@@ -1,0 +1,671 @@
+---
+title: "Fields"
+description: "To implement Dromo in your application, you must first define a schema. A schema is an array of field objects. These fields will be matched to columns during the import process, and define the properties of the JSON payload passed back in the results."
+---
+
+## Basics[​](#basics "Direct link to Basics")
+
+The most basic field consists of only a `key` and `label`. The field's key is its unique identifier, and will be the key of that field in the result JSON object. The field's label is how it will be displayed to the user.
+
+* Schema
+* Review screen
+* Results
+
+A basic schema could look like this:
+
+```
+fields: [  {    label: "First name",    key: "firstName"  },  {    label: "Last name",    key: "lastName"  },  {    label: "Membership ID",    key: "memberId"  }]
+```
+
+The user would then match these fields to the columns in their imported file, resulting in a review screen which looks like this:
+
+![The review screen with data](\images\assets\images\basicFields_review-23cd9388ebca4f4b5e251dee170cd47f.png)
+
+And, when submitted, Dromo would provide you with a result data array like this:
+
+```
+[  {    "firstName": "Richard",    "lastName": "Wysocki",    "memberId": "38008"  },  {    "firstName": "Paige",    "lastName": "Pierce",    "memberId": "29190"  },  {    "firstName": "Paul",    "lastName": "McBeth",    "memberId": "27523"  },  {    "firstName": "Kristin",    "lastName": "Tattar",    "memberId": "73986"  },  {    "firstName": "Calvin",    "lastName": "Heimburg",    "memberId": "45971"  },  {    "firstName": "Catrina",    "lastName": "Allen",    "memberId": "44184"  },  {    "firstName": "Eagle",    "lastName": "McMahon",    "memberId": "37817"  }]
+```
+
+## Field object reference[​](#field-object-reference "Direct link to Field object reference")
+
+<ResponseField name="label" type="string" required>
+  The human-friendly name of the field, shown to the user in the Dromo Uploader interface
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+  The field's unique identifier, used as the key in the JSON results
+</ResponseField>
+
+<ResponseField name="type" type="FieldType" default="string">
+  The field's type.
+
+  Can be supplied in two formats:
+
+  * As a string corresponding to a valid field type. If the field type accepts options, defaults will be used.
+  * For field types which accept options, as a two element array where the first element is the string corresponding to a valid field type, and the second element is an object with type options.
+
+  For more details, see [field types](#field-types).
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  An optional description of this field for the user. If you specify a value for this field, Dromo will show a ? icon in the importer that users can hover over to see this message.
+</ResponseField>
+
+<ResponseField name="alternateMatches" type="string[]">
+  An array of alternate matches that this field to map to. See [column matching](#column-matching).
+</ResponseField>
+
+<ResponseField name="validators" type="Validator[]">
+  An array of validator objects to validate this field. See [validators](#validators).
+</ResponseField>
+
+<ResponseField name="selectOptions" type="{ label: string, value: string, alternateMatches?: string[] }[]">
+  For select fields only, an array of possible picklist values. See the [select field type](#select).
+</ResponseField>
+
+<ResponseField name="readOnly" type="boolean" default="false">
+  If `true`, the user will not be able to edit the data in this field.
+
+  This is useful if you want to exclusively populate a virtual field using hooks.
+</ResponseField>
+
+<ResponseField name="hidden" type="boolean" default="false">
+  If `true`, the field will be hidden from the user at all times. A hidden field can be set only using hooks.
+
+  A user will not be able to match a column of data to the field. A user will not see the field in the review screen. The field will only be added to the submitted final result.
+
+  Since a user cannot change the value of a hidden field, no validations can be set on a hidden field.
+</ResponseField>
+
+<ResponseField name="requireMapping" type="boolean" default="false">
+  If `true`, the field must be mapped when matching columns. The user will not be able to progress to the data review screen unless this field has been matched to a column in the input file.
+
+  Note: cells in this column aren't required to have any values, that can be validated using [the validator `required`](/fields#required).
+</ResponseField>
+
+<ResponseField name="manyToOne" type="boolean" default="false">
+  If `true`, the field may have multiple data columns mapped to it.
+
+  The result payload will have an array of all mapped columns' values instead of just a single value. Row hooks will have an entry in a `manyToOne` array for each mapped column.
+</ResponseField>
+
+## Field types[​](#field-types "Direct link to Field types")
+
+Dromo offers many field data types to parse and transform data, display it to the user, validate it, and output the data in a useful format.
+
+The field type is set by passing a `type` parameter in the field object. This can be a string referring to one of the field types, explained below. Alternatively, some field types can take additional options controlling their behavior and format. In this case, you can provide the `type` parameter with a 2-element array, where the first element is the type name and the second element is any options that field type takes.
+
+Here is an example of a few different valid field type configurations:
+
+```
+fields: [  {    label: "Email address",    key: "email",    type: "email"  },  {    label: "Subscription fee",    key: "subscriptionFee",    type: ["number", "eur"]  }  {    label: "Subscribed since",    key: "subscriptionStart",    type: ["date", { locale: "de-DE" }]  }]
+```
+
+### String[​](#string "Direct link to String")
+
+> `type: "string"`
+
+By default (if no field type is specified), all fields in Dromo have the `string` type. This is the simplest field type, and does not do any validation or transformation of the data – the data is output as a string exactly as it was entered.
+
+The string type does not take any options.
+
+### Number[​](#number "Direct link to Number")
+
+> `type: "number"`
+>
+> `type: ["number", <preset name string>]`
+>
+> ```
+> type: [  "number",  {    preset: <preset name string>,    round: <integer>,    displayFormat: <format object>,    outputFormat: <format object>    min: <number>,    max: <number>  }]
+> ```
+
+#### For all kinds of numeric values[​](#for-all-kinds-of-numeric-values "Direct link to For all kinds of numeric values")
+
+The field type parses many common number formats and displays the number in a user-friendly format.
+
+If the input data is unable to be parsed as a number, a validation error is added to the cell.
+
+Unless an output format is specified, the number is output to the result JSON as a number.
+
+#### Presets[​](#presets "Direct link to Presets")
+
+The number type has several presets available to handle the most common number formats. You can use a preset by passing the name of the preset with the field type, such as `type: ["number", "usd"]`.
+
+Here are all of the presets that Dromo provides:
+
+| Preset Name                                      | Source value     | Display value          |
+| ------------------------------------------------ | ---------------- | ---------------------- |
+| `default`(used if no display settings are given) | 1234567.1234567  | 1,234,567.1234567      |
+| `percent`                                        | 0.12340.56       | 12.34%56%              |
+| `plain`                                          | 1234567.123      | 1234567.123            |
+| `usd`                                            | 1234.567-3456.78 | $ 1,234.57- $3,456.78  |
+| `usd_accounting`                                 | 1234.567-3456.78 | $ 1,234.57$ (3,456.78) |
+| `eur`                                            | 1234.567-3456.78 | 1,234.57 €-3,456.78 €  |
+| `gbp`                                            | 1234.567-3456.78 | £ 1,234.57- £3,456.78  |
+| `decimal_0` *or*`integer`                        | 234.567          | 235                    |
+| `decimal_1`                                      | 234.567123       | 234.6123.0             |
+| `decimal_2`                                      | 234.567123       | 234.57123.00           |
+| `decimal_3`                                      | 234.5678123      | 234.568123.000         |
+| `decimal_4`                                      | 234.56789123     | 234.5679123.0000       |
+| `percent_0`                                      | 0.1256           | 13%                    |
+| `percent_1`                                      | 0.12560.34       | 12.6%34.0%             |
+| `percent_2`                                      | 0.125670.34      | 12.57%34.00%           |
+| `percent_3`                                      | 0.1234560.34     | 12.346%34.000%         |
+| `percent_4`                                      | 0.123456780.34   | 12.3457%34.0000%       |
+
+#### Custom configuration[​](#custom-configuration "Direct link to Custom configuration")
+
+If none of the presets meet your needs, you can define your own rounding, display format and output format behavior.
+
+The `round` setting takes an integer which defines how many digits after the decimal point the value will be rounded to. Negative values will round to digits before the decimal.
+
+The `displayFormat` and `outputFormat` settings can be used for creating your own custom formats. The `displayFormat` is used for displaying the number to the user on the review screen. The `outputFormat`, if set, will determine how the number is output in the result JSON, as a string.
+
+For more information on using `displayFormat` and `outputFormat`, see the [number formatting page](/fields/number-formatting).
+
+#### Validating minimum and maximum[​](#validating-minimum-and-maximum "Direct link to Validating minimum and maximum")
+
+You can validate that the number falls within a given range using the `min` and `max` settings.
+
+The `min` and `max` settings are optional and you can specify none, one or both. If a given number falls below the `min` or above the `max`, a validation error will be added to the field.
+
+### Date[​](#date "Direct link to Date")
+
+> `type: "date"`
+>
+> ```
+> type: [  "date",  {    locale: <locale string>,    displayFormat: <format string>,    outputFormat: <format string>  }]
+> ```
+
+#### For handling date values (with no time)[​](#for-handling-date-values-with-no-time "Direct link to For handling date values (with no time)")
+
+The date type parses dates in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale. If a time is also given, it is allowed, but ignored. If a input date cannot be parsed, a validation error will be added to the cell.
+
+When using a date field, Dromo will attempt to determine the date format of the imported data and suggest fixing it to the user during the Bulk Fix step.
+
+![Suggesting date fixes during the bulk edit step](\images\assets\images\date_fixing-9b3291436a8788c5b3eb1ad7ccef06e9.png)
+
+By default, dates are output to the results in ISO-8601 format (e.g. `"2022-03-27"`).
+
+You can specify a locale for the date field, which must be a valid [BCP 47 locale string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#locale_identification_and_negotiation). If not provided, the locale defaults to `"en-US"`.
+
+The locale will change how the date is displayed to the user with the display format. The locale will also affect the output format if a custom format is used.
+
+The default display format is the standard short form in the configured locale, for example:
+
+| Locale | Default format example |
+| ------ | ---------------------- |
+| en-US  | 3/27/2022              |
+| ar-SY  | ٢٧/٣/٢٠٢٢              |
+| de-DE  | 27.3.2022              |
+| pt-BR  | 27/03/2022             |
+| th-TH  | 27/3/2565              |
+| zh-CN  | 2022/3/27              |
+
+You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+
+### Datetime[​](#datetime "Direct link to Datetime")
+
+> `type: "datetime"`
+>
+> ```
+> type: [  "datetime",  {    locale: <locale string>,    displayFormat: <format string>,    outputFormat: <format string>,    withSeconds: <boolean>  }]
+> ```
+
+#### For handling a date and time together in one field[​](#for-handling-a-date-and-time-together-in-one-field "Direct link to For handling a date and time together in one field")
+
+The datetime type parses datetimes in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale.
+
+By default, dates are output to the results in ISO-8601 format, with no time zone offset (e.g. `"2022-03-27T15:20"`).
+
+By default, seconds are neither displayed nor output. You can change this by providing `withSeconds: true` in the field settings.
+
+You can specify a locale for the datetime field, which must be a valid [BCP 47 locale string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#locale_identification_and_negotiation). If not provided, the locale defaults to `"en-US"`.
+
+The locale will change how the datetime is displayed to the user with the display format. The locale will also affect the output format if a custom format is used.
+
+The default display format is the standard short form in the configured locale, for example:
+
+| Locale | Default format example |
+| ------ | ---------------------- |
+| en-US  | 3/27/2022, 3:20 PM     |
+| ar-SY  | ٢٧/٣/٢٠٢٢, ٣:٢٠ م      |
+| de-DE  | 27.3.2022, 15:20       |
+| pt-BR  | 27/03/2022 15:20       |
+| th-TH  | 27/3/2565 15:20        |
+| zh-CN  | 2022/3/27 下午3:20       |
+
+You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+
+### Time[​](#time "Direct link to Time")
+
+> `type: "time"`
+>
+> ```
+> type: [  "time",  {    locale: <locale string>,    displayFormat: <format string>,    outputFormat: <format string>,    withSeconds: <boolean>  }]
+> ```
+
+#### For handling a time-of-day independent of date (i.e., a clock time)[​](#for-handling-a-time-of-day-independent-of-date-ie-a-clock-time "Direct link to For handling a time-of-day independent of date (i.e., a clock time)")
+
+The time type parses datetimes in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale.
+
+By default, times are output to the results in ISO-8601 format (e.g. `"15:20"`).
+
+By default, seconds are neither displayed nor output. You can change this by providing `withSeconds: true` in the field settings.
+
+You can specify a locale for the datetime field, which must be a valid [BCP 47 locale string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#locale_identification_and_negotiation). If not provided, the locale defaults to `"en-US"`.
+
+The locale will change how the time is displayed to the user with the display format. The locale will also affect the output format if a custom format is used.
+
+The default display format is the standard time format in the specified locale, for example:
+
+| Locale | Default format example |
+| ------ | ---------------------- |
+| en-US  | 3:20 PM                |
+| ar-SY  | ٣:٢٠ م                 |
+| de-DE  | 15:20                  |
+| zh-CN  | 下午3:20                 |
+
+You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+
+### Select[​](#select "Direct link to Select")
+
+> ```
+> type: "select",selectOptions: [{ label: string, value: string, alternateMatches?: string[], exactMatchOnly?: boolean }, ...]
+> ```
+>
+> `type: ["select", { allowCustom: <boolean> }]`
+
+Select fields allow you to provide a pick list of values that the user can choose from.
+
+When creating a select field, you must provide an array of valid `selectOptions`, where each option is an object with the `label` and `value` keys. The `label` will be what is displayed to the user, and the `value` is what will be output to the results for that option.
+
+<Info>
+  `selectOptions` can be overridden for individual cells using a row hook. See the [row hook reference](/hooks#row-hooks) page for details.
+</Info>
+
+Each select option can also optionally include `alternateMatches`, an array of strings. If a value in the data matches any of these strings, it will be mapped to that option.
+
+<Check>
+  For a given select field, the labels, values, and alternate matches should be unique across all options. Each of these parameters is used to map imported data to select options, so conflicts will occur if multiple select options share the same matches.
+</Check>
+
+Select fields provide several special features as the user is going through the import process.
+
+After the column matching step, the user will be prompted to match the values in their file to the given select options.
+
+![Select option matching](\images\assets\images\select_mapping-a020124a3b912e82d49c2bd036f391a5.png)
+
+On the review screen, the field will show as a dropdown menu that the user can pick an option from.
+
+![Select dropdown on the review screen](\images\assets\images\select_dropdown-c21e2afb5f82295a448ef4551485a75a.png)
+
+A validation error will be shown if a value was not matched and does not equal one of the option labels.
+
+#### `allowCustom`[​](#allowcustom "Direct link to allowcustom")
+
+By default, select fields only allow values that match a select option, and any other values are marked with a validation error.
+
+You can change this behavior with the `allowCustom` option:
+
+```
+type: ["select", { allowCustom: true }],selectOptions: [{ label: string, value: string, alternateMatches?: string[] }, ...]
+```
+
+With `allowCustom` set to `true`, the user can either choose from the valid select options, or enter their own value. This treats the select options as autocomplete suggestions.
+
+Any value is considered valid, although you can add additional validations like normal.
+
+#### `exactMatchOnly`[​](#exactmatchonly "Direct link to exactmatchonly")
+
+By default, Dromo will suggest matches to the user with fuzzy matching, and, if you have backend sync enabled, AI matching. If you would like to disable fuzzy and AI matching, and only suggest exact matches to the user, you can pass the setting `exactMatchOnly: true` with the field settings. Dromo will check the label, value, and alternateMatches for an exact match.
+
+```
+type: ["select", { exactMatchOnly: true }],selectOptions: [{ label: string, value: string, alternateMatches?: string[] }, ...]
+```
+
+### Checkbox[​](#checkbox "Direct link to Checkbox")
+
+> `type: "checkbox"`
+
+The checkbox field type is useful when you want to import a boolean (yes/no) field.
+
+The field will be displayed to the user as a checkbox and output as a JSON boolean (`true` or `false`).
+
+When importing, the following case-insensitive values are considered false: `""` (empty cell), `"0"`, `"off"`, `"n"`, `"no"`, `"false"`, `"disabled"`.
+
+All other values are considered true.
+
+### Email[​](#email "Direct link to Email")
+
+> `type: "email"`
+
+An email field is a string field with a built-in email address validation.
+
+A validation error will be added to a cell if it contains an invalid email address.
+
+The email validation is equivalent to that specified by the [HTML5 spec](https://html.spec.whatwg.org/multipage/input.html#email-state-\(type=email\)), with the additional constraints that single domains are not allowed (such as `contact@dromo`, with no TLD) and IP addresses are not allowed in the host portion.
+
+### Country[​](#country "Direct link to Country")
+
+> `type: "country"`
+>
+> ```
+> type: [  "country",  {    format: <"2-letter" or "3-letter">  }]
+> ```
+
+Country fields validate values against a list of valid country codes (either ISO 3166 alpha-2 or alpha-3).
+
+The validation will be based on the `format` option. If not specified, "2-letter" is used.
+
+The output will be the country code in uppercase matching the `format` option.
+
+### Domain[​](#domain "Direct link to Domain")
+
+> `type: "domain"`
+>
+> ```
+> type: [  "domain",  {    allowSubdomains: <boolean>  }]
+> ```
+
+Domain fields validate values against standard domain name system rules (without any paths, query parameters, or fragments).
+
+The validation will check if the input is a valid domain name, considering whether subdomains are allowed based on the `allowSubdomains` option. If not specified, `allowSubdomains` defaults to `true`.
+
+#### Examples[​](#examples "Direct link to Examples")
+
+```
+'example.com' // valid'foo.example.com' // valid'bar.foo.example.com' // valid'xn--80ak6aa92e.com' // valid'_dnslink.ipfs.io' // valid'example.com/path' // invalid 'example.co.uk/#fragment' // invalid 'example' // invalid 'ex*mple.com' // invalid '*.example.com' // invalid 
+```
+
+The output will be the domain name as entered, maintaining the case and format of the input.
+
+If you need a field that accepts paths and query params, consider using an URL field.
+
+### Phone number[​](#phone-number "Direct link to Phone number")
+
+> `type: "phone-number"`
+>
+> ```
+> type: [  "phone-number",  {    country: <2 letter iso country code>,    format: "national" | "international" | "both",    outputFormatted: boolean  }]
+> ```
+
+Phone number fields can be used to validate phone numbers in many different scenarios.
+
+When format is `"international"` (the default), this field will validate that the value is a valid international phone number, including country code. The number will be displayed with spaces, such as `+1 212 867 5309` or `+33 1 23 45 67 89`. The number will be output in E.164 format (e.g. `"+33123456789"`) unless `outputFormatted: true` is used, in which case the spaces will be left in the output.
+
+Alternatively, you can use `format: "national"` and specify a country using a 2 letter country code, such as `"country": "US"` or `"country": "FR"`. In this case, the field will validate that the value is a valid phone number in the given country. The phone number will be displayed in local format (such as `(212) 867-5309` for US or `01 23 45 67 89` for FR) and will be output as a string of digits (e.g. `"2128675309"`) unless `outputFormatted: true` is used, in which case local formatting will be left in the output.
+
+Finally, you can use `format: "both"` when you want to accept international phone numbers from any country, as well as nationally-formatted phone numbers from one particular country. Like `format: "national"`, you must specify `country` when using this option. All numbers are displayed and output in international format, whether or not they were input as a national-format number.
+
+### Social Security Number[​](#social-security-number "Direct link to Social Security Number")
+
+> `type: "ssn"`
+>
+> ```
+> type: [  "ssn",  {    outputDash: <boolean>  }]
+> ```
+
+Social security number fields can be used to validate US SSNs.
+
+The validation will check if the value contains the correct length and doesn't contain invalid characters. (Only dashes and numbers are allowed). It will not check the actual validity of the provided SSN.
+
+The output will be a string of digits, optionally including dashes if `outputDash` is set to `true`.
+
+### URL[​](#url "Direct link to URL")
+
+> `type: "url"`
+>
+> ```
+> type: [  "url",  {    acceptedProtocols: <array of accepted protocol strings. e.g: "https", "ftp">,    acceptedDomains: <array of accepted domain strings. e.g: "google", "dromo">,  }]
+> ```
+
+URL fields can be used to validate and normalize all URLs.
+
+You can optionally specify a list of accepted protocols (like `https`) and/or domains (`like dromo.io`).
+
+Validation errors will be added if the value is not a valid URL, or does not match the protocol and domain criteria. The value of the URL will be normalized to strip extra dashes and relative path references. For example, an input of `https:///dromo.io/foo/../bar` is a valid URL, but will be normalized to the value `https://dromo.io/bar`.
+
+### US State/Territory[​](#us-stateterritory "Direct link to US State/Territory")
+
+> `type: "us-state-territory"`
+
+US State/Territory fields can be used to validate values against standard US state and territory postal codes.
+
+The input can be both 2-letter ISO state/territory codes or 4-letter codes. e.g. `AL` or `US-AL`.
+
+It will output only the 2-letter code for each state/territory.
+
+### US Zipcode[​](#us-zipcode "Direct link to US Zipcode")
+
+> `type: "us-zip-code"`
+>
+> ```
+> type: [  "us-zip-code",  {    outputDash: <boolean>,    format: <"5-digit" or "9-digit">,  }]
+> ```
+
+US Zipcode fields can be used to validate values against US zip codes, either the 5-digit or 9-digit "ZIP+4" variant.
+
+* `5-digit` format accepts both 5 digits and 9 digits values with or without dashes, but 9 digit values will be truncated and transformed into only the first 5 digits. The field also accepts values with less digits and it will transform it by prepending the value with 0's. e.g. `342` becomes `00342`. The same does not happen with `9-digit` format.
+
+* `9-digit` format does not accept 5 digit values, only 9 digits, with our without dashes.
+
+Any value that contains characters other than dashes or digits will be invalid.
+
+The output will be according to the format option provided.
+
+### UUID[​](#uuid "Direct link to UUID")
+
+> `type: "uuid"`
+>
+> ```
+> type: [  "uuid",  {    version: <number>  }]
+> ```
+
+The UUID field is a string field that validates UUID format and version number, if provided.
+
+The field uses the built-in `validate` function provided by `uuid` library.
+
+If `version` is provided, it will also check the UUID version using the `getVersion` from the `uuid` library.
+
+## Validators[​](#validators "Direct link to Validators")
+
+Indepedent of field types, Dromo provides a number of validators that you can use to ensure that get clean data in exactly the format you want them. You can use validators to highlight errors for the user and ensure that they fix the errors before submitting an import.
+
+You can specify validators for a field by providing the `validators` parameter, which takes an array of validator objects.
+
+Each object must have a `validate` parameter which specifies what kind of validation it is. Every validator takes an optional `errorMessage` which you can use to provide a customized error message to the user when the validation fails. The error message is shown to the user as a tooltip on invalid cells.
+
+![A validator error message shown to the user](\images\assets\images\validator_error-d3ca93911f5e533aad98c68e9fe0b339.png)
+
+Dromo provides the following validators.
+
+### Required[​](#required "Direct link to Required")
+
+<ResponseField name="validate" type='"required"' required>
+  Specifies that the field cannot be empty.
+</ResponseField>
+
+<ResponseField name="errorMessage" type="string">
+  Custom error message to display when validation fails.
+</ResponseField>
+
+### Unique[​](#unique "Direct link to Unique")
+
+<ResponseField name="validate" type='"unique" | "unique_case_insensitive"' required>
+  Specifies that all non-empty values in the column must be distinct (non-equal).
+
+  You can also validate uniqueness case-insensitively with `{ validate: "unique_case_insensitive" }`.
+</ResponseField>
+
+<ResponseField name="errorMessage" type="string">
+  Custom error message to display when validation fails.
+</ResponseField>
+
+### Unique across multiple fields[​](#unique-across-multiple-fields "Direct link to Unique across multiple fields")
+
+<ResponseField name="validate" type='"unique_with"' required>
+  The `unique_with` validator can be used to validate uniqueness across multiple fields.
+</ResponseField>
+
+<ResponseField name="uniqueKey" type="string" required>
+  A unique identifier shared across all fields that should be validated together for uniqueness.
+</ResponseField>
+
+<ResponseField name="errorMessage" type="string">
+  Custom error message to display when validation fails.
+</ResponseField>
+
+The `unique_with` validator can be used to validate uniqueness across multiple fields.
+
+To use it, place a `unique_with` validator on each field that you want to be part of the uniqueness validation, all sharing the same `uniqueKey`.
+
+Here is an example set of fields using `unique_with` validators used to validate that the combination of the first name and last name fields are unique.
+
+```
+[  {    label: "First Name",    key: "firstName",    validators: [      {        validate: "unique_with",        uniqueKey: "full name",      },    ],  },  {    label: "Last Name",    key: "lastName",    validators: [      {        validate: "unique_with",        uniqueKey: "full name",      },    ],  },]
+```
+
+And here is an example of the validators in action:
+
+![](\images\assets\images\unique_with_example-1c91bd7d7d02a081ea2980233bb915a5.png)
+
+### Matches a regular expression[​](#matches-a-regular-expression "Direct link to Matches a regular expression")
+
+<ResponseField name="validate" type='"regex_match" | "regex_exclude"' required>
+  You can validate that a field matches the given regular expression with the `regex_match` validator.
+
+  Conversely, you can validate that a field does *not* match a regular expression with the `regex_exclude` validator.
+</ResponseField>
+
+<ResponseField name="regex" type="string | RegExp" required>
+  The regular expression pattern to match against.
+</ResponseField>
+
+<ResponseField name="regexOptions" type="RegexOptions">
+  Optional regex configuration options.
+</ResponseField>
+
+<ResponseField name="errorMessage" type="string">
+  Custom error message to display when validation fails.
+</ResponseField>
+
+The Dromo uploader uses standard JavaScript regular expressions. You can set the `regex` key as either a `RegExp` literal/object or a string.
+
+If you choose to use a string, be careful to properly escape special characters in your regex. For example, the regex `/^"\d+"$/` should be passed in as `"^\"\\d+\"$"`. Additionally, if using a string, note that you cannot pass in regex flags directly in your regex. Instead, you may optionally provide a `regexOptions` parameter with the validator which takes an object with the following keys:
+
+* `ignoreCase: boolean` - Case insensitive flag (regex flag `i`)
+* `dotAll: boolean` - Matches all including any line breaks (regex flag `s`)
+* `multiline: boolean` - Multiline flag (regex flag `m`)
+* `unicode: boolean` - Unicode flag (regex flag `u`)
+
+### Require with other fields[​](#require-with-other-fields "Direct link to Require with other fields")
+
+<ResponseField name="validate" type='"require_with" | "require_without" | "require_with_all" | "require_without_all"' required>
+  You can use these validators to require that a field be non-empty *only if* other fields are present or empty. There are four variations.
+</ResponseField>
+
+<ResponseField name="fields" type="string[]" required>
+  Array of field keys to check against.
+</ResponseField>
+
+<ResponseField name="errorMessage" type="string">
+  Custom error message to display when validation fails.
+</ResponseField>
+
+You can use these validators to require that a field be non-empty *only if* other fields are present or empty. There are four variations:
+
+> `{ validate: "require_with", fields: [<fieldKey>, ...] }`
+
+This will require that the field has a value if **any** of the fields listed in the `fields` array are **non-empty**.
+
+> `{ validate: "require_without", fields: [<fieldKey>, ...] }`
+
+This will require that the field has a value if **any** of the fields listed in the `fields` array are **empty**.
+
+> `{ validate: "require_with_all", fields: [<fieldKey>, ...] }`
+
+This will require that the field has a value if **all** of the fields listed in the `fields` array are **non-empty**.
+
+> `{ validate: "require_without_all", fields: [<fieldKey>, ...] }`
+
+This will require that the field has a value if **all** of the fields listed in the `fields` array are **empty**.
+
+### Require with other field values[​](#require-with-other-field-values "Direct link to Require with other field values")
+
+<ResponseField name="validate" type='"require_with_values" | "require_without_values" | "require_with_all_values" | "require_without_all_values"' required>
+  You can use these validators to require that a field be non-empty *only if* other fields have specific values. There are four variations.
+</ResponseField>
+
+<ResponseField name="fieldValues" type="{ [fieldKey: string]: string }" required>
+  Object mapping field keys to their required values.
+</ResponseField>
+
+<ResponseField name="errorMessage" type="string">
+  Custom error message to display when validation fails.
+</ResponseField>
+
+You can use these validators to require that a field be non-empty *only if* other fields have specific values. There are four variations:
+
+> `{ validate: "require_with_values", fieldValues: { <fieldKey>: <fieldValue>, ... } }`
+
+This will require that the field has a value if **any** of the fields contain the corresponding value specified under `fieldValues`.
+
+> `{ validate: "require_without_values", fieldValues: { <fieldKey>: <fieldValue>, ... } }`
+
+This will require that the field has a value if **any** of the fields **do not** contain the corresponding value specified under `fieldValues`.
+
+> `{ validate: "require_with_all_values", fieldValues: { <fieldKey>: <fieldValue>, ... } }`
+
+This will require that the field has a value if **all** of the fields contain the corresponding value specified under `fieldValues`.
+
+> `{ validate: "require_without_all_values", fieldValues: { <fieldKey>: <fieldValue>, ... } }`
+
+This will require that the field has a value if **all** of the fields **do not** contain the corresponding value specified under `fieldValues`.
+
+### Length[​](#length "Direct link to Length")
+
+<ResponseField name="validate" type='"length"' required>
+  Validates that a field's value falls within a minimum or maximum number of characters.
+
+  Either min, max, or both must be defined. Values are inclusive.
+
+  The length validator cannot be used with non-string-based fields, such as number or date fields.
+</ResponseField>
+
+<ResponseField name="min" type="number">
+  Minimum number of characters allowed.
+</ResponseField>
+
+<ResponseField name="max" type="number">
+  Maximum number of characters allowed.
+</ResponseField>
+
+<ResponseField name="errorMessage" type="string">
+  Custom error message to display when validation fails.
+</ResponseField>
+
+### Alphabetical[​](#alphabetical "Direct link to Alphabetical")
+
+<ResponseField name="validate" type='"alphabetical"' required>
+  Validates that a field's value only contains alphabetical characters (a-z, lowercase and uppercase).
+</ResponseField>
+
+<ResponseField name="errorMessage" type="string">
+  Custom error message to display when validation fails.
+</ResponseField>
+
+## Column matching[​](#column-matching "Direct link to Column matching")
+
+During the column matching step, Dromo will try to match columns headers in the user data to a corresponding `label` or `key` within your fields.
+
+If you want to provide additional aliases that should automatically match to a given field, you can do so by setting `alternateMatches` for that field.
+
+Column matching is case-sensitive.
+
+Example:
+
+```
+{  label: "City",  key: "city",  alternateMatches: ["municipality", "town", "locality"]}
+```

@@ -1,0 +1,92 @@
+---
+title: "DromoUploader SDK Reference"
+description: "Detailed reference for the DromoUploader JavaScript SDK instance, its constructor, and configuration methods."
+---
+
+## DromoUploader Instance
+
+To begin an import, you first need to create an instance of the `DromoUploader`.
+
+### Constructor
+
+The `DromoUploader` constructor takes 4 parameters:
+
+<ResponseField name="licenseKey" type="string" required>
+  Your Dromo front-end license key, which can be found in [the Dromo dashboard](https://dashboard.dromo.io/).
+</ResponseField>
+
+<ResponseField name="fields" type="Field[]" href="/fields" required>
+  An array of fields which comprise your import schema.
+</ResponseField>
+
+<ResponseField name="settings" type="Settings" href="/settings" required>
+  Settings to change the behavior of the Dromo importer.
+</ResponseField>
+
+<ResponseField name="user" type="User" href="/users" required>
+  Metadata about the end user to associate with the import.
+</ResponseField>
+
+```javascript
+const dromo = new DromoUploader(licenseKey, fields, settings, user);
+```
+
+### Configuration Methods
+
+Once you have an instance, you can register callbacks and configure its behavior using the following methods. You can register callbacks for [running hooks](/hooks) and [receiving results](/results).
+
+<ResponseField name="registerColumnHook(fieldKey: string, callback: ColumnHookFn) => void">
+  Used to register a [column hook](/hooks#column-hooks) callback on the field with the given field key.
+</ResponseField>
+
+<ResponseField name="registerRowHook(callback: RowHookFn) => void">
+  Used to register a standard [row hook](/hooks#standard-row-hooks) callback.
+</ResponseField>
+
+<ResponseField name="registerBulkRowHook(callback: BulkRowHookFn) => void">
+  Used to register a bulk [row hook](/hooks#standard-row-hooks) callback.
+</ResponseField>
+
+<ResponseField name="registerStepHook(stepHookType: &quot;UPLOAD_STEP&quot; | &quot;REVIEW_STEP&quot; | &quot;REVIEW_STEP_POST_HOOKS&quot;, callback: StepHookFn) => void">
+  Used to register a [step hook](/hooks#column-hooks) callback of the given type.
+</ResponseField>
+
+<ResponseField name="registerRowDeleteHook(callback: RowDeleteHookFn) => void">
+  Used to register a [row delete hook](/hooks#row-delete-hooks) callback.
+</ResponseField>
+
+<ResponseField name="beforeFinish(callback: BeforeFinishCallbackFn) => void">
+  Used to register a [beforeFinish callback](/results#the-beforefinish-callback).
+</ResponseField>
+
+<ResponseField name="onResults(callback: OnResultsCallbackFn) => void">
+  Used to register an [onResults callback](/results#the-onresults-callback).
+</ResponseField>
+
+<ResponseField name="onCancel() => void">
+  Called when the user exits the Dromo Uploader without completing the import.
+</ResponseField>
+
+**Example of registering callbacks:**
+```javascript
+dromo.registerColumnHook('zipCode', (colData) => {  
+  return colData.map((zipCode) => {
+    return { ...zipCode, value: zipCode.value.padStart(5, '0') };  
+  });
+});
+dromo.onResults((data, metadata) => {  
+  console.log(data);
+});
+```
+
+### Starting the Import
+
+With Dromo fully configured, call `open()` on the uploader instance to start the import process.
+
+<ResponseField name="open() => void">
+  Opens the Dromo Uploader interface to begin the import process.
+</ResponseField>
+
+```javascript
+dromo.open();
+``` 

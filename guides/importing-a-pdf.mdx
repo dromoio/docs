@@ -1,0 +1,89 @@
+---
+title: "Importing a PDF table with a custom parser"
+---
+
+### Overview[​](#overview "Direct link to Overview")
+
+In this guide, we will build a [custom file parser](/custom-file-parsers) so that our importer can accept PDF files from our users. To extract the data from the PDF files, we will use PDFTables, which provides an API to extract data tables from PDF files.
+
+### Getting Started[​](#getting-started "Direct link to Getting Started")
+
+For our example we're importing users from a table in a PDF document.
+
+![PDF Contents](\images\guides\assets\images\customParserPDF-fc18aec5228eeab5755848464fdbedc7.png)
+
+We'll rely on [PDFTables](https://pdftables.com/) API to parse the PDF into a CSV string. Once we hav a CSV string, we'll use an additional external library, [PapaParse](https://www.papaparse.com/), to parse the CSV string into a two dimensional array of data for Dromo to receive.
+
+<Info>
+  To use this demo you'll need to get your own [paid API key from PDFTables](https://pdftables.com/pricing).
+</Info>
+
+Once you have your own PDFTables API key we can proceed to the Dromo implementation.
+
+### Adding the Custom Parser to Dromo[​](#adding-the-custom-parser-to-dromo "Direct link to Adding the Custom Parser to Dromo")
+
+Dromo provides an [interface for implementing custom file parsing](/custom-file-parsers). We need to specify the file extension(s) and the parsing logic that will be used to parse the file.
+
+* JavaScript
+* React
+
+```
+...const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerFileParser({    extensions: ["pdf"],    parseFile: async (buffer, fileName) => {      ...    },});
+```
+
+```
+...<DromoUploader  fileParsers={[    {        extensions: ["pdf"],        parseFile: async (buffer, fileName) => {          ...        },    },  ]}>  Import Users</DromoUploader>
+```
+
+### Implementing PDF Parsing Logic[​](#implementing-pdf-parsing-logic "Direct link to Implementing PDF Parsing Logic")
+
+Dromo passes a `buffer: ArrayBuffer` and `fileName: string` to the `parseFile` callback. We will use the buffer to create a file that we can `POST` to the PDFTables API.
+
+```
+async (buffer, fileName) => {      const myPDFTablesAPIKey = "<YOUR PDF TABLED API KEY>";      const url = `https://pdftables.com/api?key=${myPDFTablesAPIKey}&format=csv`;      const formData = new FormData();      formData.append("file", new Blob([buffer]), fileName);      const response = await fetch(url, {          method: "POST",          body: formData,      });      // text data response is a CSV string      const data = await response.text();      ...};
+```
+
+If successful, the `response.text()` will contain a CSV string. Like this:
+
+```
+'my_filename,,,\nFirst,Last,Email,Food\nMichael,Phillips,jason@moxie.xyz,Apple\nMohit,Kukreja,info@hub.inc,Banana\nMark,Walz,vengat@klenty.com,Orange\nTonya,,team@buyerassist.io,Apple\nBen,Cohen,bad email,Banana\n,Simonyan,hello@markaaz.com,Orange\nSagar,Sagiraju,,Apple\nR2,Bewley,preena@klenty.com,Banana\nRuairi,Galavan,Info test,Orange\nAdam,Zelinski,info@medisponsor.com,Apple\nAnais,Mares,info@arrowxyz.com,Banana\nLucia,Lu,support@data-lead.com,Orange\nVishu,Gopal,admin@uptics.io,Strawberry\n1,,,\n'
+```
+
+We need to convert this in to a two dimensional array. We'll use [PapaParse](https://www.papaparse.com/), a free package, to convert the string to the desired format.
+
+Add PapaParse to your `package.json` so you can use it in your application.
+
+```
+import Papa from "papaparse";...// text data response is a CSV stringconst data = await response.text();// 'names email select,,,\nFirst,Last,Email,Food\nMichael,Phillips...'const lines = Papa.parse(data).data as string[][];// [['names email select', '', '', ''], ['First', 'Last', 'Email', 'Food'], ['Michael', 'Phillips', 'jason@moxie.xyz', 'Apple']...]...
+```
+
+Finally, before we can return the formatted data, we need to ensure it is the correct shape.
+
+Ensure that every line in the two dimensional array is the same length, then return the data.
+
+```
+const maxLen = Math.max(...lines.map((row) => row.length));const result = lines.map((row) => {  const padding = Array(maxLen - row.length).fill("");  return [...row, ...padding];});return result;
+```
+
+We're done! Let's try it in Dromo and see how it works.
+
+Open the Dromo importer and observe the file extensions now include 'pdf'.
+
+![extensions include pdf image](\images\guides\assets\images\extensions_include_pdf-2d728b47002aa579db819ece2755b62e.png)
+
+Drag and drop your PDF test file. Your data should be properly parsed and loaded.
+
+![parsed pdf data](\images\guides\assets\images\parsed_pdf_data-ac1fd86d5119d1972275b468e48ab2d4.png)
+
+### Full Complete Demo[​](#full-complete-demo "Direct link to Full Complete Demo")
+
+* JavaScript
+* React
+
+```
+// Using PapaParse https://www.papaparse.com/ to parse the CSV stringimport Papa from "papaparse";const fields = [    {        label: "Email",        key: "email",        type: "email",    },    {        label: "First Name",        key: "firstName",    },    {        label: "Last Name",        key: "lastName",    },    {        label: "Food",        key: "food",        type: "select",        selectOptions: [            { label: "Apple", value: "Apple" },            { label: "Banana", value: "Banana" },            { label: "Orange", value: "Orange" },            { label: "Strawberry", value: "Strawberry" },        ],    },];const settings = {  importIdentifier: "Custom Parser Example",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerFileParser({    extensions: ["pdf"],    parseFile: async (buffer, fileName) => {      const myPDFTablesAPIKey = "<YOUR PDF TABLED API KEY>";      const url = `https://pdftables.com/api?key=${myPDFTablesAPIKey}&format=csv`;      const formData = new FormData();      formData.append("file", new Blob([buffer]), fileName);      const response = await fetch(url, {          method: "POST",          body: formData,      });      // text data response is a CSV string      const data = await response.text();      const lines = Papa.parse(data).data as string[][];      // Pad the lines to ensure they're all the same length      const maxLen = Math.max(...lines.map((row) => row.length));      const result = lines.map((row) => {          const padding = Array(maxLen - row.length).fill("");          return [...row, ...padding];      });      return result;    },});
+```
+
+```
+// Using PapaParse https://www.papaparse.com/ to parse the CSV stringimport Papa from "papaparse";...<DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {        label: "Email",        key: "email",        type: "email",    },    {        label: "First Name",        key: "firstName",    },    {        label: "Last Name",        key: "lastName",    },    {        label: "Food",        key: "food",        type: "select",        selectOptions: [            { label: "Apple", value: "Apple" },            { label: "Banana", value: "Banana" },            { label: "Orange", value: "Orange" },            { label: "Strawberry", value: "Strawberry" },        ],    },  ]}  settings={{    importIdentifier: "Custom Parser Example",  }}  fileParsers={[    {        extensions: ["pdf"],        parseFile: async (buffer, fileName) => {          const myPDFTablesAPIKey = "<YOUR PDF TABLED API KEY>";          const url = `https://pdftables.com/api?key=${myPDFTablesAPIKey}&format=csv`;          const formData = new FormData();          formData.append("file", new Blob([buffer]), fileName);          const response = await fetch(url, {              method: "POST",              body: formData,          });          // text data response is a CSV string          const data = await response.text();          const lines = Papa.parse(data).data as string[][];          // Pad the lines to ensure they're all the same length          const maxLen = Math.max(...lines.map((row) => row.length));          const result = lines.map((row) => {              const padding = Array(maxLen - row.length).fill("");              return [...row, ...padding];          });          return result;        },    },  ]}>  Import Users</DromoUploader>
+```

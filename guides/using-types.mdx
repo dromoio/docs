@@ -1,0 +1,113 @@
+---
+title: "Using field types"
+description: "Dromo's field types enable you to specify how a field intakes, transforms, validates, and outputs information. Dromo provides several  for different categories of data (e.g., numbers, text, date, time, etc.)."
+---
+
+## Using field types to ensure data consistency[​](#using-field-types-to-ensure-data-consistency "Direct link to Using field types to ensure data consistency")
+
+Field types enable you to ensure that all values in a field are the same *type* of data. The type of field denotes what kind of data that field accepts (e.g., the `number` field type allows numeric values, the `string` field type allows text, etc.).
+
+### Selecting the best type for your data[​](#selecting-the-best-type-for-your-data "Direct link to Selecting the best type for your data")
+
+By default, if you don't specify a type for a field, it uses the [`string` type](/fields#string). For example, below, we create a field for collecting email addresses:
+
+* JavaScript
+* React
+
+```
+const fields = [  {    label: 'Email Address',    key: 'emailAddress'  }];const settings = {  importIdentifier: 'Field types example'};const user = {  id: '12345'};const dromo = new DromoUploader('FRONTEND_API_KEY', fields, settings, user);
+```
+
+```
+<DromoUploader  licenseKey={'FRONTEND_API_KEY'}  user={{ id: '12345' }}  fields={[    {      label: 'Email Address',      key: 'emailAddress'    }  ]}  settings={{    importIdentifier: 'Field types example'  }}>  Import data</DromoUploader>
+```
+
+Because we didn't specify a *type* in the above "Email Address" field, it uses the default `string` type.
+
+However, if we update the "Email address" field to use the [`email` type](/fields#email), that field gains the advantage of Dromo's built-in email address validation:
+
+* JavaScript
+* React
+
+```
+const fields = [  {    label: 'Email',    key: 'email',    type: 'email'  }];
+```
+
+```
+<DromoUploader  licenseKey={'FRONTEND_API_KEY'}  user={{ id: '12345' }}  fields={[    {      label: 'Email Address',      key: 'emailAddress'      type: 'email'    }  ]}>
+```
+
+<Check>
+  Selecting the ideal type for each field is essential to honing your Dromo workflow. [See all field types.](/fields#field-types)
+</Check>
+
+### Configuring field types[​](#configuring-field-types "Direct link to Configuring field types")
+
+Certain field types offer different configuration options, enabling you to customize how data is validated, displayed to the user, and output.
+
+For example, we want a field that tracks prices in USD. We can add a "Price" field using the ["usd" preset](/fields/number-formatting#usd):
+
+```
+const fields = [  {    label: 'Price',    key: 'price',    type: ['number', { preset: 'usd' }]  }];
+```
+
+<Accordion title="💡 Click to learn more about presets">
+  Dromo provides many preset options for formatting standard `number`, `date`, `time`, and `datetime` formats. Presets work by automatically filling preset values into the configuration options for a field type.
+
+  You can manually configure the options for a number type:
+
+  ```
+  type: [  "number",  {    round: <integer>,    displayFormat: <format object>,    outputFormat: <format object>  }]
+  ```
+
+  Or you can use a preset, which configures options for you. Under the hood, the "usd" preset inputs the following options:
+
+  ```
+  {  round: 2,  displayFormat: {    mantissa: 2,    thousandSeparated: true,    output: "currency",    average: false,    spaceSeparatedCurrency: true,    currencyPosition: "prefix",    currencySymbol: "$"  }}
+  ```
+
+  To learn more about configuring your types without presets, see [customizing numbers](/fields/number-formatting/) or [customizing dates, times, and datetimes](/fields/datetime-formatting/).
+</Accordion>
+
+The "usd" preset ensures that this `number` field parses, validates, displays, and outputs values in dollars. Therefore, if a user attempts to insert a value that *can't* be parsed into USD (i.e., another currency), Dromo throws a validation error:
+
+![Validation error for inputting invalid currency](\images\guides\assets\images\use_wrong_currency-ab27dad5270e96f156f02966db439e1d.png)
+
+If the field can parse an input value into USD, Dromo *displays* that value formatted in dollars:
+
+![Input a number and see how Dromo formats it](/assets/images/number_field_output-b08abcc10d6f374a5d628944e4449fde.gif)
+
+However, this "display" format isn't how our data is actually *output*. In the Dromo dashboard's [**Imports** tab](https://dashboard.dromo.io/imports), we'll see that our field still outputs the original value.
+
+![Input a number and see how Dromo formats it](data:image/png;base64,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)
+
+If you want to change how a field is output, the `outputFormat` configuration option enables you to do so. For example, if you wish to display *and* output a field into USD, you can use the ["usd" preset](/fields/number-formatting#usd) alongside an `outputFormat` option, like so:
+
+```
+{  label: 'Price',  key: 'price',  type: [    'number',    {      preset: 'usd',      outputFormat: {        mantissa: 2,        thousandSeparated: true,        output: 'currency',        average: false,        spaceSeparatedCurrency: true,        currencyPosition: 'prefix',        currencySymbol: '$'      }    }  ]}
+```
+
+In the Dromo dashboard's [**Imports** tab](https://dashboard.dromo.io/imports), we'll see that our field is now output in USD:
+
+![Output a number in USD](\images\guides\assets\images\output_in_usd-e8365509bc82b5435f4e1ba0ec559f84.png)
+
+This is the power of field types! You can tweak how each field validates, displays, and outputs values to ensure your data is always consistent.
+
+<Check>
+  You can add [validators](/fields#validators) to enforce stricter rules about the data a user can import.
+</Check>
+
+### More examples[​](#more-examples "Direct link to More examples")
+
+Below is an expanded example of defining several types of fields:
+
+* JavaScript
+* React
+
+```
+const fields = [  {    label: 'Email',    key: 'email',    type: 'email'  },  {    label: 'Charges',    key: 'charges',    type: ['number', 'usd']  },  {    label: 'Test Select',    key: 'test_select',    type: 'select',    selectOptions: [      { label: 'I want the option A!', value: 'A' },      { label: 'I want the option B!', value: 'B' }    ]  },  {    label: 'Date',    key: 'date',    type: [      'date',      {        locale: 'en-US',        displayFormat: 'EEE MMM d, y'      }    ]  }];const settings = {  importIdentifier: 'Field types example'};const user = {  id: '12345'};const dromo = new DromoUploader('FRONTEND_API_KEY', fields, settings, user);
+```
+
+```
+<DromoUploader  licenseKey={'FRONTEND_API_KEY'}  user={{ id: '12345' }}  fields={[    {      label: 'Email',      key: 'email',      type: 'email'    },    {      label: 'Charges',      key: 'charges',      type: ['number', 'usd']    },    {      label: 'Date',      key: 'date',      type: [        'date',        {          locale: 'en-US',          displayFormat: 'EEE MMM d, y'        }      ]    }  ]}  settings={{    importIdentifier: 'Field types example'  }}>  Import data</DromoUploader>
+```

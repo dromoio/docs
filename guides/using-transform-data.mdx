@@ -1,0 +1,50 @@
+---
+title: "AI editing with user transformations"
+description: "Dromo's Transform Data feature allows your users to create bulk transformations from natural language and execute them on the dataset. The feature is available on the ."
+---
+
+### Overview[​](#overview "Direct link to Overview")
+
+<Check>
+  Enable Transform Data with the [`reviewStep.enableUserTransformations` setting](/settings#enableusertransformations).
+</Check>
+
+With `enableUserTransformations` enabled, you will see a "Transform data" button on the Data Review step.
+
+![Transform data button](\images\guides\assets\images\review_screen_button-e9c4c05bd494cc13389f76c2ab8f5650.png)
+
+Click this button to open the Transform Data modal. You will be prompted for what you would like to do to your data.
+
+![Transform data prompt](\images\guides\assets\images\empty_prompt-34651e12db7e9394d7e44c93efb52f88.png)
+
+Transform Data takes a user's request and turns it in to a transformation that can be applied to the data. If the request was successfully able to produce a transformation, the result is previewed to the user so they can optionally accept or reject it.
+
+![Data Change Preview](\images\guides\assets\images\last-comma-first-699f99617101eb318d1f10be6dc64c92.png)
+
+The feature can edit values and remove rows. It cannot add rows.
+
+![Remove low value rows](\images\guides\assets\images\remove-cheap-rows-642eae7e803ed76db1c3976aeeee5f2f.png)
+
+### Best Practices[​](#best-practices "Direct link to Best Practices")
+
+#### Include context about inputs[​](#include-context-about-inputs "Direct link to Include context about inputs")
+
+The AI building the transformation function never has access to the import data, so including context about both the input and output is often helpful.
+
+For example, given a column containing dates formatted like "Jul-8-1999" where you wish to convert them to "07/08/1999," you should request "Change the date format from 'Jul-8-1999' to MM-DD-YYYY." A request unlikely to succeed would be "Change the dates to US format" because the AI does not have access to the current format.
+
+![date-example](\images\guides\assets\images\date-format-88bf2c972ebfc224d812c5aeaa49aff0.png)
+
+#### Only apply transformations to one row at a time[​](#only-apply-transformations-to-one-row-at-a-time "Direct link to Only apply transformations to one row at a time")
+
+A transformation only has access to an individual row. If you need to perform an operation that requires knowledge of other rows or information outside of the table, the transformation will not succeed.
+
+![failed prompt](\images\guides\assets\images\failed-prompt-b2c6c567a3f43d3b49faae09b2e8141a.png)
+
+#### Keep Expectations Realistic[​](#keep-expectations-realistic "Direct link to Keep Expectations Realistic")
+
+Transform data performs best when it is given a simple, well-scoped task. Changing values based on simple criteria, adjusting date and time formats, and removing rows based on simple conditions are all great uses for the transform data feature.
+
+### Privacy[​](#privacy "Direct link to Privacy")
+
+Dromo sends the request to OpenAI along with some information about the schema, but absolutely no user data is transmitted as part of this process.

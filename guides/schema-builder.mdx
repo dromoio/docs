@@ -1,0 +1,197 @@
+---
+title: "Using Schema Studio"
+description: "Dromo's Schema Studio streamlines creating a schema, so you can start working with Dromo . Watch the below video for a quick overview of Schema Studio:"
+---
+
+## Creating a Schema[​](#creating-a-schema "Direct link to Creating a Schema")
+
+<Check>
+  [Get started with Schema Studio now!](https://dashboard.dromo.io/public/schemas/create)
+</Check>
+
+Once you've [logged into](https://dashboard.dromo.io/auth/login) your Dromo account, you can access Schema Studio from your [Dromo dashboard](https://dashboard.dromo.io/schemas). Here, you can create a new schema or update any schemas you've previously created. Click **Create Schema**:
+
+![Navigate to Schema Studio](\images\guides\assets\images\highlight_dashboard_schemaBuilder-fa9bf76b14eb158581ba726aa73d0b11.png)
+
+### Step One: Add a Name[​](#step-one-add-a-name "Direct link to Step One: Add a Name")
+
+You'll have several options to customize your new schema's preferences. Start by giving your schema a name:
+
+![Adding a schema name](\images\guides\assets\images\add_schema_name-53fe79906562c92a4e085492349c9428.png)
+
+### Step Two: Customize your importer[​](#step-two-customize-your-importer "Direct link to Step Two: Customize your importer")
+
+Next, you can customize the importer your end-user interacts with:
+
+![Customizing the general settings of your Dromo importer](\images\guides\assets\images\schemaBuilder_general_settings-fb5005df2b53e45d009a13cfe2a0963a.png)
+
+You can optionally configure the importer's:
+
+* title
+* behavior for [invalid data](/settings#invaliddatabehavior)
+* a [webhook URL](/webhooks) where new submissions are sent
+* ability to let users add [custom fields](/settings#allowcustomfields)
+* private mode settings
+
+<Info>
+  Private mode lets you to control whether user data is sent or persisted through Dromo's servers. Private mode is only available on the [Dromo Pro plan](https://dromo.io/product/pro).
+</Info>
+
+You can also optionally customize your importer's appearance with custom colors. You can preview your Dromo importer's appearance by clicking **Test now** in the footer: ![Use the Test Now button to see your importer](\images\guides\assets\images\test_now-b9d361defdaf19ed0db58202538a3838.png)
+
+### Step Three: Add fields to your schema[​](#step-three-add-fields-to-your-schema "Direct link to Step Three: Add fields to your schema")
+
+Next, you'll define your schema's fields. You can think of a schema's [fields](/fields) like columns in a spreadsheet.
+
+If you are importing your user-collected data into a database, you'll want your data to be in the shape your database table expects. This means your schema's fields usually match the columns in your database. For example, let's say you have a client database table with two columns for clients' names and emails. Your schema would have two fields to match your database table; one for our clients' names and a second for their emails.
+
+You can add fields in two ways:
+
+1. Importing a CSV and letting Schema Studio automatically detect the field and types.
+2. Manually clicking the **Add field** button.
+
+![Use an existing file or manually add fields](\images\guides\assets\images\add_fields-93b990ba94d1cd0402aef48e8dfa2b96.png)
+
+Once you've added a new field, clicking on the name of that field enables you to customize or delete it. You can customize a field's:
+
+* Label: The column name your users see in the importer.
+* Key: The field's unique identifier is this field's key in the JSON results.
+* Description: A description for this field that your users will see in the importer.
+* Type: The [type](/fields#field-types) of data your user should input (e.g., email, date, text, etc.).
+
+![The options to customize a field](\images\guides\assets\images\customize_field1-ff9c6e00ee399d23d0c32cd37c3bf2bd.png)
+
+Additionally, you can use [**validators**](/fields#validators) to enforce rules for the data a user is allowed to import. You can choose to make a field required, unique, follow a particular [Regex](https://en.wikipedia.org/wiki/Regular_expression) pattern, or any combination of the above:
+
+![The validators you can add to a field](\images\guides\assets\images\customize_field2-95e8c17641357c89e9d661e736a97779.png)
+
+<Info>
+  [Pro plan users](https://dromo.io/product/pro) can access additional validators *and* can create *custom validations* to ensure their incoming data is always ideal.
+</Info>
+
+You can try out your importer settings and fields in real-time using the **Test now** button on the footer on the screen:
+
+![Click test now to try our your schema](\images\guides\assets\images\test_now_focus-7673ac5368f608fc0b760880d65fb697.png)
+
+Once you've customized your schema, click **Save schema**. You'll be redirected to the main Schema Studio page, where you can see your new schema:
+
+![New schema added to total list](\images\guides\assets\images\new_schema_added-99117dac0bd24108b4a035209f781060.png)
+
+## Using schemas[​](#using-schemas "Direct link to Using schemas")
+
+The Schemas page shows your collection of schemas, and beside each schema are three icons:
+
+![Schema icons](\images\guides\assets\images\schema_icons-cc02e07398a9fc6d0d3e4313b152cf05.png)
+
+To start using a schema in your application, click on the angled brackets icon:
+
+![Schema icons](\images\guides\assets\images\angled_brackets_focus-ce37d95b7f23313305408c3d26068f66.png)
+
+Copy and paste the pop-up code block into your own website's code:
+
+![Copy and paste the code block](\images\guides\assets\images\dromo_code_block-648edb28d8f0f1b061a0f0611eac22d9.png)
+
+You've done it! You've successfully built a new schema and added an importer to your website, enabling your users to use Dromo for a streamlined importing experience. 🎉
+
+<Check>
+  You can see your user's imports from the [**Imports** tab](https://dashboard.dromo.io/imports) in your Dromo dashboard.
+</Check>
+
+However, in order to *utilize* this data, you still need to *move* it into your backend. Upon each upload, you can automatically push your user-imported data directly into your database using the [`onResults`](/results/#the-onresults-callback) callback:
+
+* JavaScript
+* React
+
+```
+dromo.onResults((response, metadata) => {  // Connect to our database  db.connect();  // create new entries in our database using the user's imported data  db.createClients(response);});
+```
+
+```
+<DromoUploader  ...  onResults={(response, metadata) =>    // Connect to our database    db.connect();    // create new entries in our database using the user's imported data    db.createClients(response);  }></DromoUploader>
+```
+
+<Info>
+  You can also [use a webhook](/guides/webhooks#completed-webhooks) to push your user-imported data into your database.
+</Info>
+
+### Editing and deleting schemas[​](#editing-and-deleting-schemas "Direct link to Editing and deleting schemas")
+
+Clicking the pencil icon enables you to edit a schema. Clicking on the trash can icon opens a modal where you can confirm you want to delete a schema:
+
+![Delete schema](\images\guides\assets\images\delete_schema-c2656ddacd90d13494643956fd73350c.png)
+
+## Advanced usage[​](#advanced-usage "Direct link to Advanced usage")
+
+### Assigning user metadata[​](#assigning-user-metadata "Direct link to Assigning user metadata")
+
+Currently, your importer doesn't know *who* is using it to upload information. If a user uploads data, there is no associated metadata for that user, so all user-related fields are left blank:
+
+![No set user for an Import](\images\guides\assets\images\no_set_user_in_imports-5a5ce8d8554ab1d1451fef58527ac42b.png)
+
+However, you can add more context to an upload by setting user metadata about the end user to associate with an import:
+
+```
+  const dromo = new DromoUploader("YOUR_LICENSE_KEY", "YOUR_SCHEMA_ID");  // Create a user object to associate imports to  const user = {    id: '1',    name: 'Jane Doe',    email: 'jane@dromo.io',    companyId: 'Dromo',    companyName: '12345'  };  // Associate the above user to this import  dromo.setUser(user);
+```
+
+Now when someone imports a new file, you can see the associated user metadata in your imports:
+
+![See the set user in imports](\images\guides\assets\images\set_user_in_imports-9f8d48ef86064febe78010fa5649e56e.png)
+
+### Development mode[​](#development-mode "Direct link to Development mode")
+
+The `DromoUploader` offers a "development mode" for testing import flows or iterating on finishing touches. Dromo doesn't charge you for data you import in development mode, but you are restricted to only importing 100 rows for any given file.
+
+<Info>
+  Your importer runs in development mode by default if you do **not** have an active Dromo subscription. To run Dromo in production, upgrade [to one of our pricing plans](https://dromo.io/pricing).
+</Info>
+
+You can switch your `DromoUploader` into development mode using the `setDevelopmentMode` method, like so:
+
+```
+<script type="text/javascript">  const dromo = new DromoUploader("YOUR_LICENSE_KEY", "YOUR_SCHEMA_ID");  dromo.setDevelopmentMode(true);</script>
+```
+
+The importer now shows a development mode banner, and all incoming imports are now flagged as development imports:
+
+![Development Mode](\images\guides\assets\images\development_mode_banner-d53d83879ed94079c2f71a065816fdcf.png)
+
+<Check>
+  You can see development mode imports by toggling **Development mode** from the [**Imports** tab](https://dashboard.dromo.io/imports) in your Dromo dashboard. ![Development mode Imports](\images\guides\assets\images\development_mode_imports-3beaffe5eb67bf024a860bf2cf00623a.png)
+</Check>
+
+To turn off development mode, you can either set `setDevelopmentMode` to `false` or remove the line entirely:
+
+```
+<script type="text/javascript">  const dromo = new DromoUploader("YOUR_LICENSE_KEY", "YOUR_SCHEMA_ID");  dromo.setDevelopmentMode(false);</script>
+```
+
+### Hard-coding the header row[​](#hard-coding-the-header-row "Direct link to Hard-coding the header row")
+
+If your users import files with superfluous header rows, you can use the `setHeaderRowOverride` method to tell Dromo to *skip* importing specific rows.
+
+For example, if your client's invoices have three extra rows before the header row:
+
+![Example spreadsheet with header rows](\images\guides\assets\images\example_spreadsheet-7a77af85ba6935c702ef75a70b32a50b.png)
+
+You can tell Dromo to skip these three initial rows automatically:
+
+```
+<script type="text/javascript">  const dromo = new DromoUploader("YOUR_LICENSE_KEY", "YOUR_SCHEMA_ID");  // Our Dromo importer will skip the first three rows  // and make the 4th row our "header row"  dromo.setHeaderRowOverride(3);</script>
+```
+
+Now when the user imports the file, Dromo automatically skips the first three rows and correctly sets our header to the fourth row.
+
+### Receiving results and setting up hooks[​](#receiving-results-and-setting-up-hooks "Direct link to Receiving results and setting up hooks")
+
+<Warning>
+  [Dromo's Hooks](/hooks) enable you to automatically reformat, validate, and correct data via custom functions. Hooks will work with a Schema Studio snippet only if you are subscribed to a [Dromo Pro plan](https://dromo.io/product/pro).
+</Warning>
+
+You can add callbacks to [handle your final results](/results) or [add hooks](/hooks) to transform your data automatically.
+
+Adding callbacks and hooks to the Schema Studio snippet works the same as with the [JavaScript SDK](/getting-started/javascript#usage)
+
+Callbacks are useful for transforming your data into the perfect shape or pushing it into your backend of choice. Alternatively, you can [use a webhook](/guides/webhooks#completed-webhooks) to handle user imports directly on your server.
+
+You've now learned how to fully customize your importer's behavior, enabling users to use Dromo for a streamlined importing experience. 🎉

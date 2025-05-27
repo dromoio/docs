@@ -1,0 +1,171 @@
+---
+title: "FAQs"
+---
+
+## Company[​](#company "Direct link to Company")
+
+### What is Dromo's mission?[​](#what-is-dromos-mission "Direct link to What is Dromo's mission?")
+
+Dromo exists to deliver shockingly pleasant **data file importing** software to fast-paced teams on a budget.
+
+### What does "Dromo" mean?[​](#what-does-dromo-mean "Direct link to What does \"Dromo\" mean?")
+
+Dromo is a Greek word meaning "road," and holds a particular significance in the data industry. Often, we hear the euphemism of a "data pipeline", suggesting a seamless, direct journey for data from its source to its destination. In reality, data travels more often along a meandering road, filled with potholes, bumps, and twists.
+
+In many organizations, this road is always under construction. New on-ramps and exits emerge all the time, making the route unpredictable. At times, it leads somewhere useful, but frequently it dead ends.
+
+Dromo honors the winding road that your data must travel in order to become useful, and we're here to help you navigate it.
+
+### Who's behind Dromo?[​](#whos-behind-dromo "Direct link to Who's behind Dromo?")
+
+Dromo is backed by a constellation of over **three dozen** diverse investors and operators with expertise building exceptional companies like Discord, Vercel, Shopify, Palantir, Meta, and Salesforce.
+
+### Do you provide support?[​](#do-you-provide-support "Direct link to Do you provide support?")
+
+Yes! But don't take our word for it. Here's what one of our customers had to say:
+
+> "I have worked with a lot of different vendors over the years, and the timeliness and helpfulness of the Dromo team in response to our questions has got to be the best I've ever experienced."
+
+If you encounter any problems or have any questions, please reach out to our [support team](mailto:contact@dromo.io) or start a conversation using the chat app (in the lower right-hand corner of any page). We're here to help! We also offer same-day Slack support for customers on an enterprise plan.
+
+### Where is Dromo based?[​](#where-is-dromo-based "Direct link to Where is Dromo based?")
+
+Dromo is a Delaware C corporation based in San Francisco. We support customers on six continents and over 30 languages (see the full list [here](/settings#locale)).
+
+### Where can I find updates about the product?[​](#where-can-i-find-updates-about-the-product "Direct link to Where can I find updates about the product?")
+
+We publish regular updates [here](https://developer.dromo.io/changelog).
+
+### How can I monitor Dromo's uptime and availability?[​](#how-can-i-monitor-dromos-uptime-and-availability "Direct link to How can I monitor Dromo's uptime and availability?")
+
+We publish these stats 24/7 [here](https://status.dromo.io/).
+
+## Features and functionality[​](#features-and-functionality "Direct link to Features and functionality")
+
+### What are the steps of the import process?[​](#what-are-the-steps-of-the-import-process "Direct link to What are the steps of the import process?")
+
+Typically, the import flow starts with the user uploading a file. Then, they match their columns to the fields you expect (or the importer does this automatically on their behalf). Then, they have the option to perform bulk transformations on the data. Finally, they review and correct any remaining errors.
+
+### Does an end user have to upload a file to use Dromo?[​](#does-an-end-user-have-to-upload-a-file-to-use-dromo "Direct link to Does an end user have to upload a file to use Dromo?")
+
+No. A user has the option to skip uploading a file and enter their data manually (copying and pasting is supported) as long as the [`manualInputDisabled`](/settings#manualinputonly) flag is not set.
+
+You may also launch an import programmatically using the Headless API (this feature is a premium add-on). If there are any errors during the import process (for example, a column cannot be matched automatically or a data validation fails) you are provided a URL where you can direct your user to fix the issues. If there are no errors, the import succeeds automatically and the user does not need to be involved.
+
+### What file types does the importer support?[​](#what-file-types-does-the-importer-support "Direct link to What file types does the importer support?")
+
+The importer handles CSV, XLS, XLSX, and TSV files out of the box.
+
+We can also support spreadsheets in all the legacy Excel formats (Excel 2007+, Excel 97-2004, Excel 2.0-5.0), Lotus 1-2-3, Quattro Pro, Works, OpenDocument, Uniform Office Format, and Numbers, as well as DIF files, HTML tables, and RTF tables. Please [contact us](mailto:contact@dromo.io) if you need additional file type support.
+
+### Do you support JSON files?[​](#do-you-support-json-files "Direct link to Do you support JSON files?")
+
+Yes, but a user cannot upload the file directly to Dromo. You must parse the file and provide the contents to Dromo via the [`initialData`](/settings#initialdata) setting.
+
+### What is the maximum row count / file size that can be imported?[​](#what-is-the-maximum-row-count--file-size-that-can-be-imported "Direct link to What is the maximum row count / file size that can be imported?")
+
+Any in-browser importer is ultimately constrained by the resources of the user's browser, but Dromo can typically handle files with several hundred thousand rows without problems.
+
+For maximum performance with very large files (e.g., 1 million+ rows), we recommend using Dromo Headless, which processes files on an optimized server. There is no limit to the row count or file size that Dromo Headless can handle.
+
+### Can you match a user's columns to fields in my database?[​](#can-you-match-a-users-columns-to-fields-in-my-database "Direct link to Can you match a user's columns to fields in my database?")
+
+Yes, the Dromo importer provides an intuitive mapping interface that allows your user to match their columns to the fields you require. We harness OpenAI to assist users in the mapping process.
+
+### Can you remember mappings from one import to the next?[​](#can-you-remember-mappings-from-one-import-to-the-next "Direct link to Can you remember mappings from one import to the next?")
+
+Yes, you can achieve this with the [`autoMapHeaders`](/settings#automapheaders) setting. When enabled, the importer will remember mappings of prior imports that used the same `importIdentifier`.
+
+### What happens if there are errors during the import process?[​](#what-happens-if-there-are-errors-during-the-import-process "Direct link to What happens if there are errors during the import process?")
+
+At the end of an import, the user is shown a familiar workbook interface, which highlights and annotates any remaining issues in the data. From here, they can quickly isolate, diagnose, and correct any errors.
+
+### What happens if you cannot finish an import in one session?[​](#what-happens-if-you-cannot-finish-an-import-in-one-session "Direct link to What happens if you cannot finish an import in one session?")
+
+From the review screen, the user may download the current state of the import as an Excel file, complete with error annotations. The user then has the option to fix those errors offline. Whenever they re-upload that file, the importer will pick up where they left off.
+
+### What does a finished import look like?[​](#what-does-a-finished-import-look-like "Direct link to What does a finished import look like?")
+
+Dromo returns a JSON object containing the final data. Now that it has been validated and cleaned, you can move it to the next stage of your data pipeline (e.g., upsert it into a database) with confidence. Dromo also returns a separate JSON object containing metadata about the import, such as any identifying user data you provided prior to the import and stats about the import itself (e.g., the total number of rows).
+
+### How do I handle the results of an import?[​](#how-do-i-handle-the-results-of-an-import "Direct link to How do I handle the results of an import?")
+
+The results and metadata objects are both sent to your application via the [`onResults`](/results) callback. If you elect to enable the [`backendSyncMode`](/settings#backendsyncmode) setting, the data will also be stored on your behalf. In that case, you may access the original version of the file and final results (in CSV or JSON format) via the Imports tab of the [Dashboard](https://dashboard.dromo.io), or you may access the final results and metadata via the [API](/api).
+
+### How will I know when a user has finished an import?[​](#how-will-i-know-when-a-user-has-finished-an-import "Direct link to How will I know when a user has finished an import?")
+
+You may either handle the the [`onResults`](/results) callback directly in your application, or you may use a [webhook](/webhooks). In that case, Dromo will send a POST request to any address you specify in the [`webhookUrl`](/settings#webhookurl) setting whenever an import is completed.
+
+## Customization[​](#customization "Direct link to Customization")
+
+### Do you have a white-label option?[​](#do-you-have-a-white-label-option "Direct link to Do you have a white-label option?")
+
+Dromo is exclusively white-label. We believe you should have total control over your end users' import experience, so we do not include Dromo branding anywhere in the importer.
+
+### Can I customize the styling?[​](#can-i-customize-the-styling "Direct link to Can I customize the styling?")
+
+Yes, you can customize the look-and-feel of the importer using the [`styleOverrides`](/settings#styleoverrides) setting.
+
+### Can I customize the error messages and help text that my users see?[​](#can-i-customize-the-error-messages-and-help-text-that-my-users-see "Direct link to Can I customize the error messages and help text that my users see?")
+
+Yes. In Dromo Pro, error messages for built-in [validators](/fields#validators) can be customized by providing an `errorMessage` in the JavaScript SDK. You may also write [custom messages](/hooks#working-with-info-messages), including error messages, to any cell using row or column hooks.
+
+You may customize the help text at each step (i.e., Upload Step, Matching Step, and Review Step) by providing the appropriate [`helpText`](/settings#helptext) setting.
+
+## Security[​](#security "Direct link to Security")
+
+### What is Private Mode?[​](#what-is-private-mode "Direct link to What is Private Mode?")
+
+In Private Mode, the data file uploaded by the end user is processed entirely in the context of their web browser, and the results are shared back to your application directly. To enable Private Mode, set [`backendSyncMode`](/settings#backendsyncmode) to `DISABLED`. The Dromo Pro SDK enables Private Mode by default.
+
+### How does Dromo protect end user data?[​](#how-does-dromo-protect-end-user-data "Direct link to How does Dromo protect end user data?")
+
+Dromo believes the best way to protect your end user data is to never have access to it in the first place. To that end, we offer numerous options for operating Dromo without end user data ever transiting our servers or networks.
+
+By default, the embedded Dromo Pro SDK runs in [Private Mode](/faqs#what-is-private-mode).
+
+If you set [`backendSyncMode`](/settings#backendsyncmode) to `MAPPINGS_ONLY`, then information about column headers will be shared with Dromo (this is required to enable certain advanced features like AI-assisted column mapping and remembering mappings from prior imports), but the rest of the file is not shared with Dromo.
+
+If you choose to disable Private Mode (i.e., by setting `backendSyncMode` to `FULL_DATA`) but want to store imports in your own infrastructure, you can enable the premium Bring Your Own Storage feature.
+
+NB: When using the Headless API (instead of an embedded importer), Dromo processes end user data on a server.
+
+Should you store or otherwise share end user data with Dromo, we will process it solely to the extent reasonably required for the delivery of our service. For more information on how we treat end user data, read [here](https://dromo.io/legal/terms#end-user-data).
+
+### Are you SOC 2 certified?[​](#are-you-soc-2-certified "Direct link to Are you SOC 2 certified?")
+
+Yes. We can make our security report available under MNDA.
+
+### Do you offer BAAs for HIPAA compliance?[​](#do-you-offer-baas-for-hipaa-compliance "Direct link to Do you offer BAAs for HIPAA compliance?")
+
+Yes. Where possible we use the standard BAA [template](https://www.hhs.gov/sites/default/files/model-business-associate-agreement.pdf) from HHS.
+
+If your end users might be importing PHI (protected health information) about themselves or others, we strongly encourage you to not share or store that data with any third party unnecessarily, including Dromo! Instead, we recommend you either 1) exclusively run Dromo Pro in [Private Mode](/faqs#what-is-private-mode), 2) enable the Bring Your Own Storage option (requires an enterprise plan), or 3) deploy Dromo on-prem.
+
+### Are you GDPR compliant?[​](#are-you-gdpr-compliant "Direct link to Are you GDPR compliant?")
+
+Yes, but with respect to European data subjects, we recommend the same best practices for GDPR compliance as we do for HIPAA compliance (see above), so that no third party needs to process or control your end user data unnecessarily.
+
+We offer Standard Contractual Clauses (SCCs) for controller-to-processor (Module 2) and processor-to-processor (Module 3) arrangements, where necessary. To request a copy, please [contact us](mailto:privacy@dromo.io). Indicate if you require Module 2 or Module 3 and an international data transfer addendum (for transfers out of the UK).
+
+### What is "Bring Your Own Storage"?[​](#what-is-bring-your-own-storage "Direct link to What is \"Bring Your Own Storage\"?")
+
+When you enable the Bring Your Own Storage (BYOS) feature, your data is persisted directly from the user's browser to your storage layer (such as AWS S3 or GCP Cloud Storage, in a bucket owned by you). When BYOS is enabled for an embedded importer, Dromo does not have any access to user data at any point in the import process, but the import results are available to you in your cloud.
+
+The purpose of BYOS is to provide similar security benefits as a fully self-hosted solution at a fraction of the cost and with minimal additional overhead to manage.
+
+This is a premium add-on. To learn more, [contact us](mailto:contact@dromo.io) by email or [get a quote](https://dromo.io/get-a-quote).
+
+### Do you offer a self-hosted solution?[​](#do-you-offer-a-self-hosted-solution "Direct link to Do you offer a self-hosted solution?")
+
+You may choose to self-host your user data by enabling the premium "Bring Your Own Storage" feature.
+
+Dromo also offers a fully self-hosted solution, where you can deploy our full stack\* in your cloud using Kubernetes.
+
+\*excluding the Headless API
+
+## Troubleshooting[​](#troubleshooting "Direct link to Troubleshooting")
+
+### I'm trying to use NextJS and running into issues. What do I do?[​](#im-trying-to-use-nextjs-and-running-into-issues-what-do-i-do "Direct link to I'm trying to use NextJS and running into issues. What do I do?")
+
+Dromo must be used as a client component. To use Dromo in NextJS, make sure to add `'use client'` to the top of the file with the Dromo importer.

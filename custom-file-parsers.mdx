@@ -1,0 +1,51 @@
+---
+title: "Custom File Parsers"
+description: "Custom file parsers allow you to parse any file format by giving you control of the parsing logic. Dromo natively supports common CSV and Excel formats, but with custom file parsers you can enable your users to import PDF, XML, HTML, or any other file type when you implement the file parsing."
+---
+
+<Check>
+  For a PDF importing example, see our [guide on importing a PDF using the PDFTables API](/guides/importing-a-pdf).
+</Check>
+
+At a high level, custom parsers are a function you define which is called with the file contents and returns the parsed file as arrays of strings.
+
+You define which file extensions your parser should be used for, and if a user uploads a matching file, your file parsing function will be called instead of Dromo's native file parsers.
+
+Custom parsers are invoked immediately when the user selects a file. Additionally, if a user goes to the Data Review step and then backtracks to a previous step, the file is re-parsed, so the custom parser will be called again to get a fresh, unedited copy of the file data.
+
+Custom parser functions receive two arguments, the file buffer and the filename.
+
+<ResponseField name="buffer" type="ArrayBuffer">
+  An ArrayBuffer containing the raw binary content of the uploaded file
+</ResponseField>
+
+<ResponseField name="fileName" type="string">
+  The filename of the file selected by the user
+</ResponseField>
+
+File parsers must return a 2-dimensional array of strings.
+
+File parsers may return the value async, wrapped in a promise.
+
+<ResponseField name="data" type="string[][]">
+  Parsed data to be imported. The data must be an array with a length of at least 1, with each row being an array of strings. Each row must be the same length.
+</ResponseField>
+
+<Accordion title="Custom File Parsing Example">
+  In this example we're parsing a fixed width file with stock prices. Each stock symbol is 4 characters and the price is the following 6 characters.
+
+  ```
+  AAPL023367GOOG016968TSLA025952
+  ```
+
+  * JavaScript
+  * React
+
+  ```
+  const fields = [    {        label: "Stock Symbol",        key: "stock_symbol",    },    {        label: "Stock Price",        key: "stock_price",    },];const settings = {  importIdentifier: "Custom Parser Example",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerFileParser({    extensions: ["txt"],    parseFile: async (buffer, fileName) => {        const stockData = new TextDecoder().decode(buffer);        const headers = ["Stock Symbol", "Stock Price"];        const data: string[][] = stockData          .split("\n")          .map((line) => [line.slice(0, 4), line.slice(4, -1)]);        return [headers, ...data];    },});
+  ```
+
+  ```
+  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {        label: "Stock Symbol",        key: "stock_symbol",    },    {        label: "Stock Price",        key: "stock_price",    },  ]}  settings={{    importIdentifier: "Custom Parser Example",  }}  fileParsers={[    {        extensions: ["txt"],        parseFile: (buffer, _fileName) => {            const stockData = new TextDecoder().decode(buffer);            const headers = ["Stock Symbol", "Stock Price"];            const data: string[][] = stockData                .split("\n")                .map((line) => [line.slice(0, 4), line.slice(4, -1)]);            return [headers, ...data];        },    },  ]}>  Import Users</DromoUploader>
+  ```
+</Accordion>

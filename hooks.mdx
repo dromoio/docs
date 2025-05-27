@@ -1,0 +1,559 @@
+---
+title: "Hooks"
+description: "Dromo's Hooks help you reformat, validate, and correct data automatically via custom functions per column and/or row. For example, using these hooks you can automatically reformat area codes or country codes, remove special characters, validate emails against external data, or anything else you can think of."
+---
+
+The diagram below shows the general flow for Dromo. Column hooks run first and only once after the "column matching" stage. After these run, row hooks will run for each record. Row hooks will also run on a record after it is updated by the user. If you only want to run a row hook on init or on change, you can configure it accordingly.
+
+![](\images\assets\images\hooks_flow_chart-70959ea41e1d9fbcd2ce39b885433ff3.png)
+
+## Column hooks[​](#column-hooks "Direct link to Column hooks")
+
+Column hooks run on a specified column at the beginning of the data review step. They are run before the row hooks and will only run once during the import process.
+
+Column hooks are called with a single argument, `values`, with an array of objects. Each object corresponds to one value in the column, and has two parameters.
+
+<ResponseField name="index" type="number">
+  The row index of the column value, starting with 0
+</ResponseField>
+
+<ResponseField name="value" type="string">
+  The raw value as imported
+</ResponseField>
+
+Column hooks must return an array of objects in a similar format.
+
+Column hooks may return the value async, wrapped in a promise.
+
+<ResponseField name="index" type="number" required>
+  The row index of the column value. This should be unchanged from the input.
+</ResponseField>
+
+<ResponseField name="value" type="string">
+  The new value for this cell. If omitted, the value is left unchanged.
+</ResponseField>
+
+<ResponseField name="info" type="InfoMessage[]">
+  An array of messages you would like to add to this cell.
+
+  For more details, see [Info Messages](#working-with-info-messages).
+
+  If omitted, no messages are added.
+</ResponseField>
+
+<AccordionGroup>
+  <Accordion title="Sample input and output">
+    Given the following imported data:
+
+    |      Name     |                         Email                         |
+    | :-----------: | :---------------------------------------------------: |
+    |  Michelle Doe | [michelledoe@gmail.com](mailto:michelledoe@gmail.com) |
+    |    Jane Doe   |     [janedoe@gmail.com](mailto:janedoe@gmail.com)     |
+    |  Steve Jones  |     [steve@hotmail.com](mailto:steve@hotmail.com)     |
+    | Wayne Gretzky |         [wayne@nhl.com](mailto:wayne@nhl.com)         |
+
+    A column hook registered on the `Email` field would be passed the following data:
+
+    ```
+    [  { value: "michelledoe@gmail.com", index: 0 },  { value: "janedoe@gmail.com", index: 1 },  { value: "steve@hotmail.com", index: 2 },  { value: "wayne@nhl.com", index: 3 },];
+    ```
+
+    This column hook could return something like this:
+
+    ```
+    [  {    index: 0,    value: "michelledoe@aol.com",    info: [      {        message: "Automatically corrected email domain",        level: "info", // should be "info", "warning" or "error"      },    ],  },  // we can omit cells that don't need any changes or messages  {    index: 2,    // Don't need to supply value if we're not changing it    info: [      {        message: "Email not found",        level: "error",      },    ],  },];
+    ```
+  </Accordion>
+
+  <Accordion title="Column hook example">
+    * JavaScript
+    * React
+
+    ```
+    const fields = [  {    label: "Email",    key: "email",  },];const settings = {  importIdentifier: "Column Hooks Server Validation",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerColumnHook("email", function (values) {  return values.map((row) => {    const newRow = {      index: row.index,      value: "0" + row.value,      info: [        {          message: "Prepended 0 to value",          level: "info",        },      ],    };    return newRow;  });});
+    ```
+
+    ```
+    <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {      label: "Email",      key: "email",    },  ]}  settings={{    importIdentifier: "Column Hooks Example",  }}  columnHooks={[    {      fieldName: "email",      callback: (values) => {        return values.map((row) => {          const newRow = {            index: row.index,            value: "0" + row.value,            info: [              {                message: "Prepended 0 to value",                level: "info",              },            ],          };          return newRow;        });      },    },  ]}>  Import Emails</DromoUploader>
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Row hooks[​](#row-hooks "Direct link to Row hooks")
+
+Row hooks run validation on each record (row) of data and return the record with new data and/or user messages. Row hooks come in two variants: standard and bulk.
+
+Row hooks are run once in `"init"` mode after the column matching step and before the user begins the review step, and are run with the full dataset.
+
+Row hooks are run again in `"update"` mode after each time the user changes any data, with only the changed rows.
+
+### Standard row hooks[​](#standard-row-hooks "Direct link to Standard row hooks")
+
+Standard row hooks are invoked once for every row on `init`, and once for every row that changed on `update`.
+
+Standard row hooks are called with two arguments.
+
+* recordobject
+
+  * indexnumber
+
+    The index of this row
+
+  * rowobject
+
+    The `row` object will have keys matching the field key of each mapped field. Each of these keys will contain an object with data and metadata of that field in the given row.
+
+    * valuestring
+
+      The value of this field at this row, as displayed to the user
+
+    * resultValuestring | boolean | number | null
+
+      The value of this field at this row, as it will appear in the result data
+
+    * info[InfoMessage\[\]](#working-with-info-messages)
+
+      An array of any info messages you have previously added to this cell
+
+    * selectOptions\{ label: string, value: string }\[]
+
+      Overridden selectOptions previously added to this cell
+
+* mode"init" | "update"
+
+  Mode will be `"init"` if running before the start of the review step, and `"update"` if running due to a user change.
+
+* manyToOne\{ value: string, resultValue: string | boolean | number | null, info: InfoMessage\[], selectOptions: \{ label: string, value: string }\[] }\[]
+
+  If the field is [manyToOne](/fields/#manyToOne), every mapped cell for this row appears as an array.
+
+Row hooks should return the updated record in a similar format.
+
+Row hooks may return the value async, wrapped in a promise.
+
+* rowobjectRequired
+
+  The `row` object should contain keys matching the field key of each mapped field. If a mapped field is omitted, it will remain unchanged.
+
+  Each field key object may have the following entries:
+
+  * valuestring
+
+    The new value for this row
+
+  * info[InfoMessage\[\]](#working-with-info-messages)
+
+    New messages for this row. Messages returned will replace any previously set messages. If `info` is omitted, messages will remain unchanged.
+
+  * selectOptions\{ label: string, value: string }\[]
+
+    Select option overrides for this cell. If provided, the cell will use these select options for transforming values and validating instead of those set when the field was declared.
+
+<Info>
+  When fetching external data, we recommend that you make any API calls in a column hook and then validate that the data remains correct using a row hook in `update` mode.
+</Info>
+
+<Accordion title="Standard row hook example">
+  * JavaScript
+  * React
+
+  ```
+  const fields = [  {    label: "Email",    key: "email",  },  {    label: "State",    key: "state",    selectOptions: [{ label: "Alabama", value: "AL" }, { label: "Alaska", value: "AK" }],  },];const settings = {  importIdentifier: "Row Hooks Example",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerRowHook(function (record, mode) {  const newRecord = record;  if (record.index < 10 && mode === "init") {    newRecord.row.email.value = "0" + newRecord.row.email.value;    newRecord.row.email.info = [      {        message: "Prepend 0 to value",        level: "info",      },    ];    newRecord.row.state.selectOptions = [{ label: "Alberta", value: "AB"}, { label: "British Colombia", value: "BC"}];  }  return newRecord;});
+  ```
+
+  ```
+  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {      label: "Email",      key: "email",    },    {      label: "State",      key: "state",      selectOptions: [{ label: "Alabama", value: "AL" }, { label: "Alaska", value: "AK" }],    },  ]}  settings={{    importIdentifier: "Row Hooks Example",  }}  rowHooks={[    (record) => {      const newRecord = record;      if (record.index < 10) {        if (newRecord.row.email) {          newRecord.row.email.value = "0" + newRecord.row.email.value;          newRecord.row.email.info = [            {              message: "Prepend 0 to value",              level: "info",            },          ];        }        newRecord.row.state.selectOptions = [{ label: "Alberta", value: "AB"}, { label: "British Colombia", value: "BC"}];      }      return newRecord;    },  ]}>  Import Contacts</DromoUploader>
+  ```
+</Accordion>
+
+### Bulk row hooks[​](#bulk-row-hooks "Direct link to Bulk row hooks")
+
+Bulk row hooks are invoked a single time on `init` with the full dataset, and a single time on `update` with all of the changed rows.
+
+Bulk row hooks are a good fit if you need to perform potentially long-running operations that can be optimized by processing all changes in a single function call.
+
+Bulk row hooks work exactly like standard row hooks, except the first parameter is an array of record objects instead of a single record object. Similarly, bulk row hooks must return an array of record objects, preserving the `index` parameter of each record.
+
+<Accordion title="Bulk row hook example">
+  * JavaScript
+  * React
+
+  ```
+  const fields = [  {    label: "Email",    key: "email",  },];const settings = {  importIdentifier: "Row Hooks Example",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerBulkRowHook(function (records, mode) {  return records.map((record) => {    const newRecord = record;    if (record.index < 10 && mode === "init") {      newRecord.row.email.value = "0" + newRecord.row.email.value;      newRecord.row.email.info = [        {          message: "Prepend 0 to value",          level: "info",        },      ];    }    return newRecord;  });});
+  ```
+
+  ```
+  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {      label: "Email",      key: "email",    },  ]}  settings={{    importIdentifier: "Row Hooks Example",  }}  bulkRowHooks={[    (records) => {      return records.map((record) => {        const newRecord = record;        if (record.index < 10) {          if (newRecord.row.email) {            newRecord.row.email.value = "0" + newRecord.row.email.value;            newRecord.row.email.info = [              {                message: "Prepend 0 to value",                level: "info",              },            ];          }        }        return newRecord;      })    },  ]}>  Import Contacts</DromoUploader>
+  ```
+</Accordion>
+
+## Row delete hooks[​](#row-delete-hooks "Direct link to Row delete hooks")
+
+Row delete hooks are called when a row (or rows) is removed from the table by the user.
+
+Row delete hooks are called once for each row that was removed.
+
+* recordobject
+
+  * indexnumber
+
+    The index of this row
+
+  * rowobject
+
+    The `row` object will have keys matching the field key of each mapped field. Each of these keys will contain an object with data and metadata of that field in the given row.
+
+    * valuestring
+
+      The value of this field at this row, as displayed to the user
+
+    * resultValuestring | boolean | number | null
+
+      The value of this field at this row, as it will appear in the result data
+
+    * info[InfoMessage\[\]](#working-with-info-messages)
+
+      An array of any info messages you have previously added to this cell
+
+<Accordion title="Row delete hook example">
+  - JavaScript
+  - React
+
+  ```
+  dromo.registerRowDeleteHook(function (record) {  console.log("Deleted row index: " + record.index);});
+  ```
+
+  ```
+   <DromoUploader  licenseKey="FRONTEND_API_KEY"  ...  rowDeleteHooks={[(record) => console.log("Deleted row index: +" + record.index)]}  ...>  Launch Dromo</DromoUploader>
+  ```
+</Accordion>
+
+## Step hooks[​](#step-hooks "Direct link to Step hooks")
+
+Step hooks are callbacks that are invoked at different parts of the import process. In addition to fetching metadata about the import at that time, you can use them to call mutation functions like [`addField`](#instanceaddfield).
+
+### `UPLOAD_STEP` hook[​](#upload_step-hook "Direct link to upload_step-hook")
+
+This hook is called when the user has completed uploading a file and provides you with a 20 row data preview of that data.
+
+The function is called with two arguments.
+
+* instance[DromoUploader](#the-dromo-uploader-instance)
+
+  The Dromo Uploader instance which you can call mutation methods on
+
+* previewDatastring\[]\[]
+
+  An array of arrays containing the first 20 rows of raw uploaded data
+
+<Accordion title="Upload step hook example">
+  - JavaScript
+  - React
+
+  ```
+  dromo.registerStepHook("UPLOAD_STEP", function (instance, data) {  instance.addField({    label: "Full Name",    key: "fullName",  });  console.log(data.filename, data.dataPreview);});
+  ```
+
+  ```
+  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  ...  stepHooks: [    {      type: "UPLOAD_STEP",      callback: (instance, data) => {        instance.addField({          label: "Full Name",          key: "fullName",        })        console.log(data.filename, data.dataPreview);      }    }  ],  .../>
+  ```
+</Accordion>
+
+### `REVIEW_STEP` hook[​](#review_step-hook "Direct link to review_step-hook")
+
+This hook is triggered just before the final review screen loads (and before any of the row and column hooks).
+
+The function is called with two arguments.
+
+* instance[DromoUploader](#the-dromo-uploader-instance)
+
+  The Dromo Uploader instance which you can call mutation methods on
+
+* reviewStepDataobject
+
+  * rawHeadersstring\[] | null
+
+    The raw headers from the uploaded file. If no file was uploaded (e.g. manual entry was used), this will be `null`.
+
+  * headerMapping\{ \[header: string]: string }
+
+    An object whose keys are the file headers and values are the field keys of the field the header was mapped to
+
+  * fieldsobject
+
+    An object whose keys are the field keys and values are objects containing metadata about that field
+
+    * fileHeaderstring | null
+
+      The header this field was mapped to. `null` if no file was uploaded.
+
+    * fileHeaderIndexnumber | null
+
+      The column header index this field was mapped to. `null` if no file was uploaded.
+
+    * isCustomboolean
+
+      Whether this field was added by the user as a custom field
+
+    * manyToOneboolean
+
+      Indicates if this field is [`manyToOne`](/fields#manyToOne).
+
+    * fileHeadersstring\[]
+
+      The headers that were mapped to the field if it is [`manyToOne`](/fields#manyToOne).
+
+    * fileHeaderIndexesnumber\[]
+
+      The indexes of columns that were mapped to a [`manyToOne`](/fields#manyToOne) field.
+
+<Accordion title="Review step hook example">
+  - JavaScript
+  - React
+
+  ```
+  dromo.registerStepHook("REVIEW_STEP", function (instance, data) {  instance.addField({    label: "Full Name",    key: "fullName",  });  console.log(data.rawHeaders, data.headerMapping, data.fields);});
+  ```
+
+  ```
+  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  ...  stepHooks: [    {      type: "REVIEW_STEP", // to run immediately after a user uploads data, change this to UPLOAD_STEP      callback: (instance, data) => {        instance.addField({          label: "Full Name",          key: "fullName",        })        console.log(data.rawHeaders, data.headerMapping, data.fields);      }    },  ],  .../>
+  ```
+</Accordion>
+
+### `REVIEW_STEP_POST_HOOKS` hook[​](#review_step_post_hooks-hook "Direct link to review_step_post_hooks-hook")
+
+This hook is triggered during the review step after all of the initial row and column hooks have run (and after any \`REVIEW\_STEP\` hooks have run). It can be handy for doing batched updates to the data based on aggregated results from row or column hooks.
+
+The function is called with two arguments.
+
+* instance[DromoUploader](#the-dromo-uploader-instance)
+
+  The Dromo Uploader instance which you can call mutation methods on
+
+* reviewStepDataobject
+
+  * headerMapping\{ \[header: string]: string }
+
+    An object whose keys are the file headers and values are the field keys of the field the header was mapped to
+
+  * fieldsobject
+
+    An object whose keys are the field keys and values are objects containing metadata about that field
+
+    * fileHeaderstring | null
+
+      The header this field was mapped to. `null` if no file was uploaded.
+
+    * fileHeaderIndexnumber | null
+
+      The column header index this field was mapped to. `null` if no file was uploaded.
+
+    * isCustomboolean
+
+      Whether this field was added by the user as a custom field
+
+<Accordion title="Review step post hooks example">
+  - JavaScript
+  - React
+
+  ```
+  dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {  instance.addInfoMessages([    {      rowIndex: 5,      fieldKey: "month",      level: "info",      message: "Sales exceed previous month",    },  ]);  console.log(data.headerMapping, data.fields);});
+  ```
+
+  ```
+  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  ...  stepHooks: [    {      type: "REVIEW_STEP_POST_HOOKS",      callback: (instance, data) => {        instance.addInfoMessages([          {            rowIndex: 5,            fieldKey: "month",            level: "info",            message: "Sales exceed previous month",          },        ]);        console.log(data.headerMapping, data.fields);      }    },  ],  .../>
+  ```
+</Accordion>
+
+### `REVIEW_STEP_PRE_SUBMIT` hook[​](#review_step_pre_submit-hook "Direct link to review_step_pre_submit-hook")
+
+This hook is triggered during the review step right after the user clicks 'Finish' but before [`beforeFinish`](/results#the-beforefinish-callback) runs. It can be useful for customizing the 'Are you ready to submit?' dialog with info summarizing the changes and impact of the import data.
+
+The function is called with two arguments.
+
+* instance[DromoUploader](#the-dromo-uploader-instance)
+
+  The Dromo Uploader instance which you can call mutation methods on
+
+* reviewStepDataobject
+
+  * headerMapping\{ \[header: string]: string }
+
+    An object whose keys are the file headers and values are the field keys of the field the header was mapped to
+
+  * fieldsobject
+
+    An object whose keys are the field keys and values are objects containing metadata about that field
+
+    * fileHeaderstring | null
+
+      The header this field was mapped to. `null` if no file was uploaded.
+
+    * fileHeaderIndexnumber | null
+
+      The column header index this field was mapped to. `null` if no file was uploaded.
+
+    * isCustomboolean
+
+      Whether this field was added by the user as a custom field
+
+<Accordion title="Review step pre submit example">
+  - JavaScript
+  - React
+
+  ```
+  dromo.registerStepHook("REVIEW_STEP_PRE_SUBMIT", function (instance, data) {  instance.setConfirmationMessage(    "<div>Adding 5 new contacts. Modifying 20 existing contacts.</div>",    {      submitButtonText: "Accept changes",      cancelButtonText: "Cancel",    }  );  console.log(data.headerMapping, data.fields);});
+  ```
+
+  ```
+  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  ...  stepHooks: [    {      type: "REVIEW_STEP_PRE_SUBMIT",      callback: (instance, data) => {        instance.setConfirmationMessage(          "<div>Adding 5 new contacts. Modifying 20 existing contacts.</div>",          {            submitButtonText: "Accept changes",            cancelButtonText: "Cancel",          }        );        console.log(data.headerMapping, data.fields);      }    },  ],  .../>
+  ```
+</Accordion>
+
+## Working with info messages[​](#working-with-info-messages "Direct link to Working with info messages")
+
+Dromo offers the ability to add info messages to data cells to enable custom validation and provide other feedback to the user.
+
+You can add and update info messages via [column hooks](#column-hooks), [row hooks](#row-hooks), and [the updateInfoMessages method](#instanceupdateinfomessages) in step hooks.
+
+Info messages are provided as objects with these parameters.
+
+* messagestringRequired
+
+  The message to be displayed to the user in the review screen when they hover over the corresponding cell
+
+* level"info" | "warning" | "error"
+
+  Default: "error"
+
+  The nature of the message.
+
+  * A cell with an `"error"` message is highlighted in red. It is considered a validation error and impacts the user's submission options based on [`invalidDataBehavior`](/settings#invaliddatabehavior)
+  * A cell with a `"warning"` message is highlighted in yellow
+  * A cell with an `"info"` message is highlighted in blue
+
+## The Dromo Uploader instance[​](#the-dromo-uploader-instance "Direct link to The Dromo Uploader instance")
+
+Step hooks provide access to the Dromo Uploader instance, which exposes methods to alter the import.
+
+### `instance.addField`[​](#instanceaddfield "Direct link to instanceaddfield")
+
+Adds a field to the schema after a step hook has completed.
+
+By default, the field will be added to the end of the fields.
+
+You may optionally provide a position object specifying where in the list of fields to insert the new one.
+
+* field[Field](/fields#field-object-reference)Required
+
+  A field spec for the new field to add
+
+* position\{ before: string } | \{ after: string }
+
+  Specifies where in the list of fields to add the new one.
+
+  If provided, must be an object of the form `{ before: fieldKey }` or `{ after: fieldKey }` where `fieldKey` is the `key` of a mapped field. If no mapped field with the given key exists, the new field will be added to the end.
+
+<Check>
+  For an example of concatenating or splitting fields, see the [Guide](/guides/using-addField).
+</Check>
+
+### `instance.removeField`[​](#instanceremovefield "Direct link to instanceremovefield")
+
+Removes a field after a step hook has completed.
+
+The field will no longer be visible on the data review screen nor included in the result data. Any validation errors or info messages will be discarded.
+
+Can be used in conjuction with [`addField`](/hooks#instanceaddfield) to concatenate columns and remove the originals, i.e. combine `firstName` + `lastName` into `fullName` and remove `firstName` and `lastName` from the result data.
+
+* fieldKeystringRequired
+
+  Key of the field to be deleted.
+
+<Check>
+  For an example of concatenating or splitting fields, see the [Guide](/guides/using-addField).
+</Check>
+
+### `instance.updateInfoMessages`[​](#instanceupdateinfomessages "Direct link to instanceupdateinfomessages")
+
+Updates the messages for targeted cells, overwriting any previous messages.
+
+* updatesobject\[]Required
+
+  An array of objects with an object for each cell to update the messages on
+
+  * rowIndexnumberRequired
+
+    The 0-indexed position of the row you are targeting
+
+  * fieldKeystringRequired
+
+    The key of the [field](/fields) you are targeting
+
+  * manyToOneIndexnumber
+
+    If `manyToOne` is enabled on a field, you can use this property to select which mapped column shall receive the updates.
+
+  * messages[InfoMessage\[\]](#working-with-info-messages)Required
+
+    An array of [infoMessages](#working-with-info-messages) which will be set for the cell at the specified row and field.
+
+    An empty array will clear existing messages from the cell.
+
+<Accordion title="updateInfoMessages example">
+  In this case, if you had previously set a message on the email field of row 3 or the phone field of row 8, these messages would be replaced with the new ones.
+
+  ```
+  instance.updateInfoMessages([  {    rowIndex: 3,    fieldKey: "email",    messages: [{ level: "warning", message: "Email has not been confirmed" }],  },  {    rowIndex: 8,    fieldKey: "phone",    messages: [{ level: "error", message: "Phone number not in database" }],  },]);
+  ```
+</Accordion>
+
+### `instance.addRows`[​](#instanceaddrows "Direct link to instanceaddrows")
+
+Adds rows to the dataset. Returns an array of row IDs for the rows that were just added.
+
+* rowsobject\[]Required
+
+  Rows to be added to the dataset.
+
+  * indexnumber
+
+    Index where this row will be inserted. If omitted, row will be added to end of the dataset.
+
+  * rowobject
+
+    The `row` object should contain keys matching the field key of each mapped field. If a mapped field is omitted, it will remain unchanged.
+
+    Each field key object may have the following entries:
+
+    * valuestring
+
+      The new value for this row
+
+    * info[InfoMessage\[\]](#working-with-info-messages)
+
+      Info messages for this row.
+
+    * selectOptions\{ label: string, value: string }\[]
+
+      Select option overrides for this cell. If provided, the cell will use these select options for transforming values and validating instead of those set when the field was declared.
+
+### `instance.removeRows`[​](#instanceremoverows "Direct link to instanceremoverows")
+
+Removes rows rows the dataset.
+
+* rowIdsstring\[]Required
+
+  Rows to be removed. Row IDs can be read on any row or column hooks.
+
+### `instance.setConfirmationMessage`[​](#instancesetconfirmationmessage "Direct link to instancesetconfirmationmessage")
+
+Allows customization of the messaged displayed to the user after they click 'Finish'. Content can be plain text or HTML.
+
+* messageHTMLstringRequired
+
+  Message for finish confirmation alert modal. Text or HTML for embedding links or media.
+
+* options\{ submitButtonText?: string, cancelButtonText?: string }
+
+  Optionally override text for submit and cancel buttons.

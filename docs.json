@@ -1,102 +1,77 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Dromo Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0D9373",
+    "light": "#55D799",
+    "dark": "#0D9373"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Docs",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Getting Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "home",
+              "getting-started/javascript",
+              "getting-started/react",
+              "getting-started/angular",
+              "getting-started/headless"
             ]
           },
           {
-            "group": "Essentials",
+            "group": "Guides",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
+              {
+                "group": "Defining a schema",
+                "pages": [
+                  "guides/using-types",
+                  "guides/schema-builder",
+                  "guides/saved-schema-api"
+                ]
+              },
+              {
+                "group": "Adding validations",
+                "pages": [
+                  "guides/using-beforeFinish",
+                  "guides/using-row-hooks",
+                  "guides/using-addField",
+                  "guides/exporting-errors"
+                ]
+              },
+              "guides/custom-styling",
+              "guides/bring-your-own-storage",
+              "guides/writing-results-to-firebase",
+              "guides/zapier-integration",
+              "guides/using-manyToOne",
+              "guides/using-transform-data",
+              "guides/importing-a-pdf"
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Reference",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "reference/dromo-uploader-sdk",
+              "reference/react-dromo-uploader",
+              "settings",
+              "fields",
+              "hooks",
+              "users",
+              "results",
+              "custom-file-parsers",
+              "webhooks"
             ]
+          },
+          {
+            "group": "Faqs",
+            "pages": ["faqs"]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

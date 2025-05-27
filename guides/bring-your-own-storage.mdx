@@ -1,0 +1,34 @@
+---
+title: "Bring Your Own Storage"
+description: "Bring Your Own Storage (BYOS) allows import data to be sent from the Dromo JS widget in your user's browser directly to your cloud storage bucket, without Dromo ever having access to the data."
+---
+
+![Bring Your Own Storage Diagram](\images\guides\assets\images\byos-vs-backend-sync-782448c7f886a3c1c1e4dd5b77f05f8b.png)
+
+## BYOS Requirements and Setup[​](#byos-requirements-and-setup "Direct link to BYOS Requirements and Setup")
+
+BYOS supports AWS S3, GCP Cloud Storage, and Azure Blob Storage.
+
+You will need to have configuration access to prepare your storage layer for receiving data from Dromo. Dromo will need **write-only** access, which will be used to generate pre-signed upload URLS used by the Dromo importer widget.
+
+Dromo solutions staff will guide you through the setup process.
+
+## Using BYOS[​](#using-byos "Direct link to Using BYOS")
+
+Once configured, ensure [`settings: backendSycMode`](/settings#backendsyncmode) is set to `"FULL_DATA"`. All your imports will automatically be uploaded to the bucket associated with the account the API key belongs to. The raw import file will also be stored in your storage layer.
+
+After the import is completed, Dromo's backend will send any configured webhooks for the import.
+
+You can use the ID of the completed import to [fetch the import metadata](/api#tag/uploads/operation/getUploadMetadata) from Dromo's API.
+
+GET app.dromo.io/api/v1/upload/\<id from webhook>/metadata/
+
+```
+{    "id": "64bd851c-3f74-4b73-82f4-0a55430188ae",    "import_identifier": "MD Headless",    "raw_upload": {        "filename": "my_import_file.csv",        "storage_key": "2dada048-ba4b-49f9-9d4f-caf90e27ed1b-my_import_file.csv",        "download_url": "https://dromo-user-imports-production.s3.us-west-2.amazonaws.com/not-real-49f9-9d4f-caf90e27ed1b-contacts%20%284%29.csv?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARY5HJCMTMHIP7J6K%2F20241612%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20240612T235305Z&X-Amz-Expires=1800&X-Amz-SignedHeaders=host&X-Amz-Signature=1ce97f494df0e30cedae5189854fd9d5d04994aa50c74dd88cbf869e09dc17d0"    },    "user": {      "id": "abc123",      "name": "Jeff",      "email": "jeff@dromo.io",      "company_id": "123",      "company_name": "dromo",    },    "created_date": "2024-06-12T23:45:17.002869Z",    "upload_status": "PROCESSED",    "total_num_rows": 100,    "invalid_row_indexes": [],    "errors": [],    "storage_key": "64bd851c-3f74-4b73-82f4-0a55430188ae.json",    "field_order": [        "product",        "transaction"    ]}
+```
+
+The metadata payload contains the storage key for the cleaned data for your own bucket as well as the storage key for the original raw upload. You can use these to fetch the file in your own application as needed.
+
+<Info>
+  Because Dromo only has write access to your bucket, [Dromo's Data API](/api#tag/uploads/operation/getUploadData) cannot be used to fetch data by row. Likewise, the API cannot be used to delete data from your bucket. Using the [API delete endpoint](/api#tag/uploads/operation/deleteUploada) will only delete Dromo's metadata about the import.
+</Info>

@@ -1,0 +1,130 @@
+---
+title: "JavaScript Quickstart"
+---
+
+<Check>
+  Are you looking for a framework-specific SDK? Check the Getting Started guides in the sidebar.
+</Check>
+
+This guide will walk you through the essential steps to integrate the Dromo Uploader into your JavaScript application.
+
+<Steps>
+  <Step title="Installation">
+    There are two ways to add the Dromo JavaScript SDK to your codebase:
+
+    #### Using CDN
+    You can source the SDK directly from our CDN:
+    <CodeGroup>
+    ```html "HTML (CDN)"
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dromo-uploader-js/dist/DromoUploader.js"></script>
+    ```
+    </CodeGroup>
+
+    #### Using NPM package
+    Alternatively, you can install the NPM package into your application:
+    <CodeGroup>
+    ```bash Terminal
+    npm install dromo-uploader-js
+    ```
+    </CodeGroup>
+    Then import it into your project:
+    <CodeGroup>
+    ```javascript JavaScript
+    import DromoUploader from "dromo-uploader-js";
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Initialize the Uploader">
+    Create an instance of `DromoUploader`. You'll need your Dromo front-end license key, and to define your fields, settings, and user metadata.
+    <CodeGroup>
+    ```javascript JavaScript
+    const licenseKey = "YOUR_FRONTEND_LICENSE_KEY"; // Get this from the Dromo dashboard
+    const fields = [
+      { label: "Name", key: "name" },
+      { label: "Email", key: "email_address" }
+      // Define other fields as needed
+    ];
+    const settings = {
+      importIdentifier: "MyContactsImport", // A descriptive name for this import type
+      developmentMode: true // Set to false in production
+    };
+    const user = {
+      id: "unique_user_id_123",
+      name: "Jane Doe",
+      email: "jane@example.com"
+      // Add other user metadata as needed
+    };
+
+    const dromo = new DromoUploader(licenseKey, fields, settings, user);
+    ```
+    </CodeGroup>
+    For full details on constructor parameters, see the [DromoUploader SDK Reference](/reference/dromo-uploader-sdk).
+  </Step>
+
+  <Step title="Register Callbacks (Optional)">
+    You can register callbacks to handle events like data processing or when results are ready.
+    <CodeGroup>
+    ```javascript JavaScript
+    dromo.onResults((data, metadata) => {
+      console.log("Imported Data:", data);
+      console.log("Import Metadata:", metadata);
+      // Process the data here
+      return "Import successful! Thanks!"; // Optional message to show to the user
+    });
+
+    // For other available callbacks like row hooks, column hooks, etc.,
+    // refer to the [DromoUploader SDK Reference](/reference/dromo-uploader-sdk) and [Hooks documentation](/hooks).
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Open the Uploader">
+    Call `dromo.open()` to launch the Dromo import interface.
+    <CodeGroup>
+    ```javascript JavaScript
+    dromo.open();
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+## Basic Example
+
+To use the example below, replace `"FRONTEND_API_KEY"` with your frontend license key from [the Dromo dashboard](https://dashboard.dromo.io/).
+<CodeGroup>
+```html "HTML (Full Example)"
+<script type="text/javascript">
+  const license = "FRONTEND_API_KEY";
+  const fields = [
+    {
+      label: "Name",
+      key: "name"
+    },
+    {
+      label: "Email",
+      key: "email_address"
+    }
+  ];
+  const settings = {
+    importIdentifier: "Contacts",
+    developmentMode: true
+  };
+  const user = {
+    id: "1",
+    name: "Jane Doe",
+    email: "jane@dromo.io",
+    companyId: "Dromo",
+    companyName: "12345"
+  };
+  const dromo = new DromoUploader(license, fields, settings, user);
+  dromo.onResults(function (response, metadata) {
+    // Do something with the data here
+    return "Done!";
+  });
+</script>
+<div id="root">
+  <button onclick="dromo.open()">Open Dromo</button>
+</div>
+```
+</CodeGroup>

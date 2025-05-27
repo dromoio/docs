@@ -1,0 +1,79 @@
+---
+title: "<DromoUploader> Component Props"
+description: "Reference for props accepted by the DromoUploader React component."
+---
+
+The `DromoUploader` component is the primary way to integrate Dromo into your React application. It accepts the following props:
+
+<ResponseField name="licenseKey" type="string" required>
+  Your Dromo front-end license key, which can be found in [the Dromo dashboard](https://dashboard.dromo.io/).
+</ResponseField>
+
+<ResponseField name="fields" type="Field[]" href="/fields" required>
+  An array of [Field objects](/fields) which comprise your import schema.
+</ResponseField>
+
+<ResponseField name="settings" type="Settings" href="/settings" required>
+  [Settings object](/settings) to change the behavior of the Dromo importer.
+</ResponseField>
+
+<ResponseField name="user" type="User" href="/users" required>
+  [User metadata object](/users) to associate with the import.
+</ResponseField>
+
+<ResponseField name="schemaId" type="string">
+  The ID of a pre-existing schema created in Schema Studio. If provided, the `fields`, `settings` (except `importIdentifier` and `developmentMode`), and `hooks` props will be ignored in favor of the saved schema's configuration. See [Usage with saved schemas](/getting-started/react#usage-with-saved-schemas).
+</ResponseField>
+
+<ResponseField name="rowHooks" type="RowHook[]" href="/hooks#row-hooks">
+  An array of [row hook](/hooks#row-hooks) functions.
+</ResponseField>
+
+<ResponseField name="bulkRowHooks" type="BulkRowHook[]" href="/hooks#bulk-row-hooks">
+  An array of [bulk row hook](/hooks#bulk-row-hooks) functions.
+</ResponseField>
+
+<ResponseField name="columnHooks" type="object[]" href="/hooks#column-hooks">
+  An array of [column hook](/hooks#column-hooks) objects. Each object has two entries:
+  <ResponseField name="fieldKey" type="string" required>
+    The [field key](/fields) of the field this column hook should run on.
+  </ResponseField>
+  <ResponseField name="callback" type="ColumnHookFn" href="/hooks#column-hooks" required>
+    The [column hook](/hooks#column-hooks) function.
+  </ResponseField>
+</ResponseField>
+
+<ResponseField name="stepHooks" type="object[]" href="/hooks#step-hooks">
+  An array of [step hook](/hooks#step-hooks) objects. Each object has two entries:
+  <ResponseField name="type" type="'UPLOAD_STEP' | 'REVIEW_STEP' | 'REVIEW_STEP_POST_HOOKS'" required>
+    The type of step hook.
+  </ResponseField>
+  <ResponseField name="callback" type="StepHookFn" href="/hooks#step-hooks" required>
+    A function matching the signature for the specified step hook type.
+  </ResponseField>
+</ResponseField>
+
+<ResponseField name="beforeFinish" type="BeforeFinishCallbackFn" href="/results#the-beforefinish-callback">
+  A [beforeFinish callback function](/results#the-beforefinish-callback) called immediately before completing the import to check results.
+</ResponseField>
+
+<ResponseField name="onResults" type="OnResultsCallbackFn" href="/results#the-onresults-callback">
+  An [onResults callback function](/results#the-onresults-callback) called with the results after the user finishes the import.
+</ResponseField>
+
+<ResponseField name="onCancel" type="() => void">
+  Called if the user leaves the Dromo Uploader before completing the import.
+</ResponseField>
+
+<ResponseField name="open" type="boolean">
+  (Available in version >= 2.0.9)
+  If provided, determines whether the Dromo importer modal should open. See [Controlling the Modal Programmatically](/getting-started/react#open-prop-vs-children-as-open-button).
+</ResponseField>
+
+<ResponseField name="developmentMode" type="boolean">
+  Overrides the `developmentMode` setting if a `schemaId` is also provided. Defaults to `false`.
+</ResponseField>
+
+<ResponseField name="importIdentifier" type="string">
+  Overrides the `importIdentifier` setting if a `schemaId` is also provided.
+</ResponseField> 

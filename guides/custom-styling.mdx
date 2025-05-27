@@ -1,0 +1,38 @@
+---
+title: "Customizing styles"
+---
+
+<Info>
+  For more detail about possible style overrides, see the [Reference](/settings#styleoverrides) page.
+</Info>
+
+* Version 1
+* Version 2
+
+Updating the \`global\` object impacts these elements:
+
+![](\images\guides\assets\images\styleOverrides_global_textColor_1-d81ea3533d91345e22b9326b6eb57d88.png) ![](\images\guides\assets\images\styleOverrides_global_textColor_2-56915e5ace68d5327cc76105ed0df3a3.png) ![](\images\guides\assets\images\styleOverrides_global_textColor_3-dd4f8e376f82c3275c3e3c4ea47c1dac.png) ![](\images\guides\assets\images\styleOverrides_global_textColor_4-72362d80736d33575ed07c58b2af364a.png)
+
+Updating the `primaryButton` object impacts these elements:
+
+![](\images\guides\assets\images\styleOverrides_primaryButton_1-1e5a84be749819c80144077805a41812.png) ![](\images\guides\assets\images\styleOverrides_primaryButton_2-2d5f0884e9c047dc58125423aedef4fd.png) ![](\images\guides\assets\images\styleOverrides_primaryButton_3-39b829502e6f4182127a8a33d6a1f13a.png) ![](\images\guides\assets\images\styleOverrides_primaryButton_4-2b88e1195d735f6a86afa70164647f17.png)
+
+Updating the `secondaryButton` object impacts these elements: ![](\images\guides\assets\images\styleOverrides_secondaryButton_2-28ec591bb61314b224ead5486580ee77.png) ![](\images\guides\assets\images\styleOverrides_secondaryButton_3-2660845bb0d65a01109e8a843097038e.png) ![](\images\guides\assets\images\styleOverrides_secondaryButton_4-78ac07d6dfc719099e5aa77ffa25ae4a.png)
+
+You can customize styles for almost all the visual elements throughout the Dromo Uploader. ![Upload screen](\images\guides\assets\images\style_overrides_upload-124c5aec7177074a7c5da5c0bdf569af.png)
+
+![Set header screen](\images\guides\assets\images\style_overrides_header-a9799232abfec4b960f4ac3a556fdc17.png)
+
+![Matching screen](\images\guides\assets\images\style_overrides_matching-130db5bb8e0da43991d4cca1f9a0af37.png)
+
+![Clean data screen](\images\guides\assets\images\style_overrides_cleandata-23c0f30410a1b96c2d4c2da6c27fe84c.png)
+
+![Review screen](\images\guides\assets\images\style_overrides_review-46e471c4fa809541022b7c3289835bfe.png)
+
+## Basic Example[​](#basic-example "Direct link to Basic Example")
+
+In this example, we change the text color to dark gray, the primary button to blue, and the secondary button to red.
+
+```
+const settings = {    styleOverrides: {      global: {        textColor: "#394b59",        customFontURL: "https://fonts.googleapis.com/css2?family=Open+Sans&display=swap",        customFontFamily: "'Open Sans', sans-serif"      },        primaryButton: {        borderRadius: "0.25rem",        backgroundColor: "#1a4a7a",        textColor: "#ffffff",        border: "1px solid #1a4a7a",        hoverBackgroundColor: "#006bef",        hoverTextColor: "#ffffff",        hoverBorder: "1px solid #006bef"        },        secondaryButton: {        borderRadius: "0.25rem",        backgroundColor: "#b0276b",        textColor: "#ffffff",        border: "1px solid #b0276b",        hoverBackgroundColor: "#5c656d",        hoverTextColor: "#fffff",        hoverBorder: "1px solid #5c656d"        }    }}
+```

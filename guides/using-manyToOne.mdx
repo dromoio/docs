@@ -1,0 +1,112 @@
+---
+title: "Mapping multiple columns to a single field"
+description: "This guide demonstrates how to use  field setting to map multiple columns to a single field."
+---
+
+This setting is often useful when you wish for your users to include a variable number of columns that need similar validation.
+
+<Info>
+  For more detail about the `manyToOne` setting, see the [reference](/fields#manyToOne) page.
+</Info>
+
+For our example, imagine a situation where we want to collect information for tax purposes. We need to collect an `email`, `primary_earnings`, and if applicable `additional_earnings`. Users will upload spreadsheets with columns matching `email`, `primary_earnings` and one or more columns for `additional_earnings`. Because the number of additional earnings columns can vary, we want to use a single field, `additional_earnings` and map all the additional earnings columns to it. We will validate and transform all the earnings values as USD currency.
+
+## Field Configuration[​](#field-configuration "Direct link to Field Configuration")
+
+Adding the property `manyToOne` with the value `true` enables many to one mapping.
+
+* JavaScript
+* React
+
+```
+export const fields = [  {    label: 'Email',    key: 'email',    type: 'email'  },  {    label: 'Primary Earnings',    key: 'primary_earnings',    type: ['number', 'usd'],  },  {    label: 'Additional Earnings',    key: 'additional_earnings',    type: ['number', 'usd'],    manyToOne: true,  },];
+```
+
+```
+<DromoUploader  fields={[    {        label: 'Email',        key: 'email',        type: 'email'    },    {        label: 'Primary Earnings',        key: 'primary_earnings',        type: ['number', 'usd'],    },    {        label: 'Additional Earnings',        key: 'additional_earnings',        type: ['number', 'usd'],        manyToOne: true,    },  ]} ...>  Import Earnings</DromoUploader>
+```
+
+With this setting enabled, a user will be able to choose multiple columns and match them to the field without error.
+
+![many to one column mapping](\images\guides\assets\images\column_mapping-eed6adb531f610423d9527b6c17f09e6.png)
+
+## Data Review Screen[​](#data-review-screen "Direct link to Data Review Screen")
+
+With multiple columns mapped to one field, all the columns will have the label with a number indicating their order.
+
+Note that validations defined in a `manyToOne` field apply to all mapped columns.
+
+![data review screen with many to one](\images\guides\assets\images\data_review-2a8bea8cd30fdafb6eab8a192cb2e658.png)
+
+## Results[​](#results "Direct link to Results")
+
+Upon successful import, the [results and metadata](/results#the-onresults-callback) include all the values from the mapped columns and metadata indicating how the columns were mapped to the target schema.
+
+### Result Data[​](#result-data "Direct link to Result Data")
+
+Each value from a `manyToOne` column appear in an array that is the value for the `manyToOne` field's key.
+
+```
+[  {    "email": "tumvu@comowa.fk",    "primary_earnings": 8954.08,    "additional_earnings": [      66.66,      88.88    ]  },  {    "email": "hovawu@goiv.io",    "primary_earnings": 446.02,    "additional_earnings": [      6478.45,      7435.89    ]  },  {    "email": "idmup@te.au",    "primary_earnings": 2175.84,    "additional_earnings": [      7949.13,      1998.52    ]  }  ...]
+```
+
+### Result MetaData[​](#result-metadata "Direct link to Result MetaData")
+
+The result metadata indicates which columns from the source file were mapped to which columns.
+
+```
+{    "id": null,    "filename": "earnings.csv",    "importIdentifier": "earnings",    "user": {        "id": "testUser"    },    "rowsWithError": [],    "rawHeaders": [        "email",        "salary",        "gifts",        "bonuses"    ],    "fields": {        "email": {            "fileHeaderIndex": 0,            "fileHeader": "email",            "isCustom": false,            "manyToOne": false        },        "primary_earnings": {            "fileHeaderIndex": 1,            "fileHeader": "salary",            "isCustom": false,            "manyToOne": false        },        "additional_earnings": {            "fileHeader": null,            "fileHeaders": [                "gifts",                "bonuses"            ],            "fileHeaderIndex": null,            "fileHeaderIndexes": [                2,                3            ],            "isCustom": false,            "manyToOne": true        }    },    "errors": []}
+```
+
+## Hooks[​](#hooks "Direct link to Hooks")
+
+### Row Hook[​](#row-hook "Direct link to Row Hook")
+
+`manyToOne` fields can have their values changed and their info messages and validations set in [row hooks](/hooks#row-hooks).
+
+* JavaScript
+* React
+
+```
+dromo.registerRowHook(function (record) {  if (record.index !== 2) return record;  record.row.additional_earnings.manyToOne![0].value = 42.0;  record.row.additional_earnings.manyToOne![1].info = [    { level: "error", message: "Invalid additional earning" },  ];  return record;});
+```
+
+```
+<DromoUploader  ...  rowHooks={[      (record) => {        if (record.index !== 2) return record;        record.row.additional_earnings.manyToOne![0].value = 42.0;        record.row.additional_earnings.manyToOne![1].info = [          { level: "error", message: "Invalid additional earning" },        ];        return record;      }  ]}  ...>  Import Earnings</DromoUploader>
+```
+
+### Column Hooks[​](#column-hooks "Direct link to Column Hooks")
+
+For `manyToOne` fields, a [column hook](/hooks#column-hooks) callback registered for a `manyToOne` field will be invoked once for every mapped column.
+
+* JavaScript
+* React
+
+```
+dromo.registerColumnHook("additional_earnings", (values) => {  // Cap additional earnings at $5,000  return values.map((v) => {    if (v.value > 5000) {      return {        ...v,        value: 5000,        info: [{ level: "info", message: "capped at $5000" }],      };    } else return v;  });});
+```
+
+```
+<DromoUploader  ...  columnHooks={[{     fieldName: "additional_earnings",    callback: (values) => {      // Cap additional earnings at $5,000      return values.map((v) => {        if (v.value > 5000) {          return {            ...v,            value: 5000,            info: [{ level: "info", message: "capped at $5000" }],          };        } else return v;      });    }  }]}  ...>  Import Earnings</DromoUploader>
+```
+
+### Step Hooks[​](#step-hooks "Direct link to Step Hooks")
+
+[Step hooks](/hooks#step-hooks) `REVIEW_STEP` and `REVIEW_STEP_POST_HOOKS` can be used to inspect column mapping at run time to see which columns were mapped to `oneToMany` fields.
+
+The full data object supplied as an argument to the step hook will resemble this:
+
+```
+{    "fields": {        "email": {            "fileHeaderIndex": 0,            "fileHeader": "email",            "isCustom": false,            "manyToOne": false        },        "primary_earnings": {            "fileHeaderIndex": 1,            "fileHeader": "salary",            "isCustom": false,            "manyToOne": false        },        "additional_earnings": {            "fileHeader": null,            "fileHeaders": [                "gifts",                "bonuses"            ],            "fileHeaderIndex": null,            "fileHeaderIndexes": [                2,                3            ],            "isCustom": false,            "manyToOne": true        }    },    "rawHeaders": [        "email",        "salary",        "gifts",        "bonuses"    ],    "headerMapping": {        "email": "email",        "salary": "primary_earnings",        "gifts": "additional_earnings",        "bonuses": "additional_earnings"    }}
+```
+
+* JavaScript
+* React
+
+```
+...dromo.registerStepHook("REVIEW_STEP", (_uploader, data) =>    console.log("manyToOne file headers", data.fields.additional_earnings.fileHeaders);    // ["gifts", "bonuses"]    console.log("manyToOne file indexes", data.fields.additional_earnings.fileHeaderIndexes);    // [2, 3]);...
+```
+
+```
+<DromoUploader  ...  stepHooks={[    {      type: "REVIEW_STEP",      callback: (_instance, data) => {                console.log("manyToOne file headers", data.fields.additional_earnings.fileHeaders);        // ["gifts", "bonuses"]        console.log("manyToOne file indexes", data.fields.additional_earnings.fileHeaderIndexes);        // [2, 3]      }    }  ]}  ...>  Import Earnings</DromoUploader>
+```

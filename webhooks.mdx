@@ -1,0 +1,101 @@
+---
+title: "Webhooks"
+description: "You can use webhooks to get notified when your users complete an import using Dromo."
+---
+
+Dromo provides two kinds of webhooks: **managed webhooks** and **basic webhooks**.
+
+Managed webhooks are managed in the Dromo dashboard. They provide context about the completed import, and can be applied to multiple schemas.
+
+Basic webhooks are configured by setting the [webhookUrl setting](/settings#webhookurl) in your import settings. This webhook can be configured dynamically at the time of import.
+
+## Managed webhooks[​](#managed-webhooks "Direct link to Managed webhooks")
+
+Managed webhooks are configured in the dashboard on the [webhooks page](https://dashboard.dromo.io/webhooks).
+
+Click on the "New webhook" button to create your first webhook.
+
+![Creating a new managed webhook](\images\assets\images\managed_webhook-f482fe6af96ed967f9a154de467ee7e4.png)
+
+Enter a URL where you would like the URL to be delivered. This URL must be publicly accessible.
+
+The "Development Mode" toggle determines whether the webhook will fire for production imports or development imports, as specified by the [developmentMode setting](/settings#developmentmode). This is useful for testing webhooks in test or staging environments.
+
+Finally, specify schemas for which this webhook should trigger. There are two ways to specify schemas. First, you can specify a list of import identifiers. This webhook will be triggered any time an import is completed that has a matching [importIdentifier setting](/settings#importidentifier). This is useful for attaching webhooks to dynamically configured imports. Secondly, you may specify any of your saved schemas that you have [configured in the Schema Studio](/guides/schema-builder). You can use any combination of import identifiers and saved schemas when configuring the webhook.
+
+Press create to save your webhook. The next time an import is completed for a matching schema, you will recieve a POST request to the configured URL.
+
+The request will contain a JSON body with the following parameters:
+
+<ResponseField name="event" type="string">
+  The event that triggered this webhook. Currently, this will always be `"import_completed"` unless your organization is using Dromo Headless (see below).
+</ResponseField>
+
+<ResponseField name="data" type="object">
+  <ResponseField name="id" type="string">
+    The id of the import. You can use this ID with the Dromo Imports API.
+  </ResponseField>
+
+  <ResponseField name="filename" type="string | null">
+    The filename of the file uploaded by the user. This will be `null` if manual input or [initialData](/settings#initialdata) was used.
+  </ResponseField>
+
+  <ResponseField name="user" type="User">
+    The user metadata supplied with this import
+  </ResponseField>
+
+  <ResponseField name="created_date" type="string">
+    The completion time of the import, in ISO-8601 format
+  </ResponseField>
+
+  <ResponseField name="import_type" type="string">
+    `"HEADLESS"` if the import was a Headless import, otherwise `"EMBEDDED"`
+  </ResponseField>
+
+  <ResponseField name="status" type="string">
+    For standard (embedded) imports, currently will always be `"SUCCESSFUL"`. See below for Headless.
+  </ResponseField>
+
+  <ResponseField name="num_data_rows" type="number">
+    The number of rows in the completed import
+  </ResponseField>
+
+  <ResponseField name="development_mode" type="boolean">
+    Whether this import was completed in development mode
+  </ResponseField>
+
+  <ResponseField name="has_data" type="boolean">
+    Whether the results of this import were saved using [backend sync](/settings#backendsyncmode).
+
+    If `true`, you can fetch the import results using the [get import data endpoint](/api#tag/uploads/operation/getUploadData).
+  </ResponseField>
+</ResponseField>
+
+```
+{  "event": "import_completed",  "data": {    "id": "025f399f-4370-4064-aed5-b8d16b597183",    "filename": "contacts.csv",    "user": {      "id": "user-123",      "name": "Caitlin Clark",      "email": "cclark@uiowa.edu",      "company_id": null,      "company_name": null    },    "created_date": "2024-04-24T17:20:14.659349Z",    "import_type": "EMBEDDED",    "status": "SUCCESSFUL",    "num_data_rows": 433,    "development_mode": false,    "has_data": true  }}
+```
+
+<Accordion title="Managed webhooks and headless imports">
+  When using managed webhooks with headless imports, Dromo exposes additional events and data in the webhook.
+
+  There are two additional events:
+
+  * A `"headless_import_needs_review"` event is triggered when a headless import enters the [needs review state](/getting-started/headless#import-needs-review).
+  * A `"headless_import_failed"` event is triggered when a headless import encounters an unrecoverable error and goes to the [failed state](/getting-started/headless#import-failed).
+
+  Completed headless imports, whether fully automated or completed using manual review, will trigger the standard `"import_completed"` event as detailed above.
+
+  All headless import webhooks include an additional `"headless"` key in the `data` object. This will include data about the headless import in a format matching the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport), with the exception that `"review_url"` and `"original_file_download"` are not exposed in the webhook for security reasons.
+</Accordion>
+
+## Basic webhooks[​](#basic-webhooks "Direct link to Basic webhooks")
+
+Basic webhooks are triggered when an import is completed, when the settings for that import included a [webhookUrl](/settings#webhookurl).
+
+The webhooks are delivered to the configured URL via POST request in URL-encoded form format, and contain only a single key, `uploadId`.
+
+```
+uploadId=7df3a66d-b7bb-4da6-9244-b4e22c7d7ab0
+```
+
+This key can be used to fetch import data and metadata using the [Dromo API](https://developer.dromo.io/api#tag/uploads).
