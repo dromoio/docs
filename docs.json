@@ -65,7 +65,13 @@
                   "settings/deprecated"
                 ]
               },
-              "fields",
+              {
+                "group": "Fields",
+                "pages": [
+                  "fields",
+                  "fields/field-types"
+                ]
+              },
               "hooks",
               "users",
               "results",

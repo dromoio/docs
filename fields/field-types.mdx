@@ -1,0 +1,384 @@
+---
+title: "Field Types"
+description: "Dromo supports a variety of field types, each with their own unique properties and behaviors. This section describes the different types of fields available and their usage."
+---
+
+## Usage
+
+<Note>
+The field type is set by passing a `type` parameter in the field object. This can be a string referring to one of the field types, explained below. Alternatively, some field types can take additional options controlling their behavior and format. In this case, you can provide the `type` parameter with a 2-element array, where the first element is the type name and the second element is any options that field type takes.
+</Note>
+
+Here is an example of a few different valid field type configurations:
+
+```json
+{
+  "fields": [
+    {
+      "label": "Email address",
+      "key": "email",
+      "type": "email"
+    },
+    {
+      "label": "Subscription fee",
+      "key": "subscriptionFee",
+      "type": ["number", "eur"]
+    },
+    {
+      "label": "Subscribed since",
+      "key": "subscriptionStart",
+      "type": ["date", { "locale": "de-DE" }]
+    }
+  ]
+}
+```
+
+## Types
+
+### String[​](#string "Direct link to String")
+
+> `type: "string"`
+
+By default (if no field type is specified), all fields in Dromo have the `string` type. This is the simplest field type, and does not do any validation or transformation of the data – the data is output as a string exactly as it was entered.
+
+The string type does not take any options.
+
+### Number[​](#number "Direct link to Number")
+
+> `type: "number"`
+> `type: ["number", <preset name string>]`
+>
+```json
+{
+  "type": ["number", {
+    "preset": "<preset name string>",
+    "round": "<integer>",
+    "displayFormat": "<format object>",
+    "outputFormat": "<format object>",
+    "min": "<number>",
+    "max": "<number>"
+  }]
+}
+```
+
+#### For all kinds of numeric values[​](#for-all-kinds-of-numeric-values "Direct link to For all kinds of numeric values")
+
+The field type parses many common number formats and displays the number in a user-friendly format.
+
+If the input data is unable to be parsed as a number, a validation error is added to the cell.
+
+Unless an output format is specified, the number is output to the result JSON as a number.
+
+#### Presets[​](#presets "Direct link to Presets")
+
+The number type has several presets available to handle the most common number formats. You can use a preset by passing the name of the preset with the field type, such as `type: ["number", "usd"]`.
+
+Here are all of the presets that Dromo provides:
+
+| Preset Name                                      | Source value     | Display value          |
+| ------------------------------------------------ | ---------------- | ---------------------- |
+| `default`(used if no display settings are given) | 1234567.1234567  | 1,234,567.1234567      |
+| `percent`                                        | 0.12340.56       | 12.34%56%              |
+| `plain`                                          | 1234567.123      | 1234567.123            |
+| `usd`                                            | 1234.567-3456.78 | $ 1,234.57- $3,456.78  |
+| `usd_accounting`                                 | 1234.567-3456.78 | $ 1,234.57$ (3,456.78) |
+| `eur`                                            | 1234.567-3456.78 | 1,234.57 €-3,456.78 €  |
+| `gbp`                                            | 1234.567-3456.78 | £ 1,234.57- £3,456.78  |
+| `decimal_0` *or*`integer`                        | 234.567          | 235                    |
+| `decimal_1`                                      | 234.567123       | 234.6123.0             |
+| `decimal_2`                                      | 234.567123       | 234.57123.00           |
+| `decimal_3`                                      | 234.5678123      | 234.568123.000         |
+| `decimal_4`                                      | 234.56789123     | 234.5679123.0000       |
+| `percent_0`                                      | 0.1256           | 13%                    |
+| `percent_1`                                      | 0.12560.34       | 12.6%34.0%             |
+| `percent_2`                                      | 0.125670.34      | 12.57%34.00%           |
+| `percent_3`                                      | 0.1234560.34     | 12.346%34.000%         |
+| `percent_4`                                      | 0.123456780.34   | 12.3457%34.0000%       |
+
+#### Custom configuration[​](#custom-configuration "Direct link to Custom configuration")
+
+If none of the presets meet your needs, you can define your own rounding, display format and output format behavior.
+
+The `round` setting takes an integer which defines how many digits after the decimal point the value will be rounded to. Negative values will round to digits before the decimal.
+
+The `displayFormat` and `outputFormat` settings can be used for creating your own custom formats. The `displayFormat` is used for displaying the number to the user on the review screen. The `outputFormat`, if set, will determine how the number is output in the result JSON, as a string.
+
+For more information on using `displayFormat` and `outputFormat`, see the [number formatting page](/fields/number-formatting).
+
+#### Validating minimum and maximum[​](#validating-minimum-and-maximum "Direct link to Validating minimum and maximum")
+
+You can validate that the number falls within a given range using the `min` and `max` settings.
+
+The `min` and `max` settings are optional and you can specify none, one or both. If a given number falls below the `min` or above the `max`, a validation error will be added to the field.
+
+### Date[​](#date "Direct link to Date")
+
+> `type: "date"`
+
+```json
+{
+  "type": ["date", {
+    "locale": "<locale string>",
+    "displayFormat": "<format string>",
+    "outputFormat": "<format string>"
+  }]
+}
+```
+
+#### For handling date values (with no time)[​](#for-handling-date-values-with-no-time "Direct link to For handling date values (with no time)")
+
+The date type parses dates in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale. If a time is also given, it is allowed, but ignored. If a input date cannot be parsed, a validation error will be added to the cell.
+
+When using a date field, Dromo will attempt to determine the date format of the imported data and suggest fixing it to the user during the Bulk Fix step.
+
+![Suggesting date fixes during the bulk edit step](\images\assets\images\date_fixing-9b3291436a8788c5b3eb1ad7ccef06e9.png)
+
+By default, dates are output to the results in ISO-8601 format (e.g. `"2022-03-27"`).
+
+You can specify a locale for the date field, which must be a valid [BCP 47 locale string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#locale_identification_and_negotiation). If not provided, the locale defaults to `"en-US"`.
+
+The locale will change how the date is displayed to the user with the display format. The locale will also affect the output format if a custom format is used.
+
+The default display format is the standard short form in the configured locale, for example:
+
+| Locale | Default format example |
+| ------ | ---------------------- |
+| en-US  | 3/27/2022              |
+| ar-SY  | ٢٧/٣/٢٠٢٢              |
+| de-DE  | 27.3.2022              |
+| pt-BR  | 27/03/2022             |
+| th-TH  | 27/3/2565              |
+| zh-CN  | 2022/3/27              |
+
+You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+
+### Datetime[​](#datetime "Direct link to Datetime")
+
+> `type: "datetime"`
+
+```json
+{
+  "type": ["datetime", {
+    "locale": "<locale string>",
+    "displayFormat": "<format string>",
+    "outputFormat": "<format string>",
+    "withSeconds": "<boolean>"
+  }]
+}
+```
+
+#### For handling a date and time together in one field[​](#for-handling-a-date-and-time-together-in-one-field "Direct link to For handling a date and time together in one field")
+
+The datetime type parses datetimes in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale.
+
+By default, dates are output to the results in ISO-8601 format, with no time zone offset (e.g. `"2022-03-27T15:20"`).
+
+By default, seconds are neither displayed nor output. You can change this by providing `withSeconds: true` in the field settings.
+
+You can specify a locale for the datetime field, which must be a valid [BCP 47 locale string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#locale_identification_and_negotiation). If not provided, the locale defaults to `"en-US"`.
+
+The locale will change how the datetime is displayed to the user with the display format. The locale will also affect the output format if a custom format is used.
+
+The default display format is the standard short form in the configured locale, for example:
+
+| Locale | Default format example |
+| ------ | ---------------------- |
+| en-US  | 3/27/2022, 3:20 PM     |
+| ar-SY  | ٢٧/٣/٢٠٢٢, ٣:٢٠ م      |
+| de-DE  | 27.3.2022, 15:20       |
+| pt-BR  | 27/03/2022 15:20       |
+| th-TH  | 27/3/2565 15:20        |
+| zh-CN  | 2022/3/27 下午3:20       |
+
+You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+
+### Time[​](#time "Direct link to Time")
+
+> `type: "time"`
+
+```json
+{
+  "type": ["time", {
+    "locale": "<locale string>",
+    "displayFormat": "<format string>",
+    "outputFormat": "<format string>",
+    "withSeconds": "<boolean>"
+  }]
+}
+```
+
+#### For handling a time-of-day independent of date (i.e., a clock time)[​](#for-handling-a-time-of-day-independent-of-date-ie-a-clock-time "Direct link to For handling a time-of-day independent of date (i.e., a clock time)")
+
+The time type parses datetimes in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale.
+
+By default, times are output to the results in ISO-8601 format (e.g. `"15:20"`).
+
+By default, seconds are neither displayed nor output. You can change this by providing `withSeconds: true` in the field settings.
+
+You can specify a locale for the datetime field, which must be a valid [BCP 47 locale string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl#locale_identification_and_negotiation). If not provided, the locale defaults to `"en-US"`.
+
+The locale will change how the time is displayed to the user with the display format. The locale will also affect the output format if a custom format is used.
+
+The default display format is the standard time format in the specified locale, for example:
+
+| Locale | Default format example |
+| ------ | ---------------------- |
+| en-US  | 3:20 PM                |
+| ar-SY  | ٣:٢٠ م                 |
+| de-DE  | 15:20                  |
+| zh-CN  | 下午3:20                 |
+
+You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+
+### Select[​](#select "Direct link to Select")
+
+> ```
+> type: "select",selectOptions: [{ label: string, value: string, alternateMatches?: string[], exactMatchOnly?: boolean }, ...]
+> ```
+>
+> `type: ["select", { allowCustom: <boolean> }]`
+
+Select fields allow you to provide a pick list of values that the user can choose from.
+
+When creating a select field, you must provide an array of valid `selectOptions`, where each option is an object with the `label` and `value` keys. The `label` will be what is displayed to the user, and the `value` is what will be output to the results for that option.
+
+<Info>
+  `selectOptions` can be overridden for individual cells using a row hook. See the [row hook reference](/hooks#row-hooks) page for details.
+</Info>
+
+Each select option can also optionally include `alternateMatches`, an array of strings. If a value in the data matches any of these strings, it will be mapped to that option.
+
+<Check>
+  For a given select field, the labels, values, and alternate matches should be unique across all options. Each of these parameters is used to map imported data to select options, so conflicts will occur if multiple select options share the same matches.
+</Check>
+
+Select fields provide several special features as the user is going through the import process.
+
+After the column matching step, the user will be prompted to match the values in their file to the given select options.
+
+![Select option matching](\images\assets\images\select_mapping-a020124a3b912e82d49c2bd036f391a5.png)
+
+On the review screen, the field will show as a dropdown menu that the user can pick an option from.
+
+![Select dropdown on the review screen](\images\assets\images\select_dropdown-c21e2afb5f82295a448ef4551485a75a.png)
+
+A validation error will be shown if a value was not matched and does not equal one of the option labels.
+
+#### `allowCustom`[​](#allowcustom "Direct link to allowcustom")
+
+By default, select fields only allow values that match a select option, and any other values are marked with a validation error.
+
+You can change this behavior with the `allowCustom` option:
+
+```
+type: ["select", { allowCustom: true }],selectOptions: [{ label: string, value: string, alternateMatches?: string[] }, ...]
+```
+
+With `allowCustom` set to `true`, the user can either choose from the valid select options, or enter their own value. This treats the select options as autocomplete suggestions.
+
+Any value is considered valid, although you can add additional validations like normal.
+
+#### `exactMatchOnly`[​](#exactmatchonly "Direct link to exactmatchonly")
+
+By default, Dromo will suggest matches to the user with fuzzy matching, and, if you have backend sync enabled, AI matching. If you would like to disable fuzzy and AI matching, and only suggest exact matches to the user, you can pass the setting `exactMatchOnly: true` with the field settings. Dromo will check the label, value, and alternateMatches for an exact match.
+
+```
+type: ["select", { exactMatchOnly: true }],selectOptions: [{ label: string, value: string, alternateMatches?: string[] }, ...]
+```
+
+### Checkbox[​](#checkbox "Direct link to Checkbox")
+
+> `type: "checkbox"`
+
+The checkbox field type is useful when you want to import a boolean (yes/no) field. The field will be displayed to the user as a checkbox and output as a JSON boolean (`true` or `false`).
+
+When importing, the following case-insensitive values are considered false: `""` (empty cell), `"0"`, `"off"`, `"n"`, `"no"`, `"false"`, `"disabled"`. All other values are considered true.
+
+### Email[​](#email "Direct link to Email")
+
+> `type: "email"`
+
+Email fields are strings with built-in validation per the [HTML5 spec](https://html.spec.whatwg.org/multipage/input.html#email-state-\(type=email\)). There are some additional constraints: single domains (such as `contact@dromo`, with no TLD) and IP addresses are not allowed in the host portion.
+
+### Country[​](#country "Direct link to Country")
+
+> `type: "country"`
+> ```json
+> type: [ "country", { format: <"2-letter" or "3-letter"> }]
+> ```
+
+Country fields validate values against a list of valid country codes (either ISO 3166 alpha-2 or alpha-3) based on the `format` option. If not specified, "2-letter" is used.
+
+### Phone number[​](#phone-number "Direct link to Phone number")
+
+> `type: "phone-number"`
+> ```json
+> type: [ "phone-number",  { country: <2 letter iso country code>, format: "national" | "international" | "both", outputFormatted: boolean }]
+> ```
+
+Phone number fields can be used to validate phone numbers in many different scenarios.
+
+When format is `"international"` (default), the field validates full international numbers with country codes, displaying them with spaces (e.g., +1 212 867 5309) but outputting in E.164 ("+33123456789"), unless `outputFormatted: true`.
+
+With format: `"national"` and a country (e.g., `"US"`), it validates local numbers and displays them in national format (e.g., (212) 867-5309), outputting digits only unless outputFormatted: true.
+
+Use format: `"both"` with a country to accept both international and national formats. All values are displayed and output in international format.
+
+### Social Security Number[​](#social-security-number "Direct link to Social Security Number")
+
+> `type: "ssn"`
+> ```json
+> type: [ "ssn", { outputDash: <boolean> }]
+> ```
+
+Social security number fields can be used to validate US SSNs. The input can be either 9 digits or 11 digits with dashes. The output is a string of digits, optionally including dashes if `outputDash` is set to `true`. This (obviously) does not validate the actual SSN.
+
+### Domain[​](#domain "Direct link to Domain")
+
+> `type: "domain"`
+> ```
+> type: [ "domain", { allowSubdomains: <boolean> }]
+> ```
+
+Domain fields validate input as a proper domain name (no paths, queries, or fragments), checking subdomains based on the `allowSubdomains` option, which defaults to true.
+
+If you need a field that accepts paths and query params, consider using an URL field.
+
+### URL[​](#url "Direct link to URL")
+
+> `type: "url"`
+> ```json
+> type: ["url", { acceptedProtocols: array of accepted protocol strings. e.g: "https", "ftp">, acceptedDomains: <array of accepted domain strings. e.g: "google", "dromo"> }]
+> ```
+
+URL fields can be used to validate and normalize all URLs. You can optionally specify a list of accepted protocols (like `https`) and/or domains (`like dromo.io`).
+
+The value of the URL will be normalized to strip extra dashes and relative path references. For example, an input of https:///dromo.io/foo/../bar is a valid URL, but will be normalized to the value https://dromo.io/bar.
+
+### US State/Territory[​](#us-stateterritory "Direct link to US State/Territory")
+
+> `type: "us-state-territory"`
+
+US State/Territory fields can be used to validate values against standard US state and territory postal codes. The input can be both 2-letter ISO state/territory codes or 4-letter codes. e.g. `AL` or `US-AL`. The output is a 2-letter code.
+
+### US Zipcode[​](#us-zipcode "Direct link to US Zipcode")
+
+> `type: "us-zip-code"`
+> ```json
+> type: ["us-zip-code",  { outputDash: <boolean>, format: <"5-digit"|"9-digit"> }]
+> ```
+
+US Zipcode fields can be used to validate values against US zip codes, either the 5-digit or 9-digit "ZIP+4" variant, specified by the `format` option.
+* `5-digit` format accepts 5  or 9 digit values (with or without dashes), but truncates 9-digit inputs to the first 5 digits. Shorter values are left-padded with zeros (e.g., `342` → `00342`).
+* `9-digit` format does not accept 5 digit values. It will accept only 9 digits, with our without dashes.
+
+Any value that contains characters other than dashes or digits will be invalid.
+
+### UUID[​](#uuid "Direct link to UUID")
+
+> `type: "uuid"`
+```json
+type: ["uuid", { version: <number> }]
+```
+
+The UUID field is a string field that validates UUID format and version number, if provided. The field uses the built-in `validate` function provided by `uuid` library. If `version` is provided, it will also check the UUID version using the `getVersion` from the `uuid` library.
