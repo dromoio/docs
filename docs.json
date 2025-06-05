@@ -1,13 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Dromo Documentation",
+  "theme": "maple",
+  "name": "Dromo Docs",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#55D799",
-    "dark": "#0D9373"
+    "primary": "#2563EB",
+    "light": "#60A5FA",
+    "dark": "#1E40AF"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "https://dromo.io/favicon.ico",
   "navigation": {
     "tabs": [
       {
@@ -16,7 +16,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "home",
+              "index",
               "getting-started/javascript",
               "getting-started/react",
               "getting-started/angular",
@@ -71,6 +71,10 @@
             "pages": ["faqs"]
           }
         ]
+      },
+      {
+        "tab": "Changelog",
+        "href": "https://changelog.dromo.io/"
       }
     ]
   }

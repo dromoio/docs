@@ -1,71 +1,77 @@
 ---
-title: Introduction
-description: "Welcome to the home of your new documentation"
+title: "Basic Concepts"
+icon: "rocket"
 ---
 
-<img
-  className="block dark:hidden"
-  src="/images/hero-light.png"
-  alt="Hero Light"
-/>
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.png"
-  alt="Hero Dark"
-/>
+Dromo is an easy and intuitive spreadsheet importer that integrates seamlessly with your product. Dromo helps your users match columns, correct errors, perform complex validations, tranform values, and upload perfectly formatted data.
 
-## Setting up
+Check out a [live demo](https://demo.dromo.io) to try it yourself with realistic data!
 
-The first step to world-class documentation is setting up your editing environments.
+## Quickstart[​](#quickstart "Direct link to Quickstart")
 
-<CardGroup cols={2}>
-  <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
-  >
-    Get your docs set up locally for easy development
-  </Card>
-  <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
-  >
-    Preview your changes before you push to make sure they're perfect
-  </Card>
-</CardGroup>
+If you want to jump straight into getting Dromo into your app, you can head to one of these quickstart guides. Choose the SDK that works best for you:
 
-## Make it yours
+- [Vanilla JavaScript](/getting-started/javascript) (universal)
+- [React](/getting-started/react)
+- [Angular](/getting-started/angular)
 
-Update your docs to your brand and add valuable content for the best user conversion.
+Or if you want to create a no-code schema in the Dromo Dashboard, head over to the [Schema Studio guide](/guides/schema-builder).
 
-<CardGroup cols={2}>
-  <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
-  >
-    Customize your docs to your company's colors and brands
-  </Card>
-  <Card
-    title="Reference APIs"
-    icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
-  >
-    Automatically generate endpoints from an OpenAPI spec
-  </Card>
-  <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/content/components/accordions"
-  >
-    Build interactive features and designs to guide your users
-  </Card>
-  <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
-  >
-    Check out our showcase of our favorite documentation
-  </Card>
-</CardGroup>
+## Dromo in 1 Minute
+
+<iframe
+  src="https://drive.google.com/file/d/1dv39s4HZ88U9uI7PVARHet4T9z6qjf_1/preview"
+  width="640"
+  height="480"
+  allow="autoplay"
+></iframe>
+
+## Basic Set Up[​](#basic-set-up "Direct link to Basic Set Up")
+
+There are two ways to set up a Dromo importer: using the [Schema Builder](/guides/schema-builder) or using one of Dromo's SDKs to define your importer in code.
+
+The Schema Studio is a no-code option that allows you to quickly configure an importer and add it to your application.
+
+Defining the importer in code allows for full control of all settings, enabling you to leverage all of Dromo's powerful features. This [interactive sandbox](https://codesandbox.io/s/ux-demo-react-yez5e2) is a great example of a fully customized Dromo instance.
+
+Now you know what Dromo is, let's cover some basics. If you have any questions, you can chat with us any time by clicking on the chat bubble, or email us at [contact@dromo.io](mailto:contact@dromo.io).
+
+## Prerequisites[​](#prerequisites "Direct link to Prerequisites")
+
+Whether you define the importer in code or use the Schema Studio, you'll be embedding Dromo in your application with a JavaScript snippet. Before you can do this, you'll need a few things:
+
+- You will need a free **license key**. You can get a license key by [registering for an account](https://dashboard.dromo.io/auth/registration). No payment information is necessary to get started.
+- You will need a place in your JavaScript application or HTML page where you want the importer to be accessed.
+
+## Supported file types[​](#supported-file-types "Direct link to Supported file types")
+
+You can use Dromo to import CSV, TSV, XLS, XLSX, XML, or JSON files directly into your application or database.
+
+## The Basics of Dromo[​](#the-basics-of-dromo "Direct link to The basics of Dromo")
+
+There are 4 parts of a Dromo implementation:
+
+1. Defining a schema
+2. Adding validations and transformations
+3. Handling the result
+4. Customizing the experience
+
+<Note>
+  For examples of things you can do in each step, see the Guides in the sidebar.
+</Note>
+
+### Defining a schema[​](#defining-a-schema "Direct link to Defining a schema")
+
+To implement Dromo in your application, you must first define a schema. A schema is a list of [fields](/fields) that you want to import. These fields will be matched to columns during the import process, and define the properties of the JSON payload passed back in the results.
+
+### Adding validations and transformations[​](#adding-validations-and-transformations "Direct link to Adding validations and transformations")
+
+With your schema defined, you can add [validation rules](/fields) and [data transformation hooks](/hooks) to exactly match the import process to match your data requirements and provide interactive feedback to users during the import process.
+
+### Handling the result[​](#handling-the-result "Direct link to Handling the result")
+
+After an import is submitted, you will have access to a JSON payload of clean results. You can handle this data [directly in the frontend](/results), or fetch it from storage via [our REST API](/api).
+
+### Customizing the experience[​](#customizing-the-experience "Direct link to Customizing the experience")
+
+Dromo is white-label by default, so you can tailor the styling to match your brand. You can craft unique help text, configure the column matching process, regulate user behavior, and vary other [settings](/settings) to suit your requirements.

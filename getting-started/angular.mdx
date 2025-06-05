@@ -1,16 +1,16 @@
 ---
 title: "Angular Quickstart"
+icon: "angular"
 ---
 
-<Check>
-  Are you looking for a framework other than Angular? Check the Getting Started guides in the sidebar.
-</Check>
+<Note>
+  Are you looking for a framework other than Angular? Check the Getting Started
+  guides in the sidebar.
+</Note>
 
-## Overview[​](#overview "Direct link to Overview")
+## Step By Step Guide
 
-Our SDK for Angular currently supports Angular versions 13-17.
-
-Have a look at our [live example](https://codesandbox.io/s/dromo-developer-demo-angular-wbxuzt?file=/src/app/dromo-importer/dromo-importer.component.ts) for inspiration.
+Our SDK for Angular currently supports Angular versions 13-17. Have a look at our [live example](https://codesandbox.io/s/dromo-developer-demo-angular-wbxuzt?file=/src/app/dromo-importer/dromo-importer.component.ts) for inspiration.
 
 <Steps>
 
@@ -18,11 +18,7 @@ Have a look at our [live example](https://codesandbox.io/s/dromo-developer-demo-
 
 To install the Dromo Angular SDK in your application, just install the NPM package `dromo-uploader-angular`.
 
-<CodeGroup>
-```bash Terminal
-npm install dromo-uploader-angular
-```
-</CodeGroup>
+<CodeGroup>```bash Terminal npm install dromo-uploader-angular ```</CodeGroup>
 
 Then, add the `DromoUploaderModule` to your imports.
 
@@ -35,13 +31,14 @@ import { DromoUploaderModule } from 'dromo-uploader-angular';
 import { AppComponent } from './app.component'; // Assuming AppComponent is in app.component.ts
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, DromoUploaderModule],
-  providers: [],
-  bootstrap: [AppComponent]
+declarations: [AppComponent],
+imports: [BrowserModule, DromoUploaderModule],
+providers: [],
+bootstrap: [AppComponent]
 })
 export class AppModule {}
-```
+
+````
 </CodeGroup>
 
 </Step>
@@ -164,15 +161,19 @@ export class MyUploader implements DromoMethods {
     'box-shadow': '5px 5px 5px 0px #7F7F7F'
   };
 }
-```
+````
 
 ```typescript "my-uploader.component.ts (Schema Studio)"
 // my-uploader.component.ts
-import { Component } from '@angular/core';
-import { IUser, IBeforeFinishCallback, DromoSavedSchemaMethods } from 'dromo-uploader-angular';
+import { Component } from "@angular/core";
+import {
+  IUser,
+  IBeforeFinishCallback,
+  DromoSavedSchemaMethods,
+} from "dromo-uploader-angular";
 
 @Component({
-  selector: 'app-dromo-importer',
+  selector: "app-dromo-importer",
   template: `
     <lib-dromo-uploader
       [licenseKey]="licenseKey"
@@ -189,41 +190,42 @@ import { IUser, IBeforeFinishCallback, DromoSavedSchemaMethods } from 'dromo-upl
       Import with Dromo!
     </lib-dromo-uploader>
   `,
-  styleUrls: ['./dromo-importer.component.css']
+  styleUrls: ["./dromo-importer.component.css"],
 })
 export class DromoImporterComponent implements DromoSavedSchemaMethods {
-  schemaId = '00000000-0000-0000-0000-000000000000';
-  licenseKey = '<YOUR LICENSE KEY>';
-  user: IUser = { id: 'angular tester' };
+  schemaId = "00000000-0000-0000-0000-000000000000";
+  licenseKey = "<YOUR LICENSE KEY>";
+  user: IUser = { id: "angular tester" };
   developmentMode = true;
-  onCancel = () => alert('Something I said?');
+  onCancel = () => alert("Something I said?");
   onResults = (data: any[], metaData: any) => {
     alert(`Submitted ${data.length} records`);
     console.table(data);
-    console.log('MetaData', metaData);
+    console.log("MetaData", metaData);
   };
   beforeFinish: IBeforeFinishCallback = (data, metaData, _instance) => {
     console.log(`${data.length} total rows!`);
     if (metaData.rowsWithError.length > 2) {
-      return { cancel: true, message: 'More than two errors, fix them first!' };
+      return { cancel: true, message: "More than two errors, fix them first!" };
     }
     return undefined;
   };
-  class = 'dromo-button';
+  class = "dromo-button";
   styles = {
-    'background-color': 'rgb(0, 123, 255)',
-    border: '1px solid rgb(0, 123, 255)',
-    'border-radius': '0.25rem',
-    color: 'white',
-    padding: '15px',
-    'text-align': 'center',
-    'text-decoration': 'none',
-    display: 'inline-block',
-    'font-size': '16px',
-    'box-shadow': '5px 5px 5px 0px #7F7F7F'
+    "background-color": "rgb(0, 123, 255)",
+    border: "1px solid rgb(0, 123, 255)",
+    "border-radius": "0.25rem",
+    color: "white",
+    padding: "15px",
+    "text-align": "center",
+    "text-decoration": "none",
+    display: "inline-block",
+    "font-size": "16px",
+    "box-shadow": "5px 5px 5px 0px #7F7F7F",
   };
 }
 ```
+
 </CodeGroup>
 
 </Step>

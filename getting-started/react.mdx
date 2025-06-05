@@ -1,10 +1,14 @@
 ---
 title: "React Quickstart"
+icon: "react"
 ---
 
-<Check>
-  Are you looking for a framework other than React? Check the Getting Started guides in the sidebar.
-</Check>
+<Note>
+  Are you looking for a framework other than React? Check the Getting Started
+  guides in the sidebar.
+</Note>
+
+## Step By Step Guide
 
 This guide will walk you through integrating the Dromo Uploader into your React application.
 
@@ -64,7 +68,7 @@ This guide will walk you through integrating the Dromo Uploader into your React 
     If you provide children to the `<DromoUploader>` component (like the "Launch Dromo Importer" button in the example above), these children will be rendered, and clicking them will open the Dromo modal.
     <CodeGroup>
     ```jsx "JSX (Children Trigger)"
-    <DromoUploader 
+    <DromoUploader
       licenseKey="YOUR_FRONTEND_LICENSE_KEY" // Add other essential props
       onResults={(data, metadata) => console.log(data)} // Example callback
     >
@@ -90,31 +94,34 @@ This guide will walk you through integrating the Dromo Uploader into your React 
     ```
     </CodeGroup>
     See more about the `open` prop in the [`<DromoUploader>` Component Props Reference](/reference/react-dromo-uploader).
-  </Step>
 
-  <Step title="Using a Saved Schema (Optional)">
-    You can use a schema created in Dromo's Schema Studio by providing its ID via the `schemaId` prop. This simplifies the props you need to pass, as fields, most settings, and hooks will be loaded from your saved schema.
-    <CodeGroup>
-    ```jsx "JSX (Saved Schema)"
-    <DromoUploader
-      licenseKey="YOUR_LICENSE_KEY"
-      schemaId="YOUR_SCHEMA_ID_FROM_DASHBOARD"
-      user={{ id: "user_123" }}
-      // Optionally override importIdentifier or developmentMode from saved schema:
-      // settings={{ importIdentifier: "OverrideName", developmentMode: false }}
-      onResults={(response, metadata) => {
-        console.log("Data with saved schema:", response);
-      }}
-    >
-      Upload with Saved Schema
-    </DromoUploader>
-    ```
-    </CodeGroup>
-    Learn more about [creating schemas in the Schema Studio](/guides/schema-builder).
   </Step>
 </Steps>
 
-## Walkthrough video[​](#walkthrough-video "Direct link to Walkthrough video")
+## Using a Saved Schema
+
+You can use a schema created in Dromo's Schema Studio by providing its ID via the `schemaId` prop. This simplifies the props you need to pass, as fields, most settings, and hooks will be loaded from your saved schema.
+
+<CodeGroup>
+  ```jsx "JSX (Saved Schema)"
+  <DromoUploader
+    licenseKey="YOUR_LICENSE_KEY"
+    schemaId="YOUR_SCHEMA_ID_FROM_DASHBOARD"
+    user={{ id: "user_123" }}
+    // Optionally override importIdentifier or developmentMode from saved schema:
+    // settings={{ importIdentifier: "OverrideName", developmentMode: false }}
+    onResults={(response, metadata) => {
+      console.log("Data with saved schema:", response);
+    }}
+  >
+    Upload with Saved Schema
+  </DromoUploader>
+  ```
+</CodeGroup>
+
+Learn more about [creating schemas in the Schema Studio](/guides/schema-builder).
+
+## Walkthrough Video[​](#walkthrough-video "Direct link to Walkthrough video")
 
 <iframe
   className="w-full aspect-video rounded-xl"

@@ -1,28 +1,16 @@
 ---
 title: "Headless Quickstart"
-description: "The Headless API allows you to import CSVs and spreadsheet files programatically."
+icon: "server"
+description: "The Headless API allows you to import CSVs and spreadsheet files via an API"
 ---
 
 With Headless, you can send a file or JSON payload to Dromo and specify a [schema](/#defining-a-schema) that defines the desired shape and constraints of the final data file.
 
-If there are no problems with the import, Dromo will send you the cleaned data in the JSON format, just like an embedded import.
+If the import is successful, Dromo returns cleaned data in JSON format, just like an embedded import. If there are issues (e.g., missing columns or validation errors), Dromo provides a URL for users to resolve them via the embedded interface.
 
-If there are any issues with the import (like missing columns or failing data validations), Dromo provides a URL for a user to resolve them using the same interface as for embedded imports.
+## Prerequisite[​](#prerequisite "Direct link to Activation")
 
-![headless with file or data](\images\getting-started\assets\images\headless-file-vs-data-624582968ec1bf71b43faabbd1d1c6eb.png)
-
-## Activation[​](#activation "Direct link to Activation")
-
-To get started with the Headless API, Dromo will need to enable Headless for your organization. The Headless API is a premium add-on to [Dromo Enterprise](https://dromo.io/pricing).
-
-Once your account is set up, [get in touch](mailto:contact@dromo.io) and we can get you ready to go!
-
-## Rate Limits[​](#rate-limits "Direct link to Rate Limits")
-
-The Headless API has the following rate limits:
-
-* **Creating headless imports**: 20 requests per minute
-* **Polling import status**: 12 requests per minute per import
+The Headless API is a premium add-on to the [Dromo Enterprise Plan](https://dromo.io/pricing), [get in touch](mailto:support@dromo.io) and we can get you ready to go!
 
 These limits help ensure service stability. For high-volume use cases, we recommend using webhooks instead of polling to avoid hitting rate limits.
 
@@ -32,137 +20,150 @@ A headless import can be run either on a file or a JSON object. The steps below 
 
 You will need a saved schema to guide the import. For more information about saved schemas, check out the [Schema Studio Guide](/guides/schema-builder) or the [Saved Schema API](/guides/saved-schema-api).
 
-* Importing a File
-* Importing JSON
+### Importing a File
 
-## 1. Create a new headless import[​](#1-create-a-new-headless-import "Direct link to 1. Create a new headless import")
+<Steps>
+  <Step title="Create a New Headless Import">
+    The import process starts by creating a new headless import record. You will use this record ID to check the status of the import and retrieve the results.
 
-The import process starts by creating a new headless import record. You will use this record to check the status of the import and retrieve the results.
+    To create a headless import, use the [create headless import endpoint](/api#tag/headless/operation/createHeadlessImport).
 
-To create a headless import, use the [create headless import endpoint](/api#tag/headless/operation/createHeadlessImport).
+    You must provide two things when creating the import:
 
-You must provide two things when creating the import:
+    - The ID of the saved schema you want to use
+    - The original filename of the file you want to import
 
-* The ID of the saved schema you want to use
-* The original filename of the file you want to import
+    Here is an example request:
 
-Here is an example request:
+    ```sh
+    curl \
+      -H "Content-Type: application/json" \
+      -H "X-Dromo-License-Key: your-backend-key" \
+      -X POST \  'https://app.dromo.io/api/v1/headless/imports/' \
+      -d '{"schema_id": "4eefe3fe-7181-4562-aa28-8cfe1c5bdf1b", "original_filename": "data.csv"}'
+    ```
 
-```
-curl \  -H "Content-Type: application/json" \  -H "X-Dromo-License-Key: your-backend-key" \  -X POST \  'https://app.dromo.io/api/v1/headless/imports/' \  -d '{    "schema_id": "4eefe3fe-7181-4562-aa28-8cfe1c5bdf1b",    "original_filename": "data.csv"  }'
-```
+    <Note>Each headless import allows you to import only one file.</Note>
+  </Step>
+  <Step title="Upload the File">
+    Once you've created the import record, Dromo will return an ID and a URL (in the `"upload"` field) where you can upload the file. Store the ID for later use (you need it to fetch the import status and results).
 
-<Check>
-  Each headless import allows you to import only one file.
-</Check>
+    To upload the file, make a PUT request to the URL, with the file as the body. Note that the upload URL is only valid for 30 minutes, so only create the import record when you are ready to upload the file.
 
-## 2. Upload the file[​](#2-upload-the-file "Direct link to 2. Upload the file")
+    Here is an example request for uploading the file:
 
-Once you've created the import record, Dromo will return an ID and a URL (in the `"upload"` field) where you can upload the file. Store the ID for later use (you need it to fetch the import status and results).
+    ```sh
+    curl \
+      -X PUT \'https://dromo-headless-imports-prod.s3.us-west-2.amazonaws.com/.....' \
+      --data-binary "@/path/to/data.csv"
+    ```
+  </Step>
+  <Step title="Wait for the Import to Run">
+    Dromo will automatically begin the import process once the upload is complete.
+  </Step>
+</Steps>
 
-To upload the file, make a PUT request to the URL, with the file as the body. Note that the upload URL is only valid for 30 minutes, so only create the import record when you are ready to upload the file.
+### Importing a JSON Object
 
-Here is an example request for uploading the file:
+<Steps>
+  <Step title="Create a New Headless Import">
+    The import process starts by creating a new headless import record. You will use this record to check the status of the import and retrieve the results.
 
-```
-curl \  -X PUT \'https://dromo-headless-imports-prod.s3.us-west-2.amazonaws.com/74033520-fee6-4edb-9a30-8c5b3fcd513f?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARY5HJCMTO2AUIBEU%2F20230227%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230227T181454Z&X-Amz-Expires=1800&X-Amz-SignedHeaders=host&X-Amz-Signature=14241560a7d9dff1e9d2bb8d8d1445880df1860a9c96728c5fb0dd2e123c0011' \  --data-binary "@/path/to/data.csv"
-```
+    To create a headless import, use the [create headless import endpoint](/api#tag/headless/operation/createHeadlessImport).
 
-## 3. Wait for the import to run[​](#3-wait-for-the-import-to-run "Direct link to 3. Wait for the import to run")
+    You must provide two things when creating the import:
+    - The ID of the saved schema you want to use
+    - The complete JSON data
 
-Dromo will automatically begin the import process once the upload is complete.
+    Here is an example request:
 
-## 1. Create a new headless import[​](#1-create-a-new-headless-import-1 "Direct link to 1. Create a new headless import")
-
-The import process starts by creating a new headless import record. You will use this record to check the status of the import and retrieve the results.
-
-To create a headless import, use the [create headless import endpoint](/api#tag/headless/operation/createHeadlessImport).
-
-You must provide two things when creating the import:
-
-* The ID of the saved schema you want to use
-* The complete JSON data
-
-Here is an example request:
-
-```
-curl \  -H "Content-Type: application/json" \  -H "X-Dromo-License-Key: your-backend-key" \  -X POST \  'https://app.dromo.io/api/v1/headless/imports/' \  -d '{    "schema_id": "4eefe3fe-7181-4562-aa28-8cfe1c5bdf1b",    "initial_data": '[{"product": "widget1", "transaction": "foo123"}, {"product": "widget2", "transaction": "foo456"}]'  }'
-```
-
-## 2. Wait for the import to run[​](#2-wait-for-the-import-to-run "Direct link to 2. Wait for the import to run")
-
-The import will start immediately.
+    ```sh
+    curl \
+      -H "Content-Type: application/json" \
+      -H "X-Dromo-License-Key: your-backend-key" \
+      -X POST \  'https://app.dromo.io/api/v1/headless/imports/' \
+      -d '{    "schema_id": "4eefe3fe-7181-4562-aa28-8cfe1c5bdf1b",    "initial_data": '[{"product": "widget1", "transaction": "foo123"}, {"product": "widget2", "transaction": "foo456"}]'  }'
+    ```
+  </Step>
+  <Step title="Wait for the Import to Run">
+    Dromo will automatically begin the import process once the upload is complete.
+  </Step>
+</Steps>
 
 ## Handling Import Results[​](#handling-import-results "Direct link to Handling Import Results")
 
-You can query for the current import status using the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport).
+You can query for the current import status using the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport). The import status will be one of the following:
 
-The import status will be one of the following:
-
-* `AWAITING_UPLOAD`: The import record has been created, but the import file has not yet been uploaded.
-* `PENDING`: The import file has been received, and the import process will begin shortly.
-* `RUNNING`: The import process is currently running.
-* `SUCCESSFUL`: The import was successful and the result data is ready to be retrieved.
-* `NEEDS_REVIEW`: The import could not be completed due to data validation errors, and requires human attention.
-* `FAILED`: The import encountered a fatal error, and cannot be processed.
+- `AWAITING_UPLOAD`: The import record has been created, but the import file has not yet been uploaded.
+- `PENDING`: The import file has been received, and the import process will begin shortly.
+- `RUNNING`: The import process is currently running.
+- `SUCCESSFUL`: The import was successful and the result data is ready to be retrieved.
+- `NEEDS_REVIEW`: The import could not be completed due to data validation errors, and requires human attention.
+- `FAILED`: The import encountered a fatal error, and cannot be processed.
 
 ### Successful import[​](#successful-import "Direct link to Successful import")
 
 If the import data did not have any issues, the import will be in the `SUCCESSFUL` state.
 
-<Check>
-  You can be notified when an import completes in two ways:
+You can be notified when an import completes in two ways:
 
-  1. **Dashboard-configured webhooks (RECOMMENDED)**:
+1. **Dashboard-configured webhooks (RECOMMENDED)**:
 
-     The recommended approach is to configure webhooks in the Dromo dashboard under the Webhooks section. This method provides several advantages:
+   The recommended approach is to configure webhooks in the Dromo dashboard under the Webhooks section. This method provides several advantages:
 
-     * More reliable delivery with retry mechanisms
-     * Detailed event information
-     * Easier configuration and management
-     * Better security
+   - More reliable delivery with retry mechanisms
+   - Detailed event information
+   - Easier configuration and management
+   - Better security
 
-     For detailed information on setting up and using dashboard webhooks, see the [Webhooks documentation](/webhooks).
+   For detailed information on setting up and using dashboard webhooks, see the [Webhooks documentation](/webhooks).
 
-     These webhooks will receive detailed information about the completed import:
+   These webhooks will receive detailed information about the completed import:
 
-  ```
-  {  "event": "import_completed",  "data": {    "id": "911224fa-c609-46d2-a278-bc2250d2be91",    "filename": "contacts (8).csv",    "user": null,    "created_date": "2025-02-25T17:07:03.769925Z",    "import_type": "HEADLESS",    "status": "SUCCESSFUL",    "num_data_rows": 92,    "development_mode": false,    "has_data": true  }}
-  ```
+```sh
+{  "event": "import_completed",  "data": {    "id": "911224fa-c609-46d2-a278-bc2250d2be91",    "filename": "contacts (8).csv",    "user": null,    "created_date": "2025-02-25T17:07:03.769925Z",    "import_type": "HEADLESS",    "status": "SUCCESSFUL",    "num_data_rows": 92,    "development_mode": false,    "has_data": true  }}
+```
 
-  After receiving this webhook notification, use the import ID from the payload to retrieve the presigned URL for downloading the data:
+After receiving this webhook notification, use the import ID from the payload to retrieve the presigned URL for downloading the data:
 
-  ```
-  curl \  -H "X-Dromo-License-Key: your-backend-key" \  -X GET \  'https://app.dromo.io/api/v1/headless/imports/{id}/url/'
-  ```
+```sh
+curl \
+  -H "X-Dromo-License-Key: your-backend-key" \
+  -X GET \  'https://app.dromo.io/api/v1/headless/imports/{id}/url/'
+```
 
-  The response will contain a presigned URL that you can use to download the data:
+The response will contain a presigned URL that you can use to download the data:
 
-  ```
-  {  "presigned_url": "https://dromo-user-imports.s3.us-west-2.amazonaws.com/b3f0ff47-07e0-4c98-90de-5451aff066c8.json?X-Amz-Algorithm=...&X-Amz-Credential=...&X-Amz-Date=...&X-Amz-Expires=1800&X-Amz-SignedHeaders=host&X-Amz-Signature=..."}
-  ```
+```sh
+{  "presigned_url": "https://dromo-user-imports.s3.us-west-2.amazonaws.com/..."}
+```
 
-  2. **Legacy webhookUrl (DEPRECATED)**:
+2.  **Legacy webhookUrl (DEPRECATED)**:
 
-     If you define a [legacy webhookUrl](/settings#webhookurl) in your schema, it will still fire when the import completes successfully, but this method is deprecated and may be removed in the future.
-</Check>
+         If you define a [legacy webhookUrl](/settings#webhookurl) in your schema, it will still fire when the import completes successfully, but this method is deprecated and may be removed in the future.
 
 **Alternative: Polling for completion**
 
 If you prefer not to use webhooks, you can poll the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport) to check the status:
 
-```
-curl \  -H "X-Dromo-License-Key: your-backend-key" \  -X GET \  'https://app.dromo.io/api/v1/headless/imports/{id}/'
+```sh
+curl \
+  -H "X-Dromo-License-Key: your-backend-key" \
+  -X GET \  'https://app.dromo.io/api/v1/headless/imports/{id}/'
 ```
 
 Once the status shows `SUCCESSFUL`, you can then retrieve the presigned URL using the [headless import URL endpoint](/api#tag/headless/operation/getHeadlessImportUrl):
 
-```
-curl \  -H "X-Dromo-License-Key: your-backend-key" \  -X GET \  'https://app.dromo.io/api/v1/headless/imports/{id}/url/'
+```sh
+curl \
+  -H "X-Dromo-License-Key: your-backend-key" \
+  -X GET \  'https://app.dromo.io/api/v1/headless/imports/{id}/url/'
 ```
 
 <Warning>
-  Remember that polling is subject to rate limits (12 requests per minute per import). For production systems with many imports, webhooks are strongly recommended to avoid hitting these limits.
+  Remember that polling is subject to rate limits (12 requests per minute per
+  import). For production systems with many imports, webhooks are strongly
+  recommended to avoid hitting these limits.
 </Warning>
 
 ### Import needs review[​](#import-needs-review "Direct link to Import needs review")
@@ -171,9 +172,9 @@ If the import has issues that need manual review, the import will be in the `NEE
 
 This can happen for several reasons:
 
-* The header row could not be determined
-* The columns could not be mapped automatically
-* There are failing data validations, and [invalidDataBehavior](/settings#invaliddatabehavior) is set to `BLOCK_SUBMIT`
+- The header row could not be determined
+- The columns could not be mapped automatically
+- There are failing data validations, and [invalidDataBehavior](/settings#invaliddatabehavior) is set to `BLOCK_SUBMIT`
 
 When an import is in the `NEEDS_REVIEW` state, the data returned by the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport) will include a `"review_url"` field. This is a URL which you can navigate to in a browser to resolve the import issues using Dromo's import UI.
 
@@ -185,8 +186,15 @@ An import will enter the `FAILED` state if it has an unrecoverable error.
 
 Some examples of unrecoverable errors are:
 
-* The import file was corrupted and could not be parsed
-* The import file was completely empty
-* A custom hook threw an unhandled exception
+- The import file was corrupted and could not be parsed
+- The import file was completely empty
+- A custom hook threw an unhandled exception
 
 Failed imports do not have results and also do not have a review URL.
+
+## Rate Limits[​](#rate-limits "Direct link to Rate Limits")
+
+The Headless API has the following rate limits:
+
+- **Creating headless imports**: 20 requests per minute
+- **Polling import status**: 12 requests per minute per import
