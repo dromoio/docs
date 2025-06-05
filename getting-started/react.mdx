@@ -29,7 +29,7 @@ This guide will walk you through integrating the Dromo Uploader into your React 
   </Step>
 
   <Step title="Basic Usage">
-    Add the `<DromoUploader>` component to your app. You'll need to provide your `licenseKey` and configure `fields`, `settings`, `user` props, and an `onResults` callback.
+    Add the `<DromoUploader />` component to your app. You'll need to provide your `licenseKey` and configure `fields`, `settings`, `user` props, and an `onResults` callback.
     <CodeGroup>
     ```jsx "JSX (Basic Usage)"
     <DromoUploader
@@ -58,14 +58,14 @@ This guide will walk you through integrating the Dromo Uploader into your React 
     ```
     </CodeGroup>
     This will render a button that says "Launch Dromo Importer". Clicking it will open the Dromo modal.
-    For a full list of props and detailed explanations, see the [`<DromoUploader>` Component Props Reference](/reference/react-dromo-uploader).
+    For a full list of props and detailed explanations, see the [`<DromoUploader />` Component Props Reference](/reference/react-dromo-uploader).
   </Step>
 
   <Step title="Opening the Uploader">
     There are two primary ways to control when the Dromo modal opens:
 
     #### 1. Using Children as a Trigger
-    If you provide children to the `<DromoUploader>` component (like the "Launch Dromo Importer" button in the example above), these children will be rendered, and clicking them will open the Dromo modal.
+    If you provide children to the `<DromoUploader />` component (like the "Launch Dromo Importer" button in the example above), these children will be rendered, and clicking them will open the Dromo modal.
     <CodeGroup>
     ```jsx "JSX (Children Trigger)"
     <DromoUploader
@@ -93,7 +93,7 @@ This guide will walk you through integrating the Dromo Uploader into your React 
     // <button onClick={() => setIsImporterOpen(true)}>Open Programmatic Uploader</button>
     ```
     </CodeGroup>
-    See more about the `open` prop in the [`<DromoUploader>` Component Props Reference](/reference/react-dromo-uploader).
+    See more about the `open` prop in the [`<DromoUploader />` Component Props Reference](/reference/react-dromo-uploader).
 
   </Step>
 </Steps>

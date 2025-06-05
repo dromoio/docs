@@ -7,7 +7,7 @@
     "light": "#60A5FA",
     "dark": "#1E40AF"
   },
-  "favicon": "https://dromo.io/favicon.ico",
+  "favicon": "favicon.ico",
   "navigation": {
     "tabs": [
       {
@@ -57,7 +57,14 @@
             "pages": [
               "reference/dromo-uploader-sdk",
               "reference/react-dromo-uploader",
-              "settings",
+              {
+                "group": "Settings",
+                "pages": [
+                  "settings/index",
+                  "settings/style-overrides",
+                  "settings/deprecated"
+                ]
+              },
               "fields",
               "hooks",
               "users",
