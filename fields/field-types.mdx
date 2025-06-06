@@ -1,6 +1,7 @@
 ---
 title: "Field Types"
 description: "Dromo supports a variety of field types, each with their own unique properties and behaviors. This section describes the different types of fields available and their usage."
+icon: "text"
 ---
 
 ## Usage
@@ -232,59 +233,58 @@ You can define your own display and/or output formats with a format string. For 
 
 ### Select[​](#select "Direct link to Select")
 
+> ```json
+> type: "select",
+> selectOptions: [
+>   {
+>     label: string,
+>     value: string,
+>     alternateMatches?: string[],
+>     exactMatchOnly?: boolean 
+>   }, ...
+>]
 > ```
-> type: "select",selectOptions: [{ label: string, value: string, alternateMatches?: string[], exactMatchOnly?: boolean }, ...]
-> ```
->
-> `type: ["select", { allowCustom: <boolean> }]`
+> or `type: ["select", { allowCustom: <boolean> }]`
 
-Select fields allow you to provide a pick list of values that the user can choose from.
+Select fields let users choose from predefined options. You must provide an array of valid `selectOptions`, where the `label` is shown in the UI; the `value` is saved in the output.
 
-When creating a select field, you must provide an array of valid `selectOptions`, where each option is an object with the `label` and `value` keys. The `label` will be what is displayed to the user, and the `value` is what will be output to the results for that option.
+Select fields are treated differently during the import process. Expand the section below to learn more.
+
+<Expandable title="more about how select fields work">
+  After the column matching step, the user will be prompted to match the values in their file to the given select options.
+
+  ![Select option matching](/images/select_mapping.png)
+
+  On the review screen, the field will show as a dropdown menu that the user can pick an option from.
+
+  ![Select dropdown on the review screen](/images/select_dropdown.png)
+
+  A validation error will be shown if a value was not matched and does not equal one of the option labels.
+</Expandable>
 
 <Info>
   `selectOptions` can be overridden for individual cells using a row hook. See the [row hook reference](/hooks#row-hooks) page for details.
 </Info>
 
-Each select option can also optionally include `alternateMatches`, an array of strings. If a value in the data matches any of these strings, it will be mapped to that option.
+Each select option can optionally include `alternateMatche`s`, an array of strings. If an input value matches any of these, it will be mapped to that option’s value.
 
-<Check>
+<Note>
   For a given select field, the labels, values, and alternate matches should be unique across all options. Each of these parameters is used to map imported data to select options, so conflicts will occur if multiple select options share the same matches.
-</Check>
+</Note>
 
-Select fields provide several special features as the user is going through the import process.
-
-After the column matching step, the user will be prompted to match the values in their file to the given select options.
-
-![Select option matching](\images\assets\images\select_mapping-a020124a3b912e82d49c2bd036f391a5.png)
-
-On the review screen, the field will show as a dropdown menu that the user can pick an option from.
-
-![Select dropdown on the review screen](\images\assets\images\select_dropdown-c21e2afb5f82295a448ef4551485a75a.png)
-
-A validation error will be shown if a value was not matched and does not equal one of the option labels.
-
-#### `allowCustom`[​](#allowcustom "Direct link to allowcustom")
-
-By default, select fields only allow values that match a select option, and any other values are marked with a validation error.
-
-You can change this behavior with the `allowCustom` option:
-
-```
-type: ["select", { allowCustom: true }],selectOptions: [{ label: string, value: string, alternateMatches?: string[] }, ...]
-```
-
-With `allowCustom` set to `true`, the user can either choose from the valid select options, or enter their own value. This treats the select options as autocomplete suggestions.
-
-Any value is considered valid, although you can add additional validations like normal.
-
-#### `exactMatchOnly`[​](#exactmatchonly "Direct link to exactmatchonly")
-
-By default, Dromo will suggest matches to the user with fuzzy matching, and, if you have backend sync enabled, AI matching. If you would like to disable fuzzy and AI matching, and only suggest exact matches to the user, you can pass the setting `exactMatchOnly: true` with the field settings. Dromo will check the label, value, and alternateMatches for an exact match.
-
-```
-type: ["select", { exactMatchOnly: true }],selectOptions: [{ label: string, value: string, alternateMatches?: string[] }, ...]
-```
+<Expandable title="more about allowCustom and exactMatchOnly">
+  <ResponseField name="allowCustom" type="boolean" default="false">
+    If set to true, select fields will allow the user to enter their own value. With `allowCustom` set to `true`, the user can either choose from the valid select options, or enter their own value. This treats the select options as autocomplete suggestions. Any value is considered valid, although you can add additional validations like normal.
+  </ResponseField>
+  <ResponseField name="exactMatchOnly" type="boolean" default="false">
+    By default, Dromo will suggest matches to the user with fuzzy matching, and, if you have backend sync enabled, AI matching. If you would like to disable fuzzy and AI matching, and only suggest exact matches to the user, you can pass the setting `exactMatchOnly: true` with the field settings. Dromo will check the label, value, and alternateMatches for an exact match.
+  </ResponseField>
+  For example, this is how you would enable both custom values and exact matches:
+    ```json
+    type: ["select", { allowCustom: true, exactMatchOnly: true }],
+    selectOptions: [{ label: string, value: string, alternateMatches?: string[] }, ...]
+    ```
+</Expandable>
 
 ### Checkbox[​](#checkbox "Direct link to Checkbox")
 

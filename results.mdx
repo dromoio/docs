@@ -1,10 +1,19 @@
 ---
-title: "Finishing an import and getting results"
+title: "Handling Results"
 ---
 
 ## The `onResults` callback[​](#the-onresults-callback "Direct link to the-onresults-callback")
 
 This callback is called when the user completes the import flow. `onResults` is called with two arguments.
+
+<CodeGroup>
+  ```js JavaScript
+  dromo.onResults(function (response, metadata) {  // Do something with the data here  console.log(response, metadata);});
+  ```
+  ```jsx React
+  <DromoUploader  ...  onResults={(response, metadata) =>    // Do something with the data here    console.log(response, metadata)  }>  Launch Dromo</DromoUploader>
+  ```
+</CodeGroup>
 
 <ResponseField name="data" type="{ [key: string]: string | boolean | number | null }[]">
   An array of objects, one for each row in the final data.
@@ -71,19 +80,6 @@ This callback is called when the user completes the import flow. `onResults` is 
     </ResponseField>
   </ResponseField>
 </ResponseField>
-
-<Accordion title="onResults callback example">
-  - JavaScript
-  - React
-
-  ```
-  dromo.onResults(function (response, metadata) {  // Do something with the data here  console.log(response, metadata);});
-  ```
-
-  ```
-  <DromoUploader  ...  onResults={(response, metadata) =>    // Do something with the data here    console.log(response, metadata)  }>  Launch Dromo</DromoUploader>
-  ```
-</Accordion>
 
 ## The `onCancel` callback[​](#the-oncancel-callback "Direct link to the-oncancel-callback")
 
@@ -163,18 +159,14 @@ Otherwise, if nothing is returned from the `beforeFinish` callback (or any other
   The Dromo Uploader instance which you can call mutation methods on
 </ResponseField>
 
-<Accordion title="beforeFinish callback example">
-  - JavaScript
-  - React
-
-  ```
+<CodeGroup>
+  ```js JavaScript
   dromo.beforeFinish(function (data, metadata, instance) {  if (data.length < 20) {    return { cancel: true, message: "You must import at least 20 rows" }  }});
   ```
-
-  ```
+  ```jsx React
   <DromoUploader  ...  beforeFinish={(data, metadata, instance) =>    if (data.length < 20) {      return { cancel: true, message: "You must import at least 20 rows" }    }  }>  Launch Dromo</DromoUploader>
   ```
-</Accordion>
+</CodeGroup>
 
 ## Custom fields[​](#custom-fields "Direct link to Custom fields")
 
