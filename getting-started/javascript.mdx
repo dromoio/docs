@@ -1,10 +1,14 @@
 ---
 title: "JavaScript Quickstart"
+icon: "js"
 ---
 
-<Check>
-  Are you looking for a framework-specific SDK? Check the Getting Started guides in the sidebar.
-</Check>
+<Note>
+  Are you looking for a framework-specific SDK? Check the Getting Started guides
+  in the sidebar.
+</Note>
+
+## Step By Step Guide
 
 This guide will walk you through the essential steps to integrate the Dromo Uploader into your JavaScript application.
 
@@ -33,8 +37,9 @@ This guide will walk you through the essential steps to integrate the Dromo Uplo
     import DromoUploader from "dromo-uploader-js";
     ```
     </CodeGroup>
-  </Step>
 
+  </Step>
+  
   <Step title="Initialize the Uploader">
     Create an instance of `DromoUploader`. You'll need your Dromo front-end license key, and to define your fields, settings, and user metadata.
     <CodeGroup>
@@ -60,6 +65,7 @@ This guide will walk you through the essential steps to integrate the Dromo Uplo
     ```
     </CodeGroup>
     For full details on constructor parameters, see the [DromoUploader SDK Reference](/reference/dromo-uploader-sdk).
+
   </Step>
 
   <Step title="Register Callbacks (Optional)">
@@ -77,6 +83,7 @@ This guide will walk you through the essential steps to integrate the Dromo Uplo
     // refer to the [DromoUploader SDK Reference](/reference/dromo-uploader-sdk) and [Hooks documentation](/hooks).
     ```
     </CodeGroup>
+
   </Step>
 
   <Step title="Open the Uploader">
@@ -92,8 +99,9 @@ This guide will walk you through the essential steps to integrate the Dromo Uplo
 ## Basic Example
 
 To use the example below, replace `"FRONTEND_API_KEY"` with your frontend license key from [the Dromo dashboard](https://dashboard.dromo.io/).
+
 <CodeGroup>
-```html "HTML (Full Example)"
+```javascript "HTML (Full Example)"
 <script type="text/javascript">
   const license = "FRONTEND_API_KEY";
   const fields = [

@@ -3,29 +3,53 @@ title: "Webhooks"
 description: "You can use webhooks to get notified when your users complete an import using Dromo."
 ---
 
-Dromo provides two kinds of webhooks: **managed webhooks** and **basic webhooks**.
-
-Managed webhooks are managed in the Dromo dashboard. They provide context about the completed import, and can be applied to multiple schemas.
-
-Basic webhooks are configured by setting the [webhookUrl setting](/settings#webhookurl) in your import settings. This webhook can be configured dynamically at the time of import.
+Dromo provides two kinds of webhooks:
+  * **Managed Webhooks** are managed in the Dromo dashboard. They provide context about the completed import, and can be applied to multiple schemas.
+  * **Basic webhooks** are configured by setting the [webhookUrl setting](/settings#webhookurl) in your import settings. This webhook can be configured dynamically at the time of import.
 
 ## Managed webhooks[​](#managed-webhooks "Direct link to Managed webhooks")
 
-Managed webhooks are configured in the dashboard on the [webhooks page](https://dashboard.dromo.io/webhooks).
+Managed webhooks are configured in the dashboard on the [webhooks page](https://dashboard.dromo.io/webhooks). Click on the "New webhook" button to create your first webhook.
 
-Click on the "New webhook" button to create your first webhook.
+![Creating a new managed webhook](/images/assets/images/managed_webhook-f482fe6af96ed967f9a154de467ee7e4.png)
 
-![Creating a new managed webhook](\images\assets\images\managed_webhook-f482fe6af96ed967f9a154de467ee7e4.png)
+There are a few things to specify:
+ * **URL**: Provide a publicly accessible URL where the webhook should be sent.
+ * **Development Mode**: Toggle this setting to control whether the webhook fires for development imports or production imports, based on the developmentMode flag. This is helpful for testing webhooks in staging environments.
+ * **Schemas to Trigger On**: Choose when the webhook should be triggered using either or both of the following:
+   * **Import Identifiers**: A list of importIdentifier values. The webhook will fire whenever an import with a matching identifier completes. Useful for dynamic imports.
+   * **Saved Schemas**: Select from your predefined schemas in Schema Studio.
 
-Enter a URL where you would like the URL to be delivered. This URL must be publicly accessible.
+You can mix import identifiers and saved schemas as needed.
 
-The "Development Mode" toggle determines whether the webhook will fire for production imports or development imports, as specified by the [developmentMode setting](/settings#developmentmode). This is useful for testing webhooks in test or staging environments.
 
-Finally, specify schemas for which this webhook should trigger. There are two ways to specify schemas. First, you can specify a list of import identifiers. This webhook will be triggered any time an import is completed that has a matching [importIdentifier setting](/settings#importidentifier). This is useful for attaching webhooks to dynamically configured imports. Secondly, you may specify any of your saved schemas that you have [configured in the Schema Studio](/guides/schema-builder). You can use any combination of import identifiers and saved schemas when configuring the webhook.
+The next time an import is completed for a matching schema, you will recieve a POST request like the following:
 
-Press create to save your webhook. The next time an import is completed for a matching schema, you will recieve a POST request to the configured URL.
+```json
+  {
+    "event": "import_completed", 
+    "data": {
+      "id": "025f399f-4370-4064-aed5-b8d16b597183",
+      "filename": "contacts.csv", 
+      "user": {
+        "id": "user-123",
+        "name": "Jasmine Clark",
+        "email": "jclark@acme.com",
+        "company_id": null,
+        "company_name": null
+        },
+      "created_date": "2024-04-24T17:20:14.659349Z",
+      "import_type": "EMBEDDED",
+      "status": "SUCCESSFUL",
+      "num_data_rows": 433,
+      "development_mode": false,
+      "has_data": true
+    }
+  }
+```
 
-The request will contain a JSON body with the following parameters:
+To get more details about the parameters, expand the following section:
+<Expandable title="more about fields in the webhook">
 
 <ResponseField name="event" type="string">
   The event that triggered this webhook. Currently, this will always be `"import_completed"` unless your organization is using Dromo Headless (see below).
@@ -71,22 +95,17 @@ The request will contain a JSON body with the following parameters:
   </ResponseField>
 </ResponseField>
 
-```
-{  "event": "import_completed",  "data": {    "id": "025f399f-4370-4064-aed5-b8d16b597183",    "filename": "contacts.csv",    "user": {      "id": "user-123",      "name": "Caitlin Clark",      "email": "cclark@uiowa.edu",      "company_id": null,      "company_name": null    },    "created_date": "2024-04-24T17:20:14.659349Z",    "import_type": "EMBEDDED",    "status": "SUCCESSFUL",    "num_data_rows": 433,    "development_mode": false,    "has_data": true  }}
-```
+</Expandable>
 
-<Accordion title="Managed webhooks and headless imports">
-  When using managed webhooks with headless imports, Dromo exposes additional events and data in the webhook.
-
-  There are two additional events:
-
+<Note>
+  When using managed webhooks with headless imports, Dromo exposes two additional events and data in the webhook:
   * A `"headless_import_needs_review"` event is triggered when a headless import enters the [needs review state](/getting-started/headless#import-needs-review).
   * A `"headless_import_failed"` event is triggered when a headless import encounters an unrecoverable error and goes to the [failed state](/getting-started/headless#import-failed).
 
   Completed headless imports, whether fully automated or completed using manual review, will trigger the standard `"import_completed"` event as detailed above.
 
   All headless import webhooks include an additional `"headless"` key in the `data` object. This will include data about the headless import in a format matching the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport), with the exception that `"review_url"` and `"original_file_download"` are not exposed in the webhook for security reasons.
-</Accordion>
+</Note>
 
 ## Basic webhooks[​](#basic-webhooks "Direct link to Basic webhooks")
 
@@ -94,7 +113,7 @@ Basic webhooks are triggered when an import is completed, when the settings for 
 
 The webhooks are delivered to the configured URL via POST request in URL-encoded form format, and contain only a single key, `uploadId`.
 
-```
+```sh
 uploadId=7df3a66d-b7bb-4da6-9244-b4e22c7d7ab0
 ```
 
