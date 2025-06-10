@@ -54,28 +54,122 @@ Column hooks may return the value async, wrapped in a promise.
 
     A column hook registered on the `Email` field would be passed the following data:
 
+    <CodeGroup>
+    ```javascript Input
+    [
+      { value: "michelledoe@gmail.com", index: 0 },
+      { value: "janedoe@gmail.com", index: 1 },
+      { value: "steve@hotmail.com", index: 2 },
+      { value: "wayne@nhl.com", index: 3 },
+    ];
     ```
-    [  { value: "michelledoe@gmail.com", index: 0 },  { value: "janedoe@gmail.com", index: 1 },  { value: "steve@hotmail.com", index: 2 },  { value: "wayne@nhl.com", index: 3 },];
-    ```
+    </CodeGroup>
 
     This column hook could return something like this:
 
+    <CodeGroup>
+    ```javascript Output
+    [
+      {
+        index: 0,
+        value: "michelledoe@aol.com",
+        info: [
+          {
+            message: "Automatically corrected email domain",
+            level: "info", // should be "info", "warning" or "error"
+          },
+        ],
+      },
+      // we can omit cells that don't need any changes or messages
+      {
+        index: 2,
+        // Don't need to supply value if we're not changing it
+        info: [
+          {
+            message: "Email not found",
+            level: "error",
+          },
+        ],
+      },
+    ];
     ```
-    [  {    index: 0,    value: "michelledoe@aol.com",    info: [      {        message: "Automatically corrected email domain",        level: "info", // should be "info", "warning" or "error"      },    ],  },  // we can omit cells that don't need any changes or messages  {    index: 2,    // Don't need to supply value if we're not changing it    info: [      {        message: "Email not found",        level: "error",      },    ],  },];
-    ```
+    </CodeGroup>
   </Accordion>
 
   <Accordion title="Column hook example">
-    * JavaScript
-    * React
+    <CodeGroup>
+    ```javascript JavaScript
+    const fields = [
+      {
+        label: "Email",
+        key: "email",
+      },
+    ];
 
-    ```
-    const fields = [  {    label: "Email",    key: "email",  },];const settings = {  importIdentifier: "Column Hooks Server Validation",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerColumnHook("email", function (values) {  return values.map((row) => {    const newRow = {      index: row.index,      value: "0" + row.value,      info: [        {          message: "Prepended 0 to value",          level: "info",        },      ],    };    return newRow;  });});
+    const settings = {
+      importIdentifier: "Column Hooks Server Validation",
+    };
+
+    const user = {
+      id: "12345",
+    };
+
+    const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);
+
+    dromo.registerColumnHook("email", function (values) {
+      return values.map((row) => {
+        const newRow = {
+          index: row.index,
+          value: "0" + row.value,
+          info: [
+            {
+              message: "Prepended 0 to value",
+              level: "info",
+            },
+          ],
+        };
+        return newRow;
+      });
+    });
     ```
 
+    ```jsx React
+    <DromoUploader
+      licenseKey={"FRONTEND_API_KEY"}
+      user={{ id: "12345" }}
+      fields={[
+        {
+          label: "Email",
+          key: "email",
+        },
+      ]}
+      settings={{
+        importIdentifier: "Column Hooks Example",
+      }}
+      columnHooks={[
+        {
+          fieldName: "email",
+          callback: (values) => {
+            return values.map((row) => {
+              const newRow = {
+                index: row.index,
+                value: "0" + row.value,
+                info: [
+                  {
+                    message: "Prepended 0 to value",
+                    level: "info",
+                  },
+                ],
+              };
+              return newRow;
+            });
+          },
+        },
+      ]}>
+      Import Emails
+    </DromoUploader>
     ```
-    <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {      label: "Email",      key: "email",    },  ]}  settings={{    importIdentifier: "Column Hooks Example",  }}  columnHooks={[    {      fieldName: "email",      callback: (values) => {        return values.map((row) => {          const newRow = {            index: row.index,            value: "0" + row.value,            info: [              {                message: "Prepended 0 to value",                level: "info",              },            ],          };          return newRow;        });      },    },  ]}>  Import Emails</DromoUploader>
-    ```
+    </CodeGroup>
   </Accordion>
 </AccordionGroup>
 
@@ -154,16 +248,92 @@ Row hooks may return the value async, wrapped in a promise.
 </Info>
 
 <Accordion title="Standard row hook example">
-  * JavaScript
-  * React
+  <CodeGroup>
+  ```javascript JavaScript
+  const fields = [
+    {
+      label: "Email",
+      key: "email",
+    },
+    {
+      label: "State",
+      key: "state",
+      selectOptions: [{ label: "Alabama", value: "AL" }, { label: "Alaska", value: "AK" }],
+    },
+  ];
 
-  ```
-  const fields = [  {    label: "Email",    key: "email",  },  {    label: "State",    key: "state",    selectOptions: [{ label: "Alabama", value: "AL" }, { label: "Alaska", value: "AK" }],  },];const settings = {  importIdentifier: "Row Hooks Example",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerRowHook(function (record, mode) {  const newRecord = record;  if (record.index < 10 && mode === "init") {    newRecord.row.email.value = "0" + newRecord.row.email.value;    newRecord.row.email.info = [      {        message: "Prepend 0 to value",        level: "info",      },    ];    newRecord.row.state.selectOptions = [{ label: "Alberta", value: "AB"}, { label: "British Colombia", value: "BC"}];  }  return newRecord;});
+  const settings = {
+    importIdentifier: "Row Hooks Example",
+  };
+
+  const user = {
+    id: "12345",
+  };
+
+  const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);
+
+  dromo.registerRowHook(function (record, mode) {
+    const newRecord = record;
+    if (record.index < 10 && mode === "init") {
+      newRecord.row.email.value = "0" + newRecord.row.email.value;
+      newRecord.row.email.info = [
+        {
+          message: "Prepend 0 to value",
+          level: "info",
+        },
+      ];
+      newRecord.row.state.selectOptions = [
+        { label: "Alberta", value: "AB"}, 
+        { label: "British Colombia", value: "BC"}
+      ];
+    }
+    return newRecord;
+  });
   ```
 
+  ```jsx React
+  <DromoUploader
+    licenseKey={"FRONTEND_API_KEY"}
+    user={{ id: "12345" }}
+    fields={[
+      {
+        label: "Email",
+        key: "email",
+      },
+      {
+        label: "State",
+        key: "state",
+        selectOptions: [{ label: "Alabama", value: "AL" }, { label: "Alaska", value: "AK" }],
+      },
+    ]}
+    settings={{
+      importIdentifier: "Row Hooks Example",
+    }}
+    rowHooks={[
+      (record) => {
+        const newRecord = record;
+        if (record.index < 10) {
+          if (newRecord.row.email) {
+            newRecord.row.email.value = "0" + newRecord.row.email.value;
+            newRecord.row.email.info = [
+              {
+                message: "Prepend 0 to value",
+                level: "info",
+              },
+            ];
+          }
+          newRecord.row.state.selectOptions = [
+            { label: "Alberta", value: "AB"}, 
+            { label: "British Colombia", value: "BC"}
+          ];
+        }
+        return newRecord;
+      },
+    ]}>
+    Import Contacts
+  </DromoUploader>
   ```
-  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {      label: "Email",      key: "email",    },    {      label: "State",      key: "state",      selectOptions: [{ label: "Alabama", value: "AL" }, { label: "Alaska", value: "AK" }],    },  ]}  settings={{    importIdentifier: "Row Hooks Example",  }}  rowHooks={[    (record) => {      const newRecord = record;      if (record.index < 10) {        if (newRecord.row.email) {          newRecord.row.email.value = "0" + newRecord.row.email.value;          newRecord.row.email.info = [            {              message: "Prepend 0 to value",              level: "info",            },          ];        }        newRecord.row.state.selectOptions = [{ label: "Alberta", value: "AB"}, { label: "British Colombia", value: "BC"}];      }      return newRecord;    },  ]}>  Import Contacts</DromoUploader>
-  ```
+  </CodeGroup>
 </Accordion>
 
 ### Bulk row hooks[​](#bulk-row-hooks "Direct link to Bulk row hooks")
@@ -175,16 +345,78 @@ Bulk row hooks are a good fit if you need to perform potentially long-running op
 Bulk row hooks work exactly like standard row hooks, except the first parameter is an array of record objects instead of a single record object. Similarly, bulk row hooks must return an array of record objects, preserving the `index` parameter of each record.
 
 <Accordion title="Bulk row hook example">
-  * JavaScript
-  * React
+  <CodeGroup>
+  ```javascript JavaScript
+  const fields = [
+    {
+      label: "Email",
+      key: "email",
+    },
+  ];
 
-  ```
-  const fields = [  {    label: "Email",    key: "email",  },];const settings = {  importIdentifier: "Row Hooks Example",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerBulkRowHook(function (records, mode) {  return records.map((record) => {    const newRecord = record;    if (record.index < 10 && mode === "init") {      newRecord.row.email.value = "0" + newRecord.row.email.value;      newRecord.row.email.info = [        {          message: "Prepend 0 to value",          level: "info",        },      ];    }    return newRecord;  });});
+  const settings = {
+    importIdentifier: "Row Hooks Example",
+  };
+
+  const user = {
+    id: "12345",
+  };
+
+  const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);
+
+  dromo.registerBulkRowHook(function (records, mode) {
+    return records.map((record) => {
+      const newRecord = record;
+      if (record.index < 10 && mode === "init") {
+        newRecord.row.email.value = "0" + newRecord.row.email.value;
+        newRecord.row.email.info = [
+          {
+            message: "Prepend 0 to value",
+            level: "info",
+          },
+        ];
+      }
+      return newRecord;
+    });
+  });
   ```
 
+  ```jsx React
+  <DromoUploader
+    licenseKey={"FRONTEND_API_KEY"}
+    user={{ id: "12345" }}
+    fields={[
+      {
+        label: "Email",
+        key: "email",
+      },
+    ]}
+    settings={{
+      importIdentifier: "Row Hooks Example",
+    }}
+    bulkRowHooks={[
+      (records) => {
+        return records.map((record) => {
+          const newRecord = record;
+          if (record.index < 10) {
+            if (newRecord.row.email) {
+              newRecord.row.email.value = "0" + newRecord.row.email.value;
+              newRecord.row.email.info = [
+                {
+                  message: "Prepend 0 to value",
+                  level: "info",
+                },
+              ];
+            }
+          }
+          return newRecord;
+        })
+      },
+    ]}>
+    Import Contacts
+  </DromoUploader>
   ```
-  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {      label: "Email",      key: "email",    },  ]}  settings={{    importIdentifier: "Row Hooks Example",  }}  bulkRowHooks={[    (records) => {      return records.map((record) => {        const newRecord = record;        if (record.index < 10) {          if (newRecord.row.email) {            newRecord.row.email.value = "0" + newRecord.row.email.value;            newRecord.row.email.info = [              {                message: "Prepend 0 to value",                level: "info",              },            ];          }        }        return newRecord;      })    },  ]}>  Import Contacts</DromoUploader>
-  ```
+  </CodeGroup>
 </Accordion>
 
 ## Row delete hooks[​](#row-delete-hooks "Direct link to Row delete hooks")
@@ -216,16 +448,23 @@ Row delete hooks are called once for each row that was removed.
       An array of any info messages you have previously added to this cell
 
 <Accordion title="Row delete hook example">
-  - JavaScript
-  - React
+  <CodeGroup>
+  ```javascript JavaScript
+  dromo.registerRowDeleteHook(function (record) {
+    console.log("Deleted row index: " + record.index);
+  });
+  ```
 
+  ```jsx React
+  <DromoUploader
+    licenseKey="FRONTEND_API_KEY"
+    ...
+    rowDeleteHooks={[(record) => console.log("Deleted row index: +" + record.index)]}
+    ...>
+    Launch Dromo
+  </DromoUploader>
   ```
-  dromo.registerRowDeleteHook(function (record) {  console.log("Deleted row index: " + record.index);});
-  ```
-
-  ```
-   <DromoUploader  licenseKey="FRONTEND_API_KEY"  ...  rowDeleteHooks={[(record) => console.log("Deleted row index: +" + record.index)]}  ...>  Launch Dromo</DromoUploader>
-  ```
+  </CodeGroup>
 </Accordion>
 
 ## Step hooks[​](#step-hooks "Direct link to Step hooks")
@@ -247,16 +486,36 @@ The function is called with two arguments.
   An array of arrays containing the first 20 rows of raw uploaded data
 
 <Accordion title="Upload step hook example">
-  - JavaScript
-  - React
+  <CodeGroup>
+  ```javascript JavaScript
+  dromo.registerStepHook("UPLOAD_STEP", function (instance, data) {
+    instance.addField({
+      label: "Full Name",
+      key: "fullName",
+    });
+    console.log(data.filename, data.dataPreview);
+  });
+  ```
 
+  ```jsx React
+  <DromoUploader
+    licenseKey={"FRONTEND_API_KEY"}
+    ...
+    stepHooks: [
+      {
+        type: "UPLOAD_STEP",
+        callback: (instance, data) => {
+          instance.addField({
+            label: "Full Name",
+            key: "fullName",
+          })
+          console.log(data.filename, data.dataPreview);
+        }
+      }
+    ],
+    .../>
   ```
-  dromo.registerStepHook("UPLOAD_STEP", function (instance, data) {  instance.addField({    label: "Full Name",    key: "fullName",  });  console.log(data.filename, data.dataPreview);});
-  ```
-
-  ```
-  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  ...  stepHooks: [    {      type: "UPLOAD_STEP",      callback: (instance, data) => {        instance.addField({          label: "Full Name",          key: "fullName",        })        console.log(data.filename, data.dataPreview);      }    }  ],  .../>
-  ```
+  </CodeGroup>
 </Accordion>
 
 ### `REVIEW_STEP` hook[​](#review_step-hook "Direct link to review_step-hook")
@@ -308,16 +567,36 @@ The function is called with two arguments.
       The indexes of columns that were mapped to a [`manyToOne`](/fields#manyToOne) field.
 
 <Accordion title="Review step hook example">
-  - JavaScript
-  - React
+  <CodeGroup>
+  ```javascript JavaScript
+  dromo.registerStepHook("REVIEW_STEP", function (instance, data) {
+    instance.addField({
+      label: "Full Name",
+      key: "fullName",
+    });
+    console.log(data.rawHeaders, data.headerMapping, data.fields);
+  });
+  ```
 
+  ```jsx React
+  <DromoUploader
+    licenseKey={"FRONTEND_API_KEY"}
+    ...
+    stepHooks: [
+      {
+        type: "REVIEW_STEP", // to run immediately after a user uploads data, change this to UPLOAD_STEP
+        callback: (instance, data) => {
+          instance.addField({
+            label: "Full Name",
+            key: "fullName",
+          })
+          console.log(data.rawHeaders, data.headerMapping, data.fields);
+        }
+      },
+    ],
+    .../>
   ```
-  dromo.registerStepHook("REVIEW_STEP", function (instance, data) {  instance.addField({    label: "Full Name",    key: "fullName",  });  console.log(data.rawHeaders, data.headerMapping, data.fields);});
-  ```
-
-  ```
-  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  ...  stepHooks: [    {      type: "REVIEW_STEP", // to run immediately after a user uploads data, change this to UPLOAD_STEP      callback: (instance, data) => {        instance.addField({          label: "Full Name",          key: "fullName",        })        console.log(data.rawHeaders, data.headerMapping, data.fields);      }    },  ],  .../>
-  ```
+  </CodeGroup>
 </Accordion>
 
 ### `REVIEW_STEP_POST_HOOKS` hook[​](#review_step_post_hooks-hook "Direct link to review_step_post_hooks-hook")
@@ -353,16 +632,44 @@ The function is called with two arguments.
       Whether this field was added by the user as a custom field
 
 <Accordion title="Review step post hooks example">
-  - JavaScript
-  - React
+  <CodeGroup>
+  ```javascript JavaScript
+  dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {
+    instance.addInfoMessages([
+      {
+        rowIndex: 5,
+        fieldKey: "month",
+        level: "info",
+        message: "Sales exceed previous month",
+      },
+    ]);
+    console.log(data.headerMapping, data.fields);
+  });
+  ```
 
+  ```jsx React
+  <DromoUploader
+    licenseKey={"FRONTEND_API_KEY"}
+    ...
+    stepHooks: [
+      {
+        type: "REVIEW_STEP_POST_HOOKS",
+        callback: (instance, data) => {
+          instance.addInfoMessages([
+            {
+              rowIndex: 5,
+              fieldKey: "month",
+              level: "info",
+              message: "Sales exceed previous month",
+            },
+          ]);
+          console.log(data.headerMapping, data.fields);
+        }
+      },
+    ],
+    .../>
   ```
-  dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {  instance.addInfoMessages([    {      rowIndex: 5,      fieldKey: "month",      level: "info",      message: "Sales exceed previous month",    },  ]);  console.log(data.headerMapping, data.fields);});
-  ```
-
-  ```
-  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  ...  stepHooks: [    {      type: "REVIEW_STEP_POST_HOOKS",      callback: (instance, data) => {        instance.addInfoMessages([          {            rowIndex: 5,            fieldKey: "month",            level: "info",            message: "Sales exceed previous month",          },        ]);        console.log(data.headerMapping, data.fields);      }    },  ],  .../>
-  ```
+  </CodeGroup>
 </Accordion>
 
 ### `REVIEW_STEP_PRE_SUBMIT` hook[​](#review_step_pre_submit-hook "Direct link to review_step_pre_submit-hook")
@@ -398,16 +705,42 @@ The function is called with two arguments.
       Whether this field was added by the user as a custom field
 
 <Accordion title="Review step pre submit example">
-  - JavaScript
-  - React
+  <CodeGroup>
+  ```javascript JavaScript
+  dromo.registerStepHook("REVIEW_STEP_PRE_SUBMIT", function (instance, data) {
+    instance.setConfirmationMessage(
+      "<div>Adding 5 new contacts. Modifying 20 existing contacts.</div>",
+      {
+        submitButtonText: "Accept changes",
+        cancelButtonText: "Cancel",
+      }
+    );
+    console.log(data.headerMapping, data.fields);
+  });
+  ```
 
+  ```jsx React
+  <DromoUploader
+    licenseKey={"FRONTEND_API_KEY"}
+    ...
+    stepHooks: [
+      {
+        type: "REVIEW_STEP_PRE_SUBMIT",
+        callback: (instance, data) => {
+          instance.setConfirmationMessage(
+            "<div>Adding 5 new contacts. Modifying 20 existing contacts.</div>",
+            {
+              submitButtonText: "Accept changes",
+              cancelButtonText: "Cancel",
+            }
+          );
+          console.log(data.headerMapping, data.fields);
+        }
+      },
+    ],
+    .../>
   ```
-  dromo.registerStepHook("REVIEW_STEP_PRE_SUBMIT", function (instance, data) {  instance.setConfirmationMessage(    "<div>Adding 5 new contacts. Modifying 20 existing contacts.</div>",    {      submitButtonText: "Accept changes",      cancelButtonText: "Cancel",    }  );  console.log(data.headerMapping, data.fields);});
-  ```
-
-  ```
-  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  ...  stepHooks: [    {      type: "REVIEW_STEP_PRE_SUBMIT",      callback: (instance, data) => {        instance.setConfirmationMessage(          "<div>Adding 5 new contacts. Modifying 20 existing contacts.</div>",          {            submitButtonText: "Accept changes",            cancelButtonText: "Cancel",          }        );        console.log(data.headerMapping, data.fields);      }    },  ],  .../>
-  ```
+  </CodeGroup>
 </Accordion>
 
 ## Working with info messages[​](#working-with-info-messages "Direct link to Working with info messages")
@@ -503,9 +836,22 @@ Updates the messages for targeted cells, overwriting any previous messages.
 <Accordion title="updateInfoMessages example">
   In this case, if you had previously set a message on the email field of row 3 or the phone field of row 8, these messages would be replaced with the new ones.
 
+  <CodeGroup>
+  ```javascript
+  instance.updateInfoMessages([
+    {
+      rowIndex: 3,
+      fieldKey: "email",
+      messages: [{ level: "warning", message: "Email has not been confirmed" }],
+    },
+    {
+      rowIndex: 8,
+      fieldKey: "phone",
+      messages: [{ level: "error", message: "Phone number not in database" }],
+    },
+  ]);
   ```
-  instance.updateInfoMessages([  {    rowIndex: 3,    fieldKey: "email",    messages: [{ level: "warning", message: "Email has not been confirmed" }],  },  {    rowIndex: 8,    fieldKey: "phone",    messages: [{ level: "error", message: "Phone number not in database" }],  },]);
-  ```
+  </CodeGroup>
 </Accordion>
 
 ### `instance.addRows`[​](#instanceaddrows "Direct link to instanceaddrows")

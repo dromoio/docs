@@ -10,12 +10,35 @@ Here we show how to handle results directly in the browser, using Google Firebas
 
 This example assumes you have installed the [Firebase SDK](https://firebase.google.com/docs/web/setup).
 
+<CodeGroup>
+```javascript
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
+
+const firebaseConfig = {
+  ...
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 ```
-import { initializeApp } from 'firebase/app';import { getFirestore } from 'firebase/firestore';import { addDoc, collection } from 'firebase/firestore';const firebaseConfig = {  ...};const app = initializeApp(firebaseConfig);const db = getFirestore(app);
-```
+</CodeGroup>
 
 The `onResults` callback returns an array of objects, where each object represents a record. You can use a simple loop to write each record as a new document directly to a Firebase collection.
 
+<CodeGroup>
+```javascript
+dromo.onResults(function (data) {
+  // Loop through each item in the data array and add it as a document in Firebase
+  data.forEach(async (record) => {
+    try {
+      const docRef = await addDoc(collection(db, 'collectionName'), record);
+      console.log(`Document written with ID: ${docRef.id}`);
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
+  })
+});
 ```
-dromo.onResults(function (data) {  // Loop through each item in the data array and add it as a document in Firebase  data.forEach(async (record) => {    try {      const docRef = await addDoc(collection(db, 'collectionName'), record);      console.log(`Document written with ID: ${docRef.id}`);    } catch (e) {      console.error('Error adding document: ', e);    }  })});
-```
+</CodeGroup>

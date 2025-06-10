@@ -7,13 +7,79 @@ description: "This guide demonstrates how to use step hooks to add or remove fie
   For more detail about the `instance.addField` method, see the [Reference](/hooks#instanceaddfield) page. For more detail about the `instance.removeField` method, see the [Reference](/hooks#instanceremovefield) page.
 </Info>
 
-* JavaScript
-* React
+<CodeGroup>
+```javascript JavaScript
+dromo.registerStepHook("REVIEW_STEP", function (instance, data) {
+  instance.addField({
+    label: "Full Name",
+    key: "fullName",
+  });
+});
 
-```
-dromo.registerStepHook("REVIEW_STEP", function (instance, data) {  instance.addField({    label: "Full Name",    key: "fullName",  });});dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {  instance.removeField("firstName");  instance.removeField("lastName");});dromo.registerRowHook(function (data, mode) {  let out: IRowHookOutput = { row: {} };  if (data.row.firstName && data.row.lastName && mode === "init") {    out.row = {};    out.row.fullName = {      value: data.row.firstName.value + " " + data.row.lastName.value,      info: [        {          message: "combined first and last name into full name",          level: "info",        },      ],    };  }  return out;});
+dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {
+  instance.removeField("firstName");
+  instance.removeField("lastName");
+});
+
+dromo.registerRowHook(function (data, mode) {
+  let out: IRowHookOutput = { row: {} };
+  if (data.row.firstName && data.row.lastName && mode === "init") {
+    out.row = {};
+    out.row.fullName = {
+      value: data.row.firstName.value + " " + data.row.lastName.value,
+      info: [
+        {
+          message: "combined first and last name into full name",
+          level: "info",
+        },
+      ],
+    };
+  }
+  return out;
+});
 ```
 
+```jsx React
+<DromoUploader
+  licenseKey="FRONTEND_API_KEY"
+  ...
+  stepHooks={[
+    {
+      type: "REVIEW_STEP",
+      callback: (instance, _data) => {
+        instance.addField({
+          label: "Full Name",
+          key: "fullName",
+        })
+      }
+    },
+    {
+      type: "REVIEW_STEP_POST_HOOKS",
+      callback: (instance, _data) => {
+        instance.removeField("firstName");
+        instance.removeField("lastName");
+      }
+    }
+  ]}
+  rowHooks={[
+    (data: IRowHookInput, mode: string) => {
+      let out: IRowHookOutput = { row: {} };
+      if (data.row.firstName && data.row.lastName && mode === 'init') {
+        out.row = {};
+        out.row.fullName = {
+          value: data.row.firstName.value + " " + data.row.lastName.value,
+          info: [
+            {
+              message: "combined first and last name into full name",
+              level: "info"
+            }
+          ]
+        }
+      }
+      return out
+    }
+  ]}>
+  Launch Dromo
+</DromoUploader>
 ```
- <DromoUploader  licenseKey="FRONTEND_API_KEY"  ...  stepHooks={[    {      type: "REVIEW_STEP",      callback: (instance, _data) => {        instance.addField({          label: "Full Name",          key: "fullName",        })      }    },    {      type: "REVIEW_STEP_POST_HOOKS",      callback: (instance, _data) => {        instance.removeField("firstName");        instance.removeField("lastName");      }    }  ]}  rowHooks={[    (data: IRowHookInput, mode: string) => {      let out: IRowHookOutput = { row: {} };      if (data.row.firstName && data.row.lastName && mode === 'init') {        out.row = {};        out.row.fullName = {          value: data.row.firstName.value + " " + data.row.lastName.value,          info: [            {              message: "combined first and last name into full name",              level: "info"            }          ]        }      }      return out    }  ]}>  Launch Dromo</DromoUploader>
-```
+</CodeGroup>

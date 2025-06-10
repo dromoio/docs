@@ -8,13 +8,88 @@ title: "Validating with external data"
 
 Although it's not required to use `async`/`await` with hooks, we recommend you use it with an external API call.
 
-* JavaScript
-* React
+<CodeGroup>
+```javascript JavaScript
+export const fields = [
+  {
+    label: 'Email',
+    key: 'email'
+  }
+];
+...
 
-```
-export const fields = [  {    label: 'Email',    key: 'email'  }];...let hasFetchedData = false;let serverResults;dromo.registerRowHook(async function (record) {  const newRecord = record;  if (!hasFetchedData) {    await fetch('https://my-json-server.typicode.com/dromoio/docs-email-api/leads', {      method: 'GET'    })      .then((response) => response.json())      .then(function (json) {        serverResults = json.map((record) => {          return record['email'];        });        hasFetchedData = true;      });  }  if (serverResults.includes(newRecord.row['email'].value)) {    newRecord.row['email'].info = [      {        message: 'Duplicate record. This user is already in the database.',        level: 'error'      }    ];  }  return newRecord;});
+let hasFetchedData = false;
+let serverResults;
+
+dromo.registerRowHook(async function (record) {
+  const newRecord = record;
+  if (!hasFetchedData) {
+    await fetch('https://my-json-server.typicode.com/dromoio/docs-email-api/leads', {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then(function (json) {
+        serverResults = json.map((record) => {
+          return record['email'];
+        });
+        hasFetchedData = true;
+      });
+  }
+  if (serverResults.includes(newRecord.row['email'].value)) {
+    newRecord.row['email'].info = [
+      {
+        message: 'Duplicate record. This user is already in the database.',
+        level: 'error'
+      }
+    ];
+  }
+  return newRecord;
+});
 ```
 
+```jsx React
+let hasFetchedData = false;
+let serverResults;
+
+<DromoUploader
+  licenseKey={"FRONTEND_API_KEY"}
+  user={{ id: "12345" }}
+  fields={[
+    {
+      label: "Email",
+      key: "email",
+    },
+  ]}
+  settings={{
+    importIdentifier: "Row Hooks Example",
+  }}
+  rowHooks={[
+    async (record) => {
+      const newRecord = record;
+      if (!hasFetchedData) {
+        await fetch('https://my-json-server.typicode.com/dromoio/docs-email-api/leads', {
+          method: 'GET'
+        })
+          .then((response) => response.json())
+          .then(function (json) {
+            serverResults = json.map((record) => {
+              return record['email'];
+            });
+            hasFetchedData = true;
+          });
+      }
+      if (serverResults.includes(newRecord.row['email'].value)) {
+        newRecord.row['email'].info = [
+          {
+            message: 'Duplicate record. This user is already in the database.',
+            level: 'error'
+          }
+        ];
+      }
+      return newRecord;
+    }
+  ]}>
+  Import Contacts
+</DromoUploader>
 ```
-let hasFetchedData = false;let serverResults;<DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {      label: "Email",      key: "email",    },  ]}  settings={{    importIdentifier: "Row Hooks Example",  }}  rowHooks={[    async (record) => {      const newRecord = record;      if (!hasFetchedData) {        await fetch('https://my-json-server.typicode.com/dromoio/docs-email-api/leads', {          method: 'GET'        })          .then((response) => response.json())          .then(function (json) {            serverResults = json.map((record) => {              return record['email'];            });            hasFetchedData = true;          });      }      if (serverResults.includes(newRecord.row['email'].value)) {        newRecord.row['email'].info = [          {            message: 'Duplicate record. This user is already in the database.',            level: 'error'          }        ];      }      return newRecord;    }  ]}>  Import Contacts</DromoUploader>
-```
+</CodeGroup>

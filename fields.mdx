@@ -14,9 +14,24 @@ The most basic field consists of only a `key` and `label`. The field's key is it
 
 A basic schema could look like this:
 
+<CodeGroup>
+```javascript
+fields: [
+  {
+    label: "First name",
+    key: "firstName"
+  },
+  {
+    label: "Last name",
+    key: "lastName"
+  },
+  {
+    label: "Membership ID",
+    key: "memberId"
+  }
+]
 ```
-fields: [  {    label: "First name",    key: "firstName"  },  {    label: "Last name",    key: "lastName"  },  {    label: "Membership ID",    key: "memberId"  }]
-```
+</CodeGroup>
 
 The user would then match these fields to the columns in their imported file, resulting in a review screen which looks like this:
 
@@ -24,9 +39,47 @@ The user would then match these fields to the columns in their imported file, re
 
 And, when submitted, Dromo would provide you with a result data array like this:
 
+<CodeGroup>
+```json
+[
+  {
+    "firstName": "Richard",
+    "lastName": "Wysocki",
+    "memberId": "38008"
+  },
+  {
+    "firstName": "Paige",
+    "lastName": "Pierce",
+    "memberId": "29190"
+  },
+  {
+    "firstName": "Paul",
+    "lastName": "McBeth",
+    "memberId": "27523"
+  },
+  {
+    "firstName": "Kristin",
+    "lastName": "Tattar",
+    "memberId": "73986"
+  },
+  {
+    "firstName": "Calvin",
+    "lastName": "Heimburg",
+    "memberId": "45971"
+  },
+  {
+    "firstName": "Catrina",
+    "lastName": "Allen",
+    "memberId": "44184"
+  },
+  {
+    "firstName": "Eagle",
+    "lastName": "McMahon",
+    "memberId": "37817"
+  }
+]
 ```
-[  {    "firstName": "Richard",    "lastName": "Wysocki",    "memberId": "38008"  },  {    "firstName": "Paige",    "lastName": "Pierce",    "memberId": "29190"  },  {    "firstName": "Paul",    "lastName": "McBeth",    "memberId": "27523"  },  {    "firstName": "Kristin",    "lastName": "Tattar",    "memberId": "73986"  },  {    "firstName": "Calvin",    "lastName": "Heimburg",    "memberId": "45971"  },  {    "firstName": "Catrina",    "lastName": "Allen",    "memberId": "44184"  },  {    "firstName": "Eagle",    "lastName": "McMahon",    "memberId": "37817"  }]
-```
+</CodeGroup>
 
 ## Field object reference[​](#field-object-reference "Direct link to Field object reference")
 
@@ -145,9 +198,32 @@ To use it, place a `unique_with` validator on each field that you want to be par
 
 Here is an example set of fields using `unique_with` validators used to validate that the combination of the first name and last name fields are unique.
 
+<CodeGroup>
+```javascript
+[
+  {
+    label: "First Name",
+    key: "firstName",
+    validators: [
+      {
+        validate: "unique_with",
+        uniqueKey: "full name",
+      },
+    ],
+  },
+  {
+    label: "Last Name",
+    key: "lastName",
+    validators: [
+      {
+        validate: "unique_with",
+        uniqueKey: "full name",
+      },
+    ],
+  },
+]
 ```
-[  {    label: "First Name",    key: "firstName",    validators: [      {        validate: "unique_with",        uniqueKey: "full name",      },    ],  },  {    label: "Last Name",    key: "lastName",    validators: [      {        validate: "unique_with",        uniqueKey: "full name",      },    ],  },]
-```
+</CodeGroup>
 
 And here is an example of the validators in action:
 
@@ -288,6 +364,12 @@ Column matching is case-sensitive.
 
 Example:
 
+<CodeGroup>
+```javascript
+{
+  label: "City",
+  key: "city",
+  alternateMatches: ["municipality", "town", "locality"]
+}
 ```
-{  label: "City",  key: "city",  alternateMatches: ["municipality", "town", "locality"]}
-```
+</CodeGroup>

@@ -8,10 +8,68 @@
     "dark": "#1E40AF"
   },
   "favicon": "favicon.ico",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://dromo.io"
+  },
+  "topbarCtaButton": {
+    "type": "github",
+    "url": "https://github.com/dromoio"
+  },
+  "topbarLinks": [
+    {
+      "name": "Dashboard",
+      "url": "https://dashboard.dromo.io"
+    },
+    {
+      "name": "Demo",
+      "url": "https://demo.dromo.io"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "API Reference",
+      "icon": "code",
+      "url": "api-reference",
+      "color": "#2563EB"
+    },
+    {
+      "name": "Community",
+      "icon": "discord",
+      "url": "https://discord.gg/dromo"
+    },
+    {
+      "name": "Changelog",
+      "icon": "list",
+      "url": "https://changelog.dromo.io"
+    }
+  ],
+  "footerSocials": {
+    "website": "https://dromo.io",
+    "github": "https://github.com/dromoio",
+    "x": "https://x.com/dromoio",
+    "linkedin": "https://linkedin.com/company/dromo"
+  },
+  "feedback": {
+    "suggestEdit": true,
+    "raiseIssue": true
+  },
+  "api": {
+    "baseUrl": "https://app.dromo.io/api/v1",
+    "auth": {
+      "method": "bearer",
+      "name": "X-Dromo-License-Key"
+    },
+    "playground": {
+      "mode": "show"
+    }
+  },
+  "openapi": "/api-reference/openapi.json",
   "navigation": {
     "tabs": [
       {
-        "tab": "Docs",
+        "tab": "Documentation",
         "groups": [
           {
             "group": "Getting Started",
@@ -80,14 +138,47 @@
             ]
           },
           {
-            "group": "Faqs",
+            "group": "FAQs",
             "pages": ["faqs"]
           }
         ]
       },
       {
-        "tab": "Changelog",
-        "href": "https://changelog.dromo.io/"
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Authentication",
+            "pages": [
+              "api-reference/authentication"
+            ]
+          },
+          {
+            "group": "Schemas",
+            "pages": [
+              "api-reference/schemas/list",
+              "api-reference/schemas/create",
+              "api-reference/schemas/get",
+              "api-reference/schemas/update",
+              "api-reference/schemas/delete"
+            ]
+          },
+          {
+            "group": "Imports",
+            "pages": [
+              "api-reference/imports/list",
+              "api-reference/imports/get",
+              "api-reference/imports/data"
+            ]
+          },
+          {
+            "group": "Headless",
+            "pages": [
+              "api-reference/headless/create",
+              "api-reference/headless/get",
+              "api-reference/headless/url"
+            ]
+          }
+        ]
       }
     ]
   }

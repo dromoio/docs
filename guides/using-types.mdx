@@ -11,31 +11,72 @@ Field types enable you to ensure that all values in a field are the same *type* 
 
 By default, if you don't specify a type for a field, it uses the [`string` type](/fields#string). For example, below, we create a field for collecting email addresses:
 
-* JavaScript
-* React
+<CodeGroup>
+```javascript JavaScript
+const fields = [
+  {
+    label: 'Email Address',
+    key: 'emailAddress'
+  }
+];
 
-```
-const fields = [  {    label: 'Email Address',    key: 'emailAddress'  }];const settings = {  importIdentifier: 'Field types example'};const user = {  id: '12345'};const dromo = new DromoUploader('FRONTEND_API_KEY', fields, settings, user);
+const settings = {
+  importIdentifier: 'Field types example'
+};
+
+const user = {
+  id: '12345'
+};
+
+const dromo = new DromoUploader('FRONTEND_API_KEY', fields, settings, user);
 ```
 
+```jsx React
+<DromoUploader
+  licenseKey={'FRONTEND_API_KEY'}
+  user={{ id: '12345' }}
+  fields={[
+    {
+      label: 'Email Address',
+      key: 'emailAddress'
+    }
+  ]}
+  settings={{
+    importIdentifier: 'Field types example'
+  }}>
+  Import data
+</DromoUploader>
 ```
-<DromoUploader  licenseKey={'FRONTEND_API_KEY'}  user={{ id: '12345' }}  fields={[    {      label: 'Email Address',      key: 'emailAddress'    }  ]}  settings={{    importIdentifier: 'Field types example'  }}>  Import data</DromoUploader>
-```
+</CodeGroup>
 
 Because we didn't specify a *type* in the above "Email Address" field, it uses the default `string` type.
 
 However, if we update the "Email address" field to use the [`email` type](/fields#email), that field gains the advantage of Dromo's built-in email address validation:
 
-* JavaScript
-* React
+<CodeGroup>
+```javascript JavaScript
+const fields = [
+  {
+    label: 'Email',
+    key: 'email',
+    type: 'email'
+  }
+];
+```
 
+```jsx React
+<DromoUploader
+  licenseKey={'FRONTEND_API_KEY'}
+  user={{ id: '12345' }}
+  fields={[
+    {
+      label: 'Email Address',
+      key: 'emailAddress',
+      type: 'email'
+    }
+  ]}>
 ```
-const fields = [  {    label: 'Email',    key: 'email',    type: 'email'  }];
-```
-
-```
-<DromoUploader  licenseKey={'FRONTEND_API_KEY'}  user={{ id: '12345' }}  fields={[    {      label: 'Email Address',      key: 'emailAddress'      type: 'email'    }  ]}>
-```
+</CodeGroup>
 
 <Check>
   Selecting the ideal type for each field is essential to honing your Dromo workflow. [See all field types.](/fields#field-types)
@@ -47,24 +88,54 @@ Certain field types offer different configuration options, enabling you to custo
 
 For example, we want a field that tracks prices in USD. We can add a "Price" field using the ["usd" preset](/fields/number-formatting#usd):
 
+<CodeGroup>
+```javascript
+const fields = [
+  {
+    label: 'Price',
+    key: 'price',
+    type: ['number', { preset: 'usd' }]
+  }
+];
 ```
-const fields = [  {    label: 'Price',    key: 'price',    type: ['number', { preset: 'usd' }]  }];
-```
+</CodeGroup>
 
 <Accordion title="💡 Click to learn more about presets">
   Dromo provides many preset options for formatting standard `number`, `date`, `time`, and `datetime` formats. Presets work by automatically filling preset values into the configuration options for a field type.
 
   You can manually configure the options for a number type:
 
+  <CodeGroup>
+  ```javascript
+  type: [
+    "number",
+    {
+      round: <integer>,
+      displayFormat: <format object>,
+      outputFormat: <format object>
+    }
+  ]
   ```
-  type: [  "number",  {    round: <integer>,    displayFormat: <format object>,    outputFormat: <format object>  }]
-  ```
+  </CodeGroup>
 
   Or you can use a preset, which configures options for you. Under the hood, the "usd" preset inputs the following options:
 
+  <CodeGroup>
+  ```javascript
+  {
+    round: 2,
+    displayFormat: {
+      mantissa: 2,
+      thousandSeparated: true,
+      output: "currency",
+      average: false,
+      spaceSeparatedCurrency: true,
+      currencyPosition: "prefix",
+      currencySymbol: "$"
+    }
+  }
   ```
-  {  round: 2,  displayFormat: {    mantissa: 2,    thousandSeparated: true,    output: "currency",    average: false,    spaceSeparatedCurrency: true,    currencyPosition: "prefix",    currencySymbol: "$"  }}
-  ```
+  </CodeGroup>
 
   To learn more about configuring your types without presets, see [customizing numbers](/fields/number-formatting/) or [customizing dates, times, and datetimes](/fields/datetime-formatting/).
 </Accordion>
@@ -83,9 +154,29 @@ However, this "display" format isn't how our data is actually *output*. In the D
 
 If you want to change how a field is output, the `outputFormat` configuration option enables you to do so. For example, if you wish to display *and* output a field into USD, you can use the ["usd" preset](/fields/number-formatting#usd) alongside an `outputFormat` option, like so:
 
+<CodeGroup>
+```javascript
+{
+  label: 'Price',
+  key: 'price',
+  type: [
+    'number',
+    {
+      preset: 'usd',
+      outputFormat: {
+        mantissa: 2,
+        thousandSeparated: true,
+        output: 'currency',
+        average: false,
+        spaceSeparatedCurrency: true,
+        currencyPosition: 'prefix',
+        currencySymbol: '$'
+      }
+    }
+  ]
+}
 ```
-{  label: 'Price',  key: 'price',  type: [    'number',    {      preset: 'usd',      outputFormat: {        mantissa: 2,        thousandSeparated: true,        output: 'currency',        average: false,        spaceSeparatedCurrency: true,        currencyPosition: 'prefix',        currencySymbol: '$'      }    }  ]}
-```
+</CodeGroup>
 
 In the Dromo dashboard's [**Imports** tab](https://dashboard.dromo.io/imports), we'll see that our field is now output in USD:
 
@@ -101,13 +192,92 @@ This is the power of field types! You can tweak how each field validates, displa
 
 Below is an expanded example of defining several types of fields:
 
-* JavaScript
-* React
+<CodeGroup>
+```javascript JavaScript
+const fields = [
+  {
+    label: 'Email',
+    key: 'email',
+    type: 'email'
+  },
+  {
+    label: 'Charges',
+    key: 'charges',
+    type: ['number', 'usd']
+  },
+  {
+    label: 'Test Select',
+    key: 'test_select',
+    type: 'select',
+    selectOptions: [
+      { label: 'I want the option A!', value: 'A' },
+      { label: 'I want the option B!', value: 'B' }
+    ]
+  },
+  {
+    label: 'Date',
+    key: 'date',
+    type: [
+      'date',
+      {
+        locale: 'en-US',
+        displayFormat: 'EEE MMM d, y'
+      }
+    ]
+  }
+];
 
-```
-const fields = [  {    label: 'Email',    key: 'email',    type: 'email'  },  {    label: 'Charges',    key: 'charges',    type: ['number', 'usd']  },  {    label: 'Test Select',    key: 'test_select',    type: 'select',    selectOptions: [      { label: 'I want the option A!', value: 'A' },      { label: 'I want the option B!', value: 'B' }    ]  },  {    label: 'Date',    key: 'date',    type: [      'date',      {        locale: 'en-US',        displayFormat: 'EEE MMM d, y'      }    ]  }];const settings = {  importIdentifier: 'Field types example'};const user = {  id: '12345'};const dromo = new DromoUploader('FRONTEND_API_KEY', fields, settings, user);
+const settings = {
+  importIdentifier: 'Field types example'
+};
+
+const user = {
+  id: '12345'
+};
+
+const dromo = new DromoUploader('FRONTEND_API_KEY', fields, settings, user);
 ```
 
+```jsx React
+<DromoUploader
+  licenseKey={'FRONTEND_API_KEY'}
+  user={{ id: '12345' }}
+  fields={[
+    {
+      label: 'Email',
+      key: 'email',
+      type: 'email'
+    },
+    {
+      label: 'Charges',
+      key: 'charges',
+      type: ['number', 'usd']
+    },
+    {
+      label: 'Test Select',
+      key: 'test_select',
+      type: 'select',
+      selectOptions: [
+        { label: 'I want the option A!', value: 'A' },
+        { label: 'I want the option B!', value: 'B' }
+      ]
+    },
+    {
+      label: 'Date',
+      key: 'date',
+      type: [
+        'date',
+        {
+          locale: 'en-US',
+          displayFormat: 'EEE MMM d, y'
+        }
+      ]
+    }
+  ]}
+  settings={{
+    importIdentifier: 'Field types example'
+  }}>
+  Import data
+</DromoUploader>
 ```
-<DromoUploader  licenseKey={'FRONTEND_API_KEY'}  user={{ id: '12345' }}  fields={[    {      label: 'Email',      key: 'email',      type: 'email'    },    {      label: 'Charges',      key: 'charges',      type: ['number', 'usd']    },    {      label: 'Date',      key: 'date',      type: [        'date',        {          locale: 'en-US',          displayFormat: 'EEE MMM d, y'        }      ]    }  ]}  settings={{    importIdentifier: 'Field types example'  }}>  Import data</DromoUploader>
-```
+</CodeGroup>

@@ -20,21 +20,49 @@ Learn how to update your docs locally and deploy them to the public.
   </Accordion>
   <Accordion icon="rectangle-terminal" title="Preview changes">
     Previewing helps you make sure your changes look as intended. We built a
-    command line interface to render these changes locally. 
-    1. Install the
-    [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the
-    documentation changes locally with this command: ``` npm i -g mintlify ```
-    2. Run the following command at the root of your documentation (where
-    `docs.json` is): ``` mintlify dev ```
+    command line interface to render these changes locally.
+    
+    <Steps>
+      <Step title="Install the Mintlify CLI">
+        Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the
+        documentation changes locally with this command:
+        
+        <CodeGroup>
+        ```bash
+        npm i -g mintlify
+        ```
+        </CodeGroup>
+      </Step>
+      
+      <Step title="Run the development server">
+        Run the following command at the root of your documentation (where `docs.json` is):
+        
+        <CodeGroup>
+        ```bash
+        mintlify dev
+        ```
+        </CodeGroup>
+      </Step>
+    </Steps>
+    
     <Note>
-      If you’re currently using the legacy ```mint.json``` configuration file, please update the Mintlify CLI:
+      If you're currently using the legacy `mint.json` configuration file, please update the Mintlify CLI:
 
-
-      ```npm i -g mintlify@latest```
+      <CodeGroup>
+      ```bash
+      npm i -g mintlify@latest
+      ```
+      </CodeGroup>
+      
       And run the new upgrade command in your docs repository:
 
-      ```mintlify upgrade```
-      You should now be using the new ```docs.json``` configuration file. Feel free to delete the ```mint.json``` file from your repository.
+      <CodeGroup>
+      ```bash
+      mintlify upgrade
+      ```
+      </CodeGroup>
+      
+      You should now be using the new `docs.json` configuration file. Feel free to delete the `mint.json` file from your repository.
     </Note>
   </Accordion>
 </AccordionGroup>

@@ -1,102 +1,141 @@
 ---
 title: "Using the Saved Schema API"
-description: "In addition to using Dromo's intuitive , you can also create, edit and delete saved schemas directly via API."
+description: "In addition to using Dromo's intuitive interface, you can also create, edit and delete saved schemas directly via API."
 ---
 
 Working with the API allows you to access the complete array of settings and options that Dromo provides.
 
-## The API[​](#the-api "Direct link to The API")
+## The API
 
 Dromo provides a standard REST API for working with schemas. The API provides standard CRUD operations for saved schemas.
 
 You can view the full Saved Schema API reference [here](/api#tag/import-schemas).
 
-## Saved Schema Structure[​](#saved-schema-structure "Direct link to Saved Schema Structure")
+## Saved Schema Structure
 
 Schemas have the following fields:
 
-* idstring
-
+<ResponseField name="id" type="string">
   Schemas are automatically assigned a UUID when they are created.
+</ResponseField>
 
-* namestringRequired
-
+<ResponseField name="name" type="string" required>
   Schemas must have a unique name within your organization.
 
   Schema names are displayed in the Dromo dashboard.
+</ResponseField>
 
-* settings[Settings](/settings)Required
-
+<ResponseField name="settings" type="Settings" required>
   Saved schemas accept the same settings that can be provided to the browser SDK.
 
-* fields[Field\[\]](/fields#field-object-reference)Required
+  See [Settings](/settings) for more details.
+</ResponseField>
 
+<ResponseField name="fields" type="Field[]" required>
   Schemas have an array of fields which also accept the same full set of options as the browser SDK.
 
-* hooks
+  See [Field Object Reference](/fields#field-object-reference) for more details.
+</ResponseField>
 
+<ResponseField name="hooks" type="object">
   You can define any or all of the [hooks](/hooks) that Dromo provides using the Saved Schema API.
 
   The hook function JavaScript source is passed as a string, which must evaluate to a valid JavaScript function. See the [defining hooks section](#defining-hooks) for examples.
 
   All hooks are optional.
 
-  * rowHooksstring\[]
+  <Expandable title="Hook Properties">
+    <ResponseField name="rowHooks" type="string[]">
+      An array of strings defining valid JavaScript [standard row hooks](/hooks#standard-row-hooks).
+    </ResponseField>
 
-    An array of strings defining valid JavaScript [standard row hooks](/hooks#standard-row-hooks).
+    <ResponseField name="bulkRowHooks" type="string[]">
+      An array of strings defining valid JavaScript [bulk row hooks](/hooks#bulk-row-hooks).
+    </ResponseField>
 
-  * bulkRowHooksstring\[]
+    <ResponseField name="rowDeleteHooks" type="string[]">
+      An array of strings defining valid JavaScript [row delete hooks](/hooks#row-delete-hooks).
+    </ResponseField>
 
-    An array of strings defining valid JavaScript [bulk row hooks](/hooks#bulk-row-hooks).
+    <ResponseField name="columnHooks" type="object[]">
+      An array of objects defining [column hooks](/hooks#column-hooks).
 
-  * rowDeleteHooksstring\[]
+      Each column hook has a `fieldName` specifying which column the hook will run on, and a `callback` defining a valid JavaScript column hook function.
 
-    An array of strings defining valid JavaScript [row delete hooks](/hooks#row-delete-hooks).
+      <Expandable title="Column Hook Object">
+        <ResponseField name="fieldName" type="string" required>
+          The field name this hook applies to.
+        </ResponseField>
+        <ResponseField name="callback" type="string" required>
+          Valid JavaScript column hook function.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
 
-  * columnHooks\{ fieldName: string, callback: string }\[]
+    <ResponseField name="stepHooks" type="object[]">
+      An array of objects defining [step hooks](/hooks#step-hooks).
 
-    An array of objects defining [column hooks](/hooks#column-hooks).
+      Each step hook has a `type` (one of `"UPLOAD_STEP"`, `"REVIEW_STEP"`, or `"REVIEW_STEP_POST_HOOKS"`) and a `callback` defining a valid JavaScript column hook function.
 
-    Each column hook has a `fieldName` specifying which column the hook will run on, and a `callback` defining a valid JavaScript column hook function.
+      <Expandable title="Step Hook Object">
+        <ResponseField name="type" type="string" required>
+          One of: `"UPLOAD_STEP"`, `"REVIEW_STEP"`, or `"REVIEW_STEP_POST_HOOKS"`
+        </ResponseField>
+        <ResponseField name="callback" type="string" required>
+          Valid JavaScript step hook function.
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
 
-  * stepHooks\{ type: string, callback: string }\[]
+    <ResponseField name="beforeFinishCallback" type="string">
+      A string defining a valid JavaScript [before finish callback](/results#the-beforefinish-callback).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
 
-    An array of objects defining [step hooks](/hooks#step-hooks).
-
-    Each step hook has a `type` (one of `"UPLOAD_STEP"`, `"REVIEW_STEP"`, or `"REVIEW_STEP_POST_HOOKS"`) and a `callback` defining a valid JavaScript column hook function.
-
-  * beforeFinishCallbackstring
-
-    An string defining a valid JavaScript [before finish callback](/results#the-beforefinish-callback).
-
-## Defining hooks[​](#defining-hooks "Direct link to Defining hooks")
+## Defining hooks
 
 Hook functions are defined using strings containing JavaScript source code. The code is evaluated in the end user's browser for standard imports, and using Node.js 18 for headless imports.
 
 All types of function declarations are accepted:
 
-* Anonymous function expression: `function(a, b) { return a + b; }`
-* Named function expression: `function sum(a, b) { return a + b; }`
-* Arrow function: `(a, b) => { return a + b; }`
+- Anonymous function expression: `function(a, b) { return a + b; }`
+- Named function expression: `function sum(a, b) { return a + b; }`
+- Arrow function: `(a, b) => { return a + b; }`
 
 <AccordionGroup>
   <Accordion title="Row hook example">
-    To define a row hook, you could pass the following to the API's \`hooks\` parameter:
+    To define a row hook, you could pass the following to the API's `hooks` parameter:
 
+    <CodeGroup>
+    ```json
+    {
+      "rowHooks": [
+        "(record, mode) => { record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0'); return record; }"
+      ]
+    }
     ```
-    {  "rowHooks": [    "(record, mode) => { record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0'); return record; }"  ]}
-    ```
+    </CodeGroup>
   </Accordion>
 
   <Accordion title="Step hook example">
-    To define a step hook, you could pass the following to the API's \`hooks\` parameter:
+    To define a step hook, you could pass the following to the API's `hooks` parameter:
 
+    <CodeGroup>
+    ```json
+    {
+      "stepHooks": [
+        {
+          "type": "REVIEW_STEP",
+          "callback": "(instance) => instance.addField({ label: 'Full Name', key: 'fullName' })"
+        }
+      ]
+    }
     ```
-    {  "stepHooks": [    {      "type": "REVIEW_STEP",      "callback": "(instance) => instance.addField({ label: 'Full Name', key: 'fullName' })"    }  ]}
-    ```
+    </CodeGroup>
   </Accordion>
 </AccordionGroup>
 
-## Using saved schemas[​](#using-saved-schemas "Direct link to Using saved schemas")
+## Using saved schemas
 
 Saved schemas can be used [in the browser](/guides/schema-builder) or using the [Headless API](/getting-started/headless).

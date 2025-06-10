@@ -1,6 +1,6 @@
 ---
 title: "Validating multiple rows at once"
-description: "Row hooks are great for validating a single row, but what if you want to validate multiple rows at once? For example, you want to make sure that the user has imported at least 20 rows. In this case, you can use the  callback."
+description: "Row hooks are great for validating a single row, but what if you want to validate multiple rows at once? For example, you want to make sure that the user has imported at least 20 rows. In this case, you can use the beforeFinish callback."
 ---
 
 This function will run every time the user clicks the "Finish" button. If it returns an object with the `cancel` property set to `true`, the user will be reverted to the data review screen, and the `message` will be displayed as a table-level error.
@@ -9,13 +9,24 @@ This function will run every time the user clicks the "Finish" button. If it ret
   For more detail about the `beforeFinish` callback, see the [Reference](/results#the-beforefinish-callback) page
 </Info>
 
-* JavaScript
-* React
+<CodeGroup>
+```javascript JavaScript
+dromo.beforeFinish(function (data, metadata, instance) {
+  if (data.length < 20) {
+    return { cancel: true, message: "You must import at least 20 rows" }
+  }
+});
+```
 
+```jsx React
+<DromoUploader
+  ...
+  beforeFinish={(data, metadata, instance) => {
+    if (data.length < 20) {
+      return { cancel: true, message: "You must import at least 20 rows" }
+    }
+  }}>
+  Launch Dromo
+</DromoUploader>
 ```
-dromo.beforeFinish(function (data, metadata, instance) {  if (data.length < 20) {    return { cancel: true, message: "You must import at least 20 rows" }  }});
-```
-
-```
-<DromoUploader  ...  beforeFinish={(data, metadata, instance) =>    if (data.length < 20) {      return { cancel: true, message: "You must import at least 20 rows" }    }  }>  Launch Dromo</DromoUploader>
-```
+</CodeGroup>
