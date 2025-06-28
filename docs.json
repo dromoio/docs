@@ -62,10 +62,10 @@
       "name": "X-Dromo-License-Key"
     },
     "playground": {
-      "mode": "show"
+      "mode": "show",
+      "display": "simple"
     }
   },
-  "openapi": "/api-reference/openapi.json",
   "navigation": {
     "tabs": [
       {
@@ -153,32 +153,17 @@
             ]
           },
           {
-            "group": "Schemas",
-            "pages": [
-              "api-reference/schemas/list",
-              "api-reference/schemas/create",
-              "api-reference/schemas/get",
-              "api-reference/schemas/update",
-              "api-reference/schemas/delete"
-            ]
-          },
-          {
-            "group": "Imports",
-            "pages": [
-              "api-reference/imports/list",
-              "api-reference/imports/get",
-              "api-reference/imports/data"
-            ]
-          },
-          {
-            "group": "Headless",
-            "pages": [
-              "api-reference/headless/create",
-              "api-reference/headless/get",
-              "api-reference/headless/url"
-            ]
+            "group": "Endpoints",
+            "openapi": {
+              "source": "api-reference/openapi.json",
+              "directory": "api-reference"
+            }
           }
         ]
+      },
+      {
+        "tab": "Changelog",
+        "href": "https://changelog.dromo.io/"
       }
     ]
   }
