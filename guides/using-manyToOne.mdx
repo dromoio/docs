@@ -1,15 +1,14 @@
 ---
-title: "Mapping multiple columns to a single field"
-description: "This guide demonstrates how to use field setting to map multiple columns to a single field."
+title: "Mapping Multiple Columns to a Single Field"
 ---
 
-This setting is often useful when you wish for your users to include a variable number of columns that need similar validation.
+This guide demonstrates how to use field setting to map multiple columns to a single field.
 
 <Info>
   For more detail about the `manyToOne` setting, see the [reference](/fields#manyToOne) page.
 </Info>
 
-For our example, imagine a situation where we want to collect information for tax purposes. We need to collect an `email`, `primary_earnings`, and if applicable `additional_earnings`. Users will upload spreadsheets with columns matching `email`, `primary_earnings` and one or more columns for `additional_earnings`. Because the number of additional earnings columns can vary, we want to use a single field, `additional_earnings` and map all the additional earnings columns to it. We will validate and transform all the earnings values as USD currency.
+Suppose we’re collecting tax information: `email`, `primary_earnings`, and optional `additional_earnings`. Users upload spreadsheets with these columns, though the number of `additional_earnings` columns may vary. We’ll map them all to a single `additional_earnings` field and validate all earnings as USD currency.
 
 ## Field Configuration
 
@@ -65,7 +64,7 @@ export const fields = [
 
 With this setting enabled, a user will be able to choose multiple columns and match them to the field without error.
 
-![many to one column mapping](\images\guides\assets\images\column_mapping-eed6adb531f610423d9527b6c17f09e6.png)
+![many to one column mapping](/images/guides/assets/images/column_mapping.png)
 
 ## Data Review Screen
 
@@ -73,7 +72,7 @@ With multiple columns mapped to one field, all the columns will have the label w
 
 Note that validations defined in a `manyToOne` field apply to all mapped columns.
 
-![data review screen with many to one](\images\guides\assets\images\data_review-2a8bea8cd30fdafb6eab8a192cb2e658.png)
+![data review screen with many to one](/images/guides/assets/images/data_review.png)
 
 ## Results
 
@@ -115,7 +114,7 @@ Each value from a `manyToOne` column appear in an array that is the value for th
 ```
 </CodeGroup>
 
-### Result MetaData
+### Result Metadata
 
 The result metadata indicates which columns from the source file were mapped to which columns.
 
@@ -301,6 +300,8 @@ The full data object supplied as an argument to the step hook will resemble this
 }
 ```
 </CodeGroup>
+
+So in code:
 
 <CodeGroup>
 ```javascript JavaScript

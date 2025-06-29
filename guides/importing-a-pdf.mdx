@@ -1,24 +1,22 @@
 ---
-title: "Importing a PDF table with a custom parser"
+title: "Importing a PDF table with a Custom Parser"
 ---
 
 ## Overview
 
-In this guide, we will build a [custom file parser](/custom-file-parsers) so that our importer can accept PDF files from our users. To extract the data from the PDF files, we will use PDFTables, which provides an API to extract data tables from PDF files.
+In this guide, we’ll build a [custom file parser](/custom-file-parsers) to support PDF uploads using the PDFTables API to extract tables from PDFs.
 
 ## Getting Started
 
 For our example we're importing users from a table in a PDF document.
 
-![PDF Contents](\images\guides\assets\images\customParserPDF-fc18aec5228eeab5755848464fdbedc7.png)
+![PDF Contents](/images/guides/assets/images/customParserPDF.png)
 
 We'll rely on [PDFTables](https://pdftables.com/) API to parse the PDF into a CSV string. Once we have a CSV string, we'll use an additional external library, [PapaParse](https://www.papaparse.com/), to parse the CSV string into a two dimensional array of data for Dromo to receive.
 
 <Info>
   To use this demo you'll need to get your own [paid API key from PDFTables](https://pdftables.com/pricing).
 </Info>
-
-Once you have your own PDFTables API key we can proceed to the Dromo implementation.
 
 ## Adding the Custom Parser to Dromo
 
@@ -80,14 +78,12 @@ async (buffer, fileName) => {
 If successful, the `response.text()` will contain a CSV string. Like this:
 
 <CodeGroup>
-```csv
+```text
 'my_filename,,,\nFirst,Last,Email,Food\nMichael,Phillips,jason@moxie.xyz,Apple\nMohit,Kukreja,info@hub.inc,Banana\nMark,Walz,vengat@klenty.com,Orange\nTonya,,team@buyerassist.io,Apple\nBen,Cohen,bad email,Banana\n,Simonyan,hello@markaaz.com,Orange\nSagar,Sagiraju,,Apple\nR2,Bewley,preena@klenty.com,Banana\nRuairi,Galavan,Info test,Orange\nAdam,Zelinski,info@medisponsor.com,Apple\nAnais,Mares,info@arrowxyz.com,Banana\nLucia,Lu,support@data-lead.com,Orange\nVishu,Gopal,admin@uptics.io,Strawberry\n1,,,\n'
 ```
 </CodeGroup>
 
 We need to convert this in to a two dimensional array. We'll use [PapaParse](https://www.papaparse.com/), a free package, to convert the string to the desired format.
-
-Add PapaParse to your `package.json` so you can use it in your application.
 
 <CodeGroup>
 ```javascript
@@ -103,8 +99,6 @@ const lines = Papa.parse(data).data as string[][];
 ...
 ```
 </CodeGroup>
-
-Finally, before we can return the formatted data, we need to ensure it is the correct shape.
 
 Ensure that every line in the two dimensional array is the same length, then return the data.
 
@@ -124,11 +118,11 @@ We're done! Let's try it in Dromo and see how it works.
 
 Open the Dromo importer and observe the file extensions now include 'pdf'.
 
-![extensions include pdf image](\images\guides\assets\images\extensions_include_pdf-2d728b47002aa579db819ece2755b62e.png)
+![extensions include pdf image](/images/guides/assets/images/extensions_include_pdf.png)
 
 Drag and drop your PDF test file. Your data should be properly parsed and loaded.
 
-![parsed pdf data](\images\guides\assets\images\parsed_pdf_data-ac1fd86d5119d1972275b468e48ab2d4.png)
+![parsed pdf data](/images/guides/assets/images/parsed_pdf_data.png)
 
 ## Full Complete Demo
 

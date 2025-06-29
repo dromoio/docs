@@ -93,7 +93,7 @@
                 ]
               },
               {
-                "group": "Adding validations",
+                "group": "Advance Validations",
                 "pages": [
                   "guides/using-beforeFinish",
                   "guides/using-row-hooks",
@@ -103,7 +103,6 @@
               },
               "guides/custom-styling",
               "guides/bring-your-own-storage",
-              "guides/writing-results-to-firebase",
               "guides/zapier-integration",
               "guides/using-manyToOne",
               "guides/using-transform-data",

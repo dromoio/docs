@@ -12,209 +12,224 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
     For a visual overlay of the available styling options, see the [guide to customizing styles](/guides/custom-styling).
   </Info>
 
-  <ResponseField name="global" type="object" default="{}">
-    Style overrides that affect the general UI of the Dromo Uploader
+  <div className="ml-8">
 
-    <ResponseField name="primaryTextColor" type="string">
-      The primary text color
+    <ResponseField name="global" type="object">
+      Style overrides that affect the general UI of the Dromo Uploader
+
+      <div className="ml-8">
+        <ResponseField name="primaryTextColor" type="string">
+          The primary text color
+        </ResponseField>
+
+        <ResponseField name="secondaryTextColor" type="string">
+          The secondary text color
+        </ResponseField>
+
+        <ResponseField name="customFontURL" type="string">
+          A URL to a custom font file
+        </ResponseField>
+
+        <ResponseField name="customFontFamily" type="string">
+          The name of the font family provided by the custom font file
+        </ResponseField>
+
+        <ResponseField name="backgroundColor" type="string" default="#ffffff">
+          Added in v2
+
+          The background color of the modal
+        </ResponseField>
+
+        <ResponseField name="borderRadius" type="string" default="8px">
+          Added in v2
+
+          The border radius of the modal
+        </ResponseField>
+
+        <ResponseField name="borderStyle" type="string" default="none">
+          Added in v2
+
+          The border style of the modal
+        </ResponseField>
+
+        <ResponseField name="borderWidth" type="string" default="none">
+          Added in v2
+
+          The border width of the modal
+        </ResponseField>
+
+        <ResponseField name="borderColor" type="string" default="none">
+          Added in v2
+
+          The border color of the modal
+        </ResponseField>
+      </div>
     </ResponseField>
 
-    <ResponseField name="secondaryTextColor" type="string">
-      The secondary text color
+    <ResponseField name="primaryButton" type="object" default="{}">
+      Style overrides for the primary action button
+
+      <div className="ml-8">
+        <ResponseField name="borderRadius" type="string">
+          The radius of the button
+        </ResponseField>
+
+        <ResponseField name="backgroundColor" type="string">
+          The background color of the button
+        </ResponseField>
+
+        <ResponseField name="textColor" type="string">
+          The color of the text in the button
+        </ResponseField>
+
+        <ResponseField name="border" type="string">
+          The `border` shorthand property to apply to the button
+        </ResponseField>
+
+        <ResponseField name="hoverBackgroundColor" type="string">
+          The background color of the button while hovering
+        </ResponseField>
+
+        <ResponseField name="hoverTextColor" type="string">
+          The text color of the button while hovering
+        </ResponseField>
+
+        <ResponseField name="hoverBorder" type="string">
+          The `border` shorthand property to apply to the button while hovering
+        </ResponseField>
+      </div>
     </ResponseField>
 
-    <ResponseField name="customFontURL" type="string">
-      A URL to a custom font file
+    <ResponseField name="secondaryButton" type="object" default="{}">
+      Style overrides for the secondary action button
+
+      <div className="ml-8">
+        <ResponseField name="borderRadius" type="string">
+          The radius of the button
+        </ResponseField>
+
+        <ResponseField name="backgroundColor" type="string">
+          The background color of the button
+        </ResponseField>
+
+        <ResponseField name="textColor" type="string">
+          The color of the text in the button
+        </ResponseField>
+
+        <ResponseField name="border" type="string">
+          The `border` shorthand property to apply to the button
+        </ResponseField>
+
+        <ResponseField name="hoverBackgroundColor" type="string">
+          The background color of the button while hovering
+        </ResponseField>
+
+        <ResponseField name="hoverTextColor" type="string">
+          The text color of the button while hovering
+        </ResponseField>
+
+        <ResponseField name="hoverBorder" type="string">
+          The `border` shorthand property to apply to the button while hovering
+        </ResponseField>
+      </div>
     </ResponseField>
 
-    <ResponseField name="customFontFamily" type="string">
-      The name of the font family provided by the custom font file
+    <ResponseField name="dropzone" type="object" default="{}">
+      Style overrides for the file dropzone on the upload screen
+
+      <div className="ml-8">
+        <ResponseField name="borderWidth" type="number" default="2">
+          The width of the dropzone border in pixels
+        </ResponseField>
+
+        <ResponseField name="borderRadius" type="number" default="8">
+          The radius of the dropzone border in pixels
+        </ResponseField>
+
+        <ResponseField name="borderColor" type="string">
+          The color of the dropzone border
+        </ResponseField>
+
+        <ResponseField name="borderStyle" type="string" default="dashed">
+          The style of the dropzone border
+        </ResponseField>
+
+        <ResponseField name="backgroundColor" type="string">
+          The background color of the dropzone
+        </ResponseField>
+
+        <ResponseField name="outline" type="string">
+          The outline property of the dropzone
+        </ResponseField>
+      </div>
     </ResponseField>
 
-    <ResponseField name="backgroundColor" type="string" default="#ffffff">
-      Added in v2
+    <ResponseField name="helpText" type="object" default="{}">
+      Style overrides for the help text boxes
 
-      The background color of the modal
+      <div className="ml-8">
+        <ResponseField name="textColor" type="string">
+          The text color of the help text
+        </ResponseField>
+
+        <ResponseField name="backgroundColor" type="string">
+          The background color of the help text box
+        </ResponseField>
+      </div>
     </ResponseField>
 
-    <ResponseField name="borderRadius" type="string" default="8px">
-      Added in v2
+    <ResponseField name="stepperBar" type="object" default="{}">
+      Style overrides for the progress bar in the header
 
-      The border radius of the modal
+      <div className="ml-8">
+        <ResponseField name="completeColor" type="string">
+          The color of completed steps
+        </ResponseField>
+
+        <ResponseField name="incompleteColor" type="string">
+          The color of steps that have not been started yet
+        </ResponseField>
+
+        <ResponseField name="currentColor" type="string">
+          The color of the step currently in progress
+        </ResponseField>
+
+        <ResponseField name="fontSize" type="string" default="1rem">
+          Added in v2
+
+          The font size of the step text
+        </ResponseField>
+
+        <ResponseField name="completeFontWeight" type="string" default="bold">
+          Added in v2
+
+          The font weight of completed steps
+        </ResponseField>
+
+        <ResponseField name="incompleteFontWeight" type="string" default="normal">
+          Added in v2
+
+          The font weight of incomplete steps
+        </ResponseField>
+
+        <ResponseField name="currentFontWeight" type="string" default="bold">
+          Added in v2
+
+          The font weight of the current step
+        </ResponseField>
+
+        <ResponseField name="backgroundColor" type="string">
+          Added in v2
+
+          The background color of the stepper bar
+        </ResponseField>
+
+        <ResponseField name="borderBottom" type="string">
+          Added in v2
+
+          The bottom border separating the stepper bar from the rest of the modal
+        </ResponseField>
+      </div>
     </ResponseField>
-
-    <ResponseField name="borderStyle" type="string" default="none">
-      Added in v2
-
-      The border style of the modal
-    </ResponseField>
-
-    <ResponseField name="borderWidth" type="string" default="none">
-      Added in v2
-
-      The border width of the modal
-    </ResponseField>
-
-    <ResponseField name="borderColor" type="string" default="none">
-      Added in v2
-
-      The border color of the modal
-    </ResponseField>
-  </ResponseField>
-
-  <ResponseField name="primaryButton" type="object" default="{}">
-    Style overrides for the primary action button
-
-    <ResponseField name="borderRadius" type="string">
-      The radius of the button
-    </ResponseField>
-
-    <ResponseField name="backgroundColor" type="string">
-      The background color of the button
-    </ResponseField>
-
-    <ResponseField name="textColor" type="string">
-      The color of the text in the button
-    </ResponseField>
-
-    <ResponseField name="border" type="string">
-      The `border` shorthand property to apply to the button
-    </ResponseField>
-
-    <ResponseField name="hoverBackgroundColor" type="string">
-      The background color of the button while hovering
-    </ResponseField>
-
-    <ResponseField name="hoverTextColor" type="string">
-      The text color of the button while hovering
-    </ResponseField>
-
-    <ResponseField name="hoverBorder" type="string">
-      The `border` shorthand property to apply to the button while hovering
-    </ResponseField>
-  </ResponseField>
-
-  <ResponseField name="secondaryButton" type="object" default="{}">
-    Style overrides for the secondary action button
-
-    <ResponseField name="borderRadius" type="string">
-      The radius of the button
-    </ResponseField>
-
-    <ResponseField name="backgroundColor" type="string">
-      The background color of the button
-    </ResponseField>
-
-    <ResponseField name="textColor" type="string">
-      The color of the text in the button
-    </ResponseField>
-
-    <ResponseField name="border" type="string">
-      The `border` shorthand property to apply to the button
-    </ResponseField>
-
-    <ResponseField name="hoverBackgroundColor" type="string">
-      The background color of the button while hovering
-    </ResponseField>
-
-    <ResponseField name="hoverTextColor" type="string">
-      The text color of the button while hovering
-    </ResponseField>
-
-    <ResponseField name="hoverBorder" type="string">
-      The `border` shorthand property to apply to the button while hovering
-    </ResponseField>
-  </ResponseField>
-
-  <ResponseField name="dropzone" type="object" default="{}">
-    Style overrides for the file dropzone on the upload screen
-
-    <ResponseField name="borderWidth" type="number" default="2">
-      The width of the dropzone border in pixels
-    </ResponseField>
-
-    <ResponseField name="borderRadius" type="number" default="8">
-      The radius of the dropzone border in pixels
-    </ResponseField>
-
-    <ResponseField name="borderColor" type="string">
-      The color of the dropzone border
-    </ResponseField>
-
-    <ResponseField name="borderStyle" type="string" default="dashed">
-      The style of the dropzone border
-    </ResponseField>
-
-    <ResponseField name="backgroundColor" type="string">
-      The background color of the dropzone
-    </ResponseField>
-
-    <ResponseField name="outline" type="string">
-      The outline property of the dropzone
-    </ResponseField>
-  </ResponseField>
-
-  <ResponseField name="helpText" type="object" default="{}">
-    Style overrides for the help text boxes
-
-    <ResponseField name="textColor" type="string">
-      The text color of the help text
-    </ResponseField>
-
-    <ResponseField name="backgroundColor" type="string">
-      The background color of the help text box
-    </ResponseField>
-  </ResponseField>
-
-  <ResponseField name="stepperBar" type="object" default="{}">
-    Style overrides for the progress bar in the header
-
-    <ResponseField name="completeColor" type="string">
-      The color of completed steps
-    </ResponseField>
-
-    <ResponseField name="incompleteColor" type="string">
-      The color of steps that have not been started yet
-    </ResponseField>
-
-    <ResponseField name="currentColor" type="string">
-      The color of the step currently in progress
-    </ResponseField>
-
-    <ResponseField name="fontSize" type="string" default="1rem">
-      Added in v2
-
-      The font size of the step text
-    </ResponseField>
-
-    <ResponseField name="completeFontWeight" type="string" default="bold">
-      Added in v2
-
-      The font weight of completed steps
-    </ResponseField>
-
-    <ResponseField name="incompleteFontWeight" type="string" default="normal">
-      Added in v2
-
-      The font weight of incomplete steps
-    </ResponseField>
-
-    <ResponseField name="currentFontWeight" type="string" default="bold">
-      Added in v2
-
-      The font weight of the current step
-    </ResponseField>
-
-    <ResponseField name="backgroundColor" type="string">
-      Added in v2
-
-      The background color of the stepper bar
-    </ResponseField>
-
-    <ResponseField name="borderBottom" type="string">
-      Added in v2
-
-      The bottom border separating the stepper bar from the rest of the modal
-    </ResponseField>
-  </ResponseField>
+  </div>
 </ResponseField>
