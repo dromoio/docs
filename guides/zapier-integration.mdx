@@ -18,7 +18,7 @@ Dromo offers two event triggers: "New Results File" and "New Data Row Imported".
 
 You can manually [create a new Zap](https://zapier.com/resources/guides/quick-start/create-zap) or use one of Dromo's pre-configured Zap templates. These are available from the integrations menu in the Schema Editor.
 
-![Schema Integrations Image](/images/guides/assets/images/schema_integrations.png)
+![Schema Integrations Image](/images/guides/schema_integrations.png)
 
 If you manually create a Zap, you can add a Dromo trigger by searching for the "Dromo" app in the menu. Once you've selected the Dromo app, you can choose the event to subscribe to.
 
@@ -34,30 +34,30 @@ To follow along, you will need a [Dromo account](https://dashboard.dromo.io/), a
 
 The Dromo Zapier triggers are scoped to a specific saved schema. If you don't have one already, you will need to [create a schema](/guides/schema-builder) using the Schema Studio to try out your Zap with. It is also helpful to have at least one completed import using your schema so you can test that your Zap will work as expected.
 
-![Schema Studio](/images/guides/assets/images/schema_studio.png)
+![Schema Studio](/images/guides/schema_studio.png)
 
 Open the Schema Integrations Menu and click "Use this Zap" under the "Send Slack Messages for New Dromo Imports" template.
 
-![Schema Integrations Image](/images/guides/assets/images/schema_integrations.png)
+![Schema Integrations Image](/images/guides/schema_integrations.png)
 
 A new draft Zap will open in Zapier.
 
 Expand the Dromo trigger, where you can configure how your Zap will run. First, you will need to connect your Dromo account. Then, select the schema you want notifications for in the "Trigger" section.
 
-![Dromo Trigger](/images/guides/assets/images/dromo_trigger.png)
+![Dromo Trigger](/images/guides/dromo_trigger.png)
 
 Under the "Test" section, click "Test Trigger". Zapier will retrieve a recent import from your schema. Click "Continue with selected record".
 
-![Sample File](/images/guides/assets/images/sample_file.png)
+![Sample File](/images/guides/sample_file.png)
 
 Next, we will configure the Slack action. For this example, we'll configure Zapier to send ourselves a DM, so we'll choose the "Send Direct Message" event. Click continue and connect your Slack account.
 
 Then, set "To Username" to yourself. For the message text, we'll configure the Zap to send us a DM with the result filename and a link to download the results.
 
-![Slack config](/images/guides/assets/images/slack_config.png)
+![Slack config](/images/guides/slack_config.png)
 
 Test the action, you should receive a Slack message with the ID as text and a working link to download the file!
 
-![Slack message](/images/guides/assets/images/slack_msg.png)
+![Slack message](/images/guides/slack_msg.png)
 
 Click publish, and your Zap is now live! Try importing some files with Dromo in production mode. You should see a new Slack message for each import.

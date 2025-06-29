@@ -14,10 +14,10 @@ description: "Deprecated settings are settings that are no longer supported and 
 
   This option impacts the messaging on the final screen before submitting data. When this is set to `false`, Dromo will discard the records with errors and the user will see "Discard *X* rows with issues. Submit the rest." When this is set to `true`, Dromo will submit the records with errors and the user will see "Submit your data anyway (errors may occur).":
   <Expandable title="allowInvalidSubmit=false">
-    ![invalidSubmit false](/images/guides/assets/images/allowInvalidSubmit_false.png)
+    ![invalidSubmit false](/images/guides/allowInvalidSubmit_false.png)
   </Expandable>
   <Expandable title="allowInvalidSubmit=true">
-    ![invalidSubmit true](/images/guides/assets/images/allowInvalidSubmit_true.png)
+    ![invalidSubmit true](/images/guides/allowInvalidSubmit_true.png)
   </Expandable>
 </ResponseField>
 
@@ -27,4 +27,10 @@ description: "Deprecated settings are settings that are no longer supported and 
   `backendSync = false` is equivalent to `backendSyncMode = "DISABLED"`
   `backendSync = true` is equivalent to `backendSyncMode = "FULL_DATA"`
 </Warning>
+</ResponseField>
+
+<ResponseField name="displayEncoding" type="boolean" default="true">
+  <Warning>Removed in v2</Warning>
+  
+  Allows the user to specify an encoding for any files they upload. Dromo will default to the encoding that it detects. If `displayEncoding` is set to `true` (default), the encoding dropdown is visible in the importer:
 </ResponseField>

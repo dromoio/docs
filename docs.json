@@ -126,7 +126,8 @@
                 "group": "Fields",
                 "pages": [
                   "settings/fields",
-                  "settings/field-types"
+                  "settings/field-types",
+                  "settings/field-validators"
                 ]
               },
               "settings/hooks",

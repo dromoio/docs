@@ -142,7 +142,7 @@ const fields = [
 
 The "usd" preset ensures that this `number` field parses, validates, displays, and outputs values in dollars. Therefore, if a user attempts to insert a value that *can't* be parsed into USD (i.e., another currency), Dromo throws a validation error:
 
-![Validation error for inputting invalid currency](/images/guides/assets/images/use_wrong_currency.png)
+![Validation error for inputting invalid currency](/images/guides/use_wrong_currency.png)
 
 <Note>
   For numbers (and a few other field types) the display format is not what the field outputs. If you want to change how a field is output, the `outputFormat` configuration option enables you to do so. For example, if you wish to display *and* output a field into USD, you can use the ["usd" preset](/fields/number-formatting#usd) alongside an `outputFormat` option.

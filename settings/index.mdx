@@ -10,7 +10,7 @@ description: "Settings are supplied as an object to the Dromo instance on initia
 <ResponseField name="title" type="string" default='Add ${importIdentifier}'>
   Replaces the title of the importer modal. For instance, if we set `title` to "Enjoy Dromo!" you would see the title appear in the importer like this:
 
-  ![](\images\assets\images\title-433b1d06060b596f4b945f164836e073.png)
+  ![](/images/assets/images/title.png)
 
   <Note>
     The default for this will display "Add `importIdentifier`". For instance, if the `importIdentifier` is `Products`, it will say "Add Products".
@@ -22,7 +22,7 @@ description: "Settings are supplied as an object to the Dromo instance on initia
 
   |                                    `REMOVE_INVALID_ROWS`                                   |                                    `INCLUDE_INVALID_ROWS`                                   |                                   `BLOCK_SUBMIT`                                  |
   | :----------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
-  | ![](\images\assets\images\invalidData_remove_invalid-01740ea0a822f4e0c237ad8996b6bee2.png) | ![](\images\assets\images\invalidData_include_invalid-0161b5af83630258a646f89c8442d569.png) | ![](\images\assets\images\invalidData_block-8712b85ffd9b1c76a9650236e929f06d.png) |
+  | ![](/images/assets/images/invalidData_remove_invalid.png) | ![](/images/assets/images/invalidData_include_invalid.png) | ![](/images/assets/images/invalidData_block.png) |
 </ResponseField>
 
 <ResponseField name="allowEmptySubmit" type="boolean" default="true">
@@ -37,14 +37,6 @@ description: "Settings are supplied as an object to the Dromo instance on initia
 
 <ResponseField name="manualInputOnly" type="boolean" default="false">
   Show or hide the file dropzone that appears when the importer is started. If this is set to `true`, then there will only be a manual input table on the page and the dropzone will be hidden. The `manualInputDisabled` and `manualInputOnly` settings cannot both be set to `true`.
-</ResponseField>
-
-<ResponseField name="displayEncoding" type="boolean" default="true">
-  <Warning>Removed in v2</Warning>
-  
-  Allows the user to specify an encoding for any files they upload. Dromo will default to the encoding that it detects. If `displayEncoding` is set to `true` (default), the encoding dropdown is visible in the importer:
-
-  ![](\images\assets\images\encoding-f3c88ec9319c0b48045977bc488d8097.png)
 </ResponseField>
 
 <ResponseField name="backendSyncMode" type='"FULL_DATA" | "MAPPINGS_ONLY" | "DISABLED"' default='"DISABLED"'>
@@ -259,7 +251,9 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
   * Modified URLs
   * Adjusted phone numbers
 
-  ![](\images\assets\images\highlightAutoFixes-3c3fc6c34e841a51ac99fe4f0afee421.png)
+  <Expandable title="an example">
+    ![](/images/assets/images/highlightAutoFixes.png)
+  </Expandable>
 
   <Check>
     This feature can help users quickly identify and verify automatic transformations made to their data during the import process.
