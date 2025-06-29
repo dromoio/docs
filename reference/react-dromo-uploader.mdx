@@ -35,22 +35,28 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
 
 <ResponseField name="columnHooks" type="object[]" href="/hooks#column-hooks">
   An array of [column hook](/hooks#column-hooks) objects. Each object has two entries:
-  <ResponseField name="fieldKey" type="string" required>
-    The [field key](/fields) of the field this column hook should run on.
-  </ResponseField>
-  <ResponseField name="callback" type="ColumnHookFn" href="/hooks#column-hooks" required>
-    The [column hook](/hooks#column-hooks) function.
-  </ResponseField>
+
+  <div className="ml-8">
+    <ResponseField name="fieldKey" type="string" required>
+      The [field key](/fields) of the field this column hook should run on.
+    </ResponseField>
+    <ResponseField name="callback" type="ColumnHookFn" href="/hooks#column-hooks" required>
+      The [column hook](/hooks#column-hooks) function.
+    </ResponseField>
+  </div>
 </ResponseField>
 
 <ResponseField name="stepHooks" type="object[]" href="/hooks#step-hooks">
   An array of [step hook](/hooks#step-hooks) objects. Each object has two entries:
-  <ResponseField name="type" type="'UPLOAD_STEP' | 'REVIEW_STEP' | 'REVIEW_STEP_POST_HOOKS'" required>
-    The type of step hook.
-  </ResponseField>
-  <ResponseField name="callback" type="StepHookFn" href="/hooks#step-hooks" required>
-    A function matching the signature for the specified step hook type.
-  </ResponseField>
+
+  <div className="ml-8">
+    <ResponseField name="type" type="'UPLOAD_STEP' | 'REVIEW_STEP' | 'REVIEW_STEP_POST_HOOKS'" required>
+      The type of step hook.
+    </ResponseField>
+    <ResponseField name="callback" type="StepHookFn" href="/hooks#step-hooks" required>
+      A function matching the signature for the specified step hook type.
+    </ResponseField>
+  </div>
 </ResponseField>
 
 <ResponseField name="beforeFinish" type="BeforeFinishCallbackFn" href="/results#the-beforefinish-callback">

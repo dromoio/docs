@@ -125,15 +125,15 @@
               {
                 "group": "Fields",
                 "pages": [
-                  "fields",
-                  "fields/field-types"
+                  "settings/fields",
+                  "settings/field-types"
                 ]
               },
-              "hooks",
-              "users",
-              "results",
-              "custom-file-parsers",
-              "webhooks"
+              "settings/hooks",
+              "settings/users",
+              "settings/results",
+              "settings/custom-file-parsers",
+              "settings/webhooks"
             ]
           },
           {

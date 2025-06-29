@@ -5,7 +5,11 @@ description: "Detailed reference for the DromoUploader JavaScript SDK instance, 
 
 ## DromoUploader Instance
 
-To begin an import, you first need to create an instance of the `DromoUploader`.
+To begin an import, you first need to create an instance of the `DromoUploader`:
+
+```javascript
+const dromo = new DromoUploader(licenseKey, fields, settings, user);
+```
 
 ### Constructor
 
@@ -26,10 +30,6 @@ The `DromoUploader` constructor takes 4 parameters:
 <ResponseField name="user" type="User" href="/users" required>
   Metadata about the end user to associate with the import.
 </ResponseField>
-
-```javascript
-const dromo = new DromoUploader(licenseKey, fields, settings, user);
-```
 
 ### Configuration Methods
 
