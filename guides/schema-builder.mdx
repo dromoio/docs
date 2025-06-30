@@ -28,9 +28,9 @@ Once you've [logged into](https://dashboard.dromo.io/auth/login) your Dromo acco
     You can optionally configure the importer's:
 
     * title
-    * behavior for [invalid data](/settings/index#param-invalid-data-behavior)
-    * a [webhook URL](/webhooks) where new submissions are sent
-    * ability to let users add [custom fields](/settings/index#param-allow-custom-fields)
+    * behavior for [invalid data](/reference/settings/settings#invaliddatabehavior)
+    * a [webhook URL](/reference/webhooks) where new submissions are sent
+    * ability to let users add [custom fields](/reference/settings/settings#allowcustomfields)
     * private mode settings
 
     <Info>
@@ -43,7 +43,7 @@ Once you've [logged into](https://dashboard.dromo.io/auth/login) your Dromo acco
   </Step>
 
   <Step title="Add fields to your schema">
-    Next, you'll define your schema's fields. You can think of a schema's [fields](/fields) like columns in a spreadsheet.
+    Next, you'll define your schema's fields. You can think of a schema's [fields](/reference/fields) like columns in a spreadsheet.
 
     If you are importing your user-collected data into a database, you'll want your data to be in the shape your database table expects. This means your schema's fields usually match the columns in your database. For example, let's say you have a client database table with two columns for clients' names and emails. Your schema would have two fields to match your database table; one for our clients' names and a second for their emails.
 
@@ -59,11 +59,11 @@ Once you've [logged into](https://dashboard.dromo.io/auth/login) your Dromo acco
     * Label: The column name your users see in the importer.
     * Key: The field's unique identifier is this field's key in the JSON results.
     * Description: A description for this field that your users will see in the importer.
-    * Type: The [type](/fields/field-types) of data your user should input (e.g., email, date, text, etc.).
+    * Type: The [type](/reference/fields/field-types) of data your user should input (e.g., email, date, text, etc.).
 
     ![The options to customize a field](/images/guides/customize_field1.png)
 
-    Additionally, you can use [**validators**](/fields#validators) to enforce rules for the data a user is allowed to import. You can choose to make a field required, unique, follow a particular [Regex](https://en.wikipedia.org/wiki/Regular_expression) pattern, or any combination of the above:
+    Additionally, you can use [**validators**](/reference/fields#validators) to enforce rules for the data a user is allowed to import. You can choose to make a field required, unique, follow a particular [Regex](https://en.wikipedia.org/wiki/Regular_expression) pattern, or any combination of the above:
 
     ![The validators you can add to a field](/images/guides/customize_field2.png)
 
@@ -89,7 +89,7 @@ Copy and paste the pop-up code block into your own website's code and you're don
   You can see your user's imports from the [**Imports** Tab](https://dashboard.dromo.io/imports) in your Dromo dashboard.
 </Info>
 
-However, to integrate into your application, you will still need to handle the data, which you can do via the [`onResult` callback](/results).
+However, to integrate into your application, you will still need to handle the data, which you can do via the [`onResult` callback](/reference/results).
 
 <CodeGroup>
 ```javascript JavaScript
@@ -166,3 +166,8 @@ You can switch your `DromoUploader` into development mode using the `setDevelopm
 The importer now shows a development mode banner, and all incoming imports are now flagged as development imports and you don't get charged for them!
 
 ![Development Mode](/images/guides/development_mode_banner.png)
+
+* **Webhooks**: Configure [webhooks](/reference/webhooks) to receive notifications when imports complete.
+* **Allow Custom Fields**: Enable the [allowCustomFields setting](/reference/settings/settings#allowcustomfields) to let users add fields not in your schema.
+* **Invalid Data Behavior**: Configure how to handle invalid data using the [invalidDataBehavior setting](/reference/settings/settings#invaliddatabehavior).
+* **Results**: Configure how to handle [results](/reference/results) when imports complete.

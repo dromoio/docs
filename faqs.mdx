@@ -30,7 +30,7 @@ If you encounter any problems or have any questions, please reach out to our [su
 
 ### Where is Dromo based?[​](#where-is-dromo-based "Direct link to Where is Dromo based?")
 
-Dromo is a Delaware C corporation based in San Francisco. We support customers on six continents and over 30 languages (see the full list [here](/settings#locale)).
+Dromo is a Delaware C corporation based in San Francisco. We support customers on six continents and over 30 languages (see the full list [here](/reference/settings/settings#locale)).
 
 ### Where can I find updates about the product?[​](#where-can-i-find-updates-about-the-product "Direct link to Where can I find updates about the product?")
 
@@ -48,7 +48,7 @@ Typically, the import flow starts with the user uploading a file. Then, they mat
 
 ### Does an end user have to upload a file to use Dromo?[​](#does-an-end-user-have-to-upload-a-file-to-use-dromo "Direct link to Does an end user have to upload a file to use Dromo?")
 
-No. A user has the option to skip uploading a file and enter their data manually (copying and pasting is supported) as long as the [`manualInputDisabled`](/settings#manualinputonly) flag is not set.
+No. A user has the option to skip uploading a file and enter their data manually (copying and pasting is supported) as long as the [`manualInputDisabled`](/reference/settings/settings#manualinputonly) flag is not set.
 
 You may also launch an import programmatically using the Headless API (this feature is a premium add-on). If there are any errors during the import process (for example, a column cannot be matched automatically or a data validation fails) you are provided a URL where you can direct your user to fix the issues. If there are no errors, the import succeeds automatically and the user does not need to be involved.
 
@@ -60,7 +60,7 @@ We can also support spreadsheets in all the legacy Excel formats (Excel 2007+, E
 
 ### Do you support JSON files?[​](#do-you-support-json-files "Direct link to Do you support JSON files?")
 
-Yes, but a user cannot upload the file directly to Dromo. You must parse the file and provide the contents to Dromo via the [`initialData`](/settings#initialdata) setting.
+Yes, but a user cannot upload the file directly to Dromo. You must parse the file and provide the contents to Dromo via the [`initialData`](/reference/settings/settings#initialdata) setting.
 
 ### What is the maximum row count / file size that can be imported?[​](#what-is-the-maximum-row-count--file-size-that-can-be-imported "Direct link to What is the maximum row count / file size that can be imported?")
 
@@ -74,7 +74,7 @@ Yes, the Dromo importer provides an intuitive mapping interface that allows your
 
 ### Can you remember mappings from one import to the next?[​](#can-you-remember-mappings-from-one-import-to-the-next "Direct link to Can you remember mappings from one import to the next?")
 
-Yes, you can achieve this with the [`autoMapHeaders`](/settings#automapheaders) setting. When enabled, the importer will remember mappings of prior imports that used the same `importIdentifier`.
+Yes, you can achieve this with the [`autoMapHeaders`](/reference/settings/settings#automapheaders) setting. When enabled, the importer will remember mappings of prior imports that used the same `importIdentifier`.
 
 ### What happens if there are errors during the import process?[​](#what-happens-if-there-are-errors-during-the-import-process "Direct link to What happens if there are errors during the import process?")
 
@@ -90,11 +90,11 @@ Dromo returns a JSON object containing the final data. Now that it has been vali
 
 ### How do I handle the results of an import?[​](#how-do-i-handle-the-results-of-an-import "Direct link to How do I handle the results of an import?")
 
-The results and metadata objects are both sent to your application via the [`onResults`](/results) callback. If you elect to enable the [`backendSyncMode`](/settings#backendsyncmode) setting, the data will also be stored on your behalf. In that case, you may access the original version of the file and final results (in CSV or JSON format) via the Imports tab of the [Dashboard](https://dashboard.dromo.io), or you may access the final results and metadata via the [API](/api).
+The results and metadata objects are both sent to your application via the [`onResults`](/reference/results) callback. If you elect to enable the [`backendSyncMode`](/reference/settings/settings#backendsyncmode) setting, the data will also be stored on your behalf. In that case, you may access the original version of the file and final results (in CSV or JSON format) via the Imports tab of the [Dashboard](https://dashboard.dromo.io), or you may access the final results and metadata via the [API](/api-reference).
 
 ### How will I know when a user has finished an import?[​](#how-will-i-know-when-a-user-has-finished-an-import "Direct link to How will I know when a user has finished an import?")
 
-You may either handle the the [`onResults`](/results) callback directly in your application, or you may use a [webhook](/webhooks). In that case, Dromo will send a POST request to any address you specify in the [`webhookUrl`](/settings#webhookurl) setting whenever an import is completed.
+You may either handle the the [`onResults`](/reference/results) callback directly in your application, or you may use a [webhook](/reference/webhooks). In that case, Dromo will send a POST request to any address you specify in the [`webhookUrl`](/reference/settings/settings#webhookurl) setting whenever an import is completed.
 
 ## Customization[​](#customization "Direct link to Customization")
 
@@ -104,19 +104,19 @@ Dromo is exclusively white-label. We believe you should have total control over 
 
 ### Can I customize the styling?[​](#can-i-customize-the-styling "Direct link to Can I customize the styling?")
 
-Yes, you can customize the look-and-feel of the importer using the [`styleOverrides`](/settings#styleoverrides) setting.
+Yes, you can customize the look-and-feel of the importer using the [`styleOverrides`](/reference/settings/settings#styleoverrides) setting.
 
 ### Can I customize the error messages and help text that my users see?[​](#can-i-customize-the-error-messages-and-help-text-that-my-users-see "Direct link to Can I customize the error messages and help text that my users see?")
 
-Yes. In Dromo Pro, error messages for built-in [validators](/fields#validators) can be customized by providing an `errorMessage` in the JavaScript SDK. You may also write [custom messages](/hooks#working-with-info-messages), including error messages, to any cell using row or column hooks.
+Yes. In Dromo Pro, error messages for built-in [validators](/reference/fields/field-validators) can be customized by providing an `errorMessage` in the JavaScript SDK. You may also write [custom messages](/reference/hooks#working-with-info-messages), including error messages, to any cell using row or column hooks.
 
-You may customize the help text at each step (i.e., Upload Step, Matching Step, and Review Step) by providing the appropriate [`helpText`](/settings#helptext) setting.
+You may customize the help text at each step (i.e., Upload Step, Matching Step, and Review Step) by providing the appropriate [`helpText`](/reference/settings/settings#helptext) setting.
 
 ## Security[​](#security "Direct link to Security")
 
 ### What is Private Mode?[​](#what-is-private-mode "Direct link to What is Private Mode?")
 
-In Private Mode, the data file uploaded by the end user is processed entirely in the context of their web browser, and the results are shared back to your application directly. To enable Private Mode, set [`backendSyncMode`](/settings#backendsyncmode) to `DISABLED`. The Dromo Pro SDK enables Private Mode by default.
+In Private Mode, the data file uploaded by the end user is processed entirely in the context of their web browser, and the results are shared back to your application directly. To enable Private Mode, set [`backendSyncMode`](/reference/settings/settings#backendsyncmode) to `DISABLED`. The Dromo Pro SDK enables Private Mode by default.
 
 ### How does Dromo protect end user data?[​](#how-does-dromo-protect-end-user-data "Direct link to How does Dromo protect end user data?")
 
@@ -124,7 +124,7 @@ Dromo believes the best way to protect your end user data is to never have acces
 
 By default, the embedded Dromo Pro SDK runs in [Private Mode](/faqs#what-is-private-mode).
 
-If you set [`backendSyncMode`](/settings#backendsyncmode) to `MAPPINGS_ONLY`, then information about column headers will be shared with Dromo (this is required to enable certain advanced features like AI-assisted column mapping and remembering mappings from prior imports), but the rest of the file is not shared with Dromo.
+If you set [`backendSyncMode`](/reference/settings/settings#backendsyncmode) to `MAPPINGS_ONLY`, then information about column headers will be shared with Dromo (this is required to enable certain advanced features like AI-assisted column mapping and remembering mappings from prior imports), but the rest of the file is not shared with Dromo.
 
 If you choose to disable Private Mode (i.e., by setting `backendSyncMode` to `FULL_DATA`) but want to store imports in your own infrastructure, you can enable the premium Bring Your Own Storage feature.
 

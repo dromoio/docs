@@ -219,7 +219,7 @@ Standard row hooks are called with two arguments.
 
 * manyToOne\{ value: string, resultValue: string | boolean | number | null, info: InfoMessage\[], selectOptions: \{ label: string, value: string }\[] }\[]
 
-  If the field is [manyToOne](/fields/#manyToOne), every mapped cell for this row appears as an array.
+  If the field is [manyToOne](/reference/fields/field-types#manytoone), every mapped cell for this row appears as an array.
 
 Row hooks should return the updated record in a similar format.
 
@@ -556,15 +556,15 @@ The function is called with two arguments.
 
     * manyToOneboolean
 
-      Indicates if this field is [`manyToOne`](/fields#manyToOne).
+      Indicates if this field is [`manyToOne`](/reference/fields/field-types#manytoone).
 
     * fileHeadersstring\[]
 
-      The headers that were mapped to the field if it is [`manyToOne`](/fields#manyToOne).
+      The headers that were mapped to the field if it is [`manyToOne`](/reference/fields/field-types#manytoone).
 
     * fileHeaderIndexesnumber\[]
 
-      The indexes of columns that were mapped to a [`manyToOne`](/fields#manyToOne) field.
+      The indexes of columns that were mapped to a [`manyToOne`](/reference/fields/field-types#manytoone) field.
 
 <Accordion title="Review step hook example">
   <CodeGroup>
@@ -674,7 +674,7 @@ The function is called with two arguments.
 
 ### `REVIEW_STEP_PRE_SUBMIT` hook[​](#review_step_pre_submit-hook "Direct link to review_step_pre_submit-hook")
 
-This hook is triggered during the review step right after the user clicks 'Finish' but before [`beforeFinish`](/results#the-beforefinish-callback) runs. It can be useful for customizing the 'Are you ready to submit?' dialog with info summarizing the changes and impact of the import data.
+This hook is triggered during the review step right after the user clicks 'Finish' but before [`beforeFinish`](/reference/results#the-beforefinish-callback) runs. It can be useful for customizing the 'Are you ready to submit?' dialog with info summarizing the changes and impact of the import data.
 
 The function is called with two arguments.
 
@@ -761,7 +761,7 @@ Info messages are provided as objects with these parameters.
 
   The nature of the message.
 
-  * A cell with an `"error"` message is highlighted in red. It is considered a validation error and impacts the user's submission options based on [`invalidDataBehavior`](/settings#invaliddatabehavior)
+  * A cell with an `"error"` message is highlighted in red. It is considered a validation error and impacts the user's submission options based on [`invalidDataBehavior`](/reference/settings/settings#invaliddatabehavior)
   * A cell with a `"warning"` message is highlighted in yellow
   * A cell with an `"info"` message is highlighted in blue
 
@@ -797,7 +797,7 @@ Removes a field after a step hook has completed.
 
 The field will no longer be visible on the data review screen nor included in the result data. Any validation errors or info messages will be discarded.
 
-Can be used in conjuction with [`addField`](/hooks#instanceaddfield) to concatenate columns and remove the originals, i.e. combine `firstName` + `lastName` into `fullName` and remove `firstName` and `lastName` from the result data.
+Can be used in conjuction with [`addField`](/reference/hooks#instanceaddfield) to concatenate columns and remove the originals, i.e. combine `firstName` + `lastName` into `fullName` and remove `firstName` and `lastName` from the result data.
 
 * fieldKeystringRequired
 
@@ -903,3 +903,9 @@ Allows customization of the messaged displayed to the user after they click 'Fin
 * options\{ submitButtonText?: string, cancelButtonText?: string }
 
   Optionally override text for submit and cancel buttons.
+
+For more information on the beforeFinish callback, see the [BeforeFinish Callback](/reference/results#the-beforefinish-callback) documentation.
+
+For more information on invalidDataBehavior, see the [Settings](/reference/settings/settings#invaliddatabehavior) documentation.
+
+For more information on the instance.addField method, see the [Instance Methods](/reference/hooks#instanceaddfield) documentation.

@@ -4,7 +4,7 @@ title: "Importing a PDF table with a Custom Parser"
 
 ## Overview
 
-In this guide, we’ll build a [custom file parser](/custom-file-parsers) to support PDF uploads using the PDFTables API to extract tables from PDFs.
+In this guide, we'll build a [custom file parser](/reference/custom-file-parsers) to support PDF uploads using the PDFTables API to extract tables from PDFs.
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ We'll rely on [PDFTables](https://pdftables.com/) API to parse the PDF into a CS
 
 ## Adding the Custom Parser to Dromo
 
-Dromo provides an [interface for implementing custom file parsing](/custom-file-parsers). We need to specify the file extension(s) and the parsing logic that will be used to parse the file.
+Dromo provides an [interface for implementing custom file parsing](/reference/custom-file-parsers). We need to specify the file extension(s) and the parsing logic that will be used to parse the file.
 
 <CodeGroup>
 ```javascript JavaScript
@@ -267,3 +267,5 @@ import Papa from "papaparse";
 </DromoUploader>
 ```
 </CodeGroup>
+
+For more information on custom file parsers, see the [Custom File Parsers](/reference/custom-file-parsers) documentation.

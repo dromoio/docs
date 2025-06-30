@@ -9,7 +9,7 @@ Working with the API allows you to access the complete array of settings and opt
 
 Dromo provides a standard REST API for working with schemas. The API provides standard CRUD operations for saved schemas.
 
-You can view the full Saved Schema API reference [here](/api#tag/import-schemas).
+You can view the full Saved Schema API reference [here](/api-reference/import-schemas).
 
 ## Saved Schema Structure
 
@@ -28,7 +28,7 @@ Schemas have the following fields:
 <ResponseField name="settings" type="Settings" required>
   Saved schemas accept the same settings that can be provided to the browser SDK.
 
-  See [Settings](/settings) for more details.
+  See [Settings](/reference/settings/settings) for more details.
 </ResponseField>
 
 <ResponseField name="fields" type="Field[]" required>
@@ -38,7 +38,7 @@ Schemas have the following fields:
 </ResponseField>
 
 <ResponseField name="hooks" type="object">
-  You can define any or all of the [hooks](/hooks) that Dromo provides using the Saved Schema API.
+  You can define any or all of the [hooks](/reference/hooks) that Dromo provides using the Saved Schema API.
 
   The hook function JavaScript source is passed as a string, which must evaluate to a valid JavaScript function. See the [defining hooks section](#defining-hooks) for examples.
 
@@ -46,19 +46,19 @@ Schemas have the following fields:
 
   <Expandable title="Hook Properties">
     <ResponseField name="rowHooks" type="string[]">
-      An array of strings defining valid JavaScript [standard row hooks](/hooks#standard-row-hooks).
+      An array of strings defining valid JavaScript [standard row hooks](/reference/hooks#standard-row-hooks).
     </ResponseField>
 
     <ResponseField name="bulkRowHooks" type="string[]">
-      An array of strings defining valid JavaScript [bulk row hooks](/hooks#bulk-row-hooks).
+      An array of strings defining valid JavaScript [bulk row hooks](/reference/hooks#bulk-row-hooks).
     </ResponseField>
 
     <ResponseField name="rowDeleteHooks" type="string[]">
-      An array of strings defining valid JavaScript [row delete hooks](/hooks#row-delete-hooks).
+      An array of strings defining valid JavaScript [row delete hooks](/reference/hooks#row-delete-hooks).
     </ResponseField>
 
     <ResponseField name="columnHooks" type="object[]">
-      An array of objects defining [column hooks](/hooks#column-hooks).
+      An array of objects defining [column hooks](/reference/hooks#column-hooks).
 
       Each column hook has a `fieldName` specifying which column the hook will run on, and a `callback` defining a valid JavaScript column hook function.
 
@@ -73,7 +73,7 @@ Schemas have the following fields:
     </ResponseField>
 
     <ResponseField name="stepHooks" type="object[]">
-      An array of objects defining [step hooks](/hooks#step-hooks).
+      An array of objects defining [step hooks](/reference/hooks#step-hooks).
 
       Each step hook has a `type` (one of `"UPLOAD_STEP"`, `"REVIEW_STEP"`, or `"REVIEW_STEP_POST_HOOKS"`) and a `callback` defining a valid JavaScript column hook function.
 
@@ -88,7 +88,7 @@ Schemas have the following fields:
     </ResponseField>
 
     <ResponseField name="beforeFinishCallback" type="string">
-      A string defining a valid JavaScript [before finish callback](/results#the-beforefinish-callback).
+      A string defining a valid JavaScript [before finish callback](/reference/results#the-beforefinish-callback).
     </ResponseField>
   </Expandable>
 </ResponseField>
@@ -139,3 +139,21 @@ All types of function declarations are accepted:
 ## Using saved schemas
 
 Saved schemas can be used [in the browser](/guides/schema-builder) or using the [Headless API](/getting-started/headless).
+
+You can also use the [Saved Schema API](/api-reference/import-schemas) to programmatically create and manage schemas.
+
+For more information on configuring your schema, see the [Settings](/reference/settings/settings) documentation.
+
+For more information on hooks, see the [Hooks](/reference/hooks) documentation.
+
+For more information on row hooks, see the [Standard Row Hooks](/reference/hooks#standard-row-hooks) documentation.
+
+For more information on bulk row hooks, see the [Bulk Row Hooks](/reference/hooks#bulk-row-hooks) documentation.
+
+For more information on row delete hooks, see the [Row Delete Hooks](/reference/hooks#row-delete-hooks) documentation.
+
+For more information on column hooks, see the [Column Hooks](/reference/hooks#column-hooks) documentation.
+
+For more information on step hooks, see the [Step Hooks](/reference/hooks#step-hooks) documentation.
+
+For more information on the beforeFinish callback, see the [BeforeFinish Callback](/reference/results#the-beforefinish-callback) documentation.
