@@ -17,13 +17,9 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
   [Settings object](/reference/settings/settings) to change the behavior of the Dromo importer.
 </ResponseField>
 
-For more information on settings, see the [Settings](/reference/settings/settings) documentation.
-
 <ResponseField name="user" type="User" href="/reference/users" required>
   [User metadata object](/reference/users) to associate with the import.
 </ResponseField>
-
-For more information on users, see the [Users](/reference/users) documentation.
 
 <ResponseField name="schemaId" type="string">
   The ID of a pre-existing schema created in Schema Studio. If provided, the `fields`, `settings` (except `importIdentifier` and `developmentMode`), and `hooks` props will be ignored in favor of the saved schema's configuration. See [Usage with saved schemas](/getting-started/react#usage-with-saved-schemas).
@@ -33,13 +29,9 @@ For more information on users, see the [Users](/reference/users) documentation.
   An array of [row hook](/reference/hooks#row-hooks) functions.
 </ResponseField>
 
-For more information on row hooks, see the [Row Hooks](/reference/hooks#row-hooks) documentation.
-
 <ResponseField name="bulkRowHooks" type="BulkRowHook[]" href="/reference/hooks#bulk-row-hooks">
   An array of [bulk row hook](/reference/hooks#bulk-row-hooks) functions.
 </ResponseField>
-
-For more information on bulk row hooks, see the [Bulk Row Hooks](/reference/hooks#bulk-row-hooks) documentation.
 
 <ResponseField name="columnHooks" type="object[]" href="/reference/hooks#column-hooks">
   An array of [column hook](/reference/hooks#column-hooks) objects. Each object has two entries:
@@ -54,8 +46,6 @@ For more information on bulk row hooks, see the [Bulk Row Hooks](/reference/hook
   </div>
 </ResponseField>
 
-For more information on column hooks, see the [Column Hooks](/reference/hooks#column-hooks) documentation.
-
 <ResponseField name="stepHooks" type="object[]" href="/reference/hooks#step-hooks">
   An array of [step hook](/reference/hooks#step-hooks) objects. Each object has two entries:
 
@@ -69,19 +59,13 @@ For more information on column hooks, see the [Column Hooks](/reference/hooks#co
   </div>
 </ResponseField>
 
-For more information on step hooks, see the [Step Hooks](/reference/hooks#step-hooks) documentation.
-
 <ResponseField name="beforeFinish" type="BeforeFinishCallbackFn" href="/reference/results#the-beforefinish-callback">
   A [beforeFinish callback function](/reference/results#the-beforefinish-callback) called immediately before completing the import to check results.
 </ResponseField>
 
-For more information on the beforeFinish callback, see the [BeforeFinish Callback](/reference/results#the-beforefinish-callback) documentation.
-
 <ResponseField name="onResults" type="OnResultsCallbackFn" href="/reference/results#the-onresults-callback">
   An [onResults callback function](/reference/results#the-onresults-callback) called with the results after the user finishes the import.
 </ResponseField>
-
-For more information on the onResults callback, see the [OnResults Callback](/reference/results#the-onresults-callback) documentation.
 
 <ResponseField name="onCancel" type="() => void">
   Called if the user leaves the Dromo Uploader before completing the import.
