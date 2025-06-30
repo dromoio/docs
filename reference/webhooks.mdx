@@ -5,7 +5,7 @@ description: "You can use webhooks to get notified when your users complete an i
 
 Dromo provides two kinds of webhooks:
 * **Managed Webhooks** are managed in the Dromo dashboard. They provide context about the completed import, and can be applied to multiple schemas.
-* **Basic webhooks** are configured by setting the [webhookUrl setting](/settings#webhookurl) in your import settings. This webhook can be configured dynamically at the time of import.
+* **Basic webhooks** are configured by setting the [webhookUrl setting](/reference/settings/settings#webhookurl) in your import settings. This webhook can be configured dynamically at the time of import.
 
 ## Managed webhooks
 
@@ -62,7 +62,7 @@ To get more details about the parameters, expand the following section:
   </ResponseField>
 
   <ResponseField name="filename" type="string | null">
-    The filename of the file uploaded by the user. This will be `null` if manual input or [initialData](/settings#initialdata) was used.
+    The filename of the file uploaded by the user. This will be `null` if manual input or [initialData](/reference/settings/settings#initialdata) was used.
   </ResponseField>
 
   <ResponseField name="user" type="User">
@@ -90,9 +90,9 @@ To get more details about the parameters, expand the following section:
   </ResponseField>
 
   <ResponseField name="has_data" type="boolean">
-    Whether the results of this import were saved using [backend sync](/settings#backendsyncmode).
+    Whether the results of this import were saved using [backend sync](/reference/settings/settings#backendsyncmode).
 
-    If `true`, you can fetch the import results using the [get import data endpoint](/api#tag/uploads/operation/getUploadData).
+    If `true`, you can fetch the import results using the [get import data endpoint](/api-reference/uploads/get-upload-metadata).
   </ResponseField>
 </ResponseField>
 </Expandable>
@@ -104,12 +104,12 @@ To get more details about the parameters, expand the following section:
 
   Completed headless imports, whether fully automated or completed using manual review, will trigger the standard `"import_completed"` event as detailed above.
 
-  All headless import webhooks include an additional `"headless"` key in the `data` object. This will include data about the headless import in a format matching the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport), with the exception that `"review_url"` and `"original_file_download"` are not exposed in the webhook for security reasons.
+  All headless import webhooks include an additional `"headless"` key in the `data` object. This will include data about the headless import in a format matching the [retrieve headless import endpoint](/api-reference/headless/retrieve-headless-import), with the exception that `"review_url"` and `"original_file_download"` are not exposed in the webhook for security reasons.
 </Note>
 
 ## Basic webhooks
 
-Basic webhooks are triggered when an import is completed, when the settings for that import included a [webhookUrl](/settings#webhookurl).
+Basic webhooks are triggered when an import is completed, when the settings for that import included a [webhookUrl](/reference/settings/settings#webhookurl).
 
 The webhooks are delivered to the configured URL via POST request in URL-encoded form format, and contain only a single key, `uploadId`.
 

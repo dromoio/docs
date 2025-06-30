@@ -26,7 +26,7 @@ You will need a saved schema to guide the import. For more information about sav
   <Step title="Create a New Headless Import">
     The import process starts by creating a new headless import record. You will use this record ID to check the status of the import and retrieve the results.
 
-    To create a headless import, use the [create headless import endpoint](/api#tag/headless/operation/createHeadlessImport).
+    To create a headless import, use the [create headless import endpoint](/api-reference/headless/create-a-new-headless-import).
 
     You must provide two things when creating the import:
 
@@ -69,7 +69,7 @@ You will need a saved schema to guide the import. For more information about sav
   <Step title="Create a New Headless Import">
     The import process starts by creating a new headless import record. You will use this record to check the status of the import and retrieve the results.
 
-    To create a headless import, use the [create headless import endpoint](/api#tag/headless/operation/createHeadlessImport).
+    To create a headless import, use the [create headless import endpoint](/api-reference/headless/create-a-new-headless-import).
 
     You must provide two things when creating the import:
     - The ID of the saved schema you want to use
@@ -92,7 +92,7 @@ You will need a saved schema to guide the import. For more information about sav
 
 ## Handling Import Results[​](#handling-import-results "Direct link to Handling Import Results")
 
-You can query for the current import status using the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport). The import status will be one of the following:
+You can query for the current import status using the [retrieve headless import endpoint](/api-reference/headless/retrieve-headless-import). The import status will be one of the following:
 
 - `AWAITING_UPLOAD`: The import record has been created, but the import file has not yet been uploaded.
 - `PENDING`: The import file has been received, and the import process will begin shortly.
@@ -116,7 +116,7 @@ You can be notified when an import completes in two ways:
    - Easier configuration and management
    - Better security
 
-   For detailed information on setting up and using dashboard webhooks, see the [Webhooks documentation](/webhooks).
+   For detailed information on setting up and using dashboard webhooks, see the [Webhooks documentation](/reference/webhooks).
 
    These webhooks will receive detailed information about the completed import:
 
@@ -140,11 +140,11 @@ The response will contain a presigned URL that you can use to download the data:
 
 2.  **Legacy webhookUrl (DEPRECATED)**:
 
-         If you define a [legacy webhookUrl](/settings#webhookurl) in your schema, it will still fire when the import completes successfully, but this method is deprecated and may be removed in the future.
+         If you define a [legacy webhookUrl](/reference/settings/settings#webhookurl) in your schema, it will still fire when the import completes successfully, but this method is deprecated and may be removed in the future.
 
 **Alternative: Polling for completion**
 
-If you prefer not to use webhooks, you can poll the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport) to check the status:
+If you prefer not to use webhooks, you can poll the [retrieve headless import endpoint](/api-reference/headless/retrieve-headless-import) to check the status:
 
 ```sh
 curl \
@@ -152,7 +152,7 @@ curl \
   -X GET \  'https://app.dromo.io/api/v1/headless/imports/{id}/'
 ```
 
-Once the status shows `SUCCESSFUL`, you can then retrieve the presigned URL using the [headless import URL endpoint](/api#tag/headless/operation/getHeadlessImportUrl):
+Once the status shows `SUCCESSFUL`, you can then retrieve the presigned URL using the [headless import URL endpoint](/api-reference/headless/get-headless-import-url):
 
 ```sh
 curl \
@@ -174,9 +174,9 @@ This can happen for several reasons:
 
 - The header row could not be determined
 - The columns could not be mapped automatically
-- There are failing data validations, and [invalidDataBehavior](/settings#invaliddatabehavior) is set to `BLOCK_SUBMIT`
+- There are failing data validations, and [invalidDataBehavior](/reference/settings/settings#invaliddatabehavior) is set to `BLOCK_SUBMIT`
 
-When an import is in the `NEEDS_REVIEW` state, the data returned by the [retrieve headless import endpoint](/api#tag/headless/operation/retrieveHeadlessImport) will include a `"review_url"` field. This is a URL which you can navigate to in a browser to resolve the import issues using Dromo's import UI.
+When an import is in the `NEEDS_REVIEW` state, the data returned by the [retrieve headless import endpoint](/api-reference/headless/retrieve-headless-import) will include a `"review_url"` field. This is a URL which you can navigate to in a browser to resolve the import issues using Dromo's import UI.
 
 After resolving the issues and completing the import, the import will transition to the `SUCCESSFUL` state.
 

@@ -33,34 +33,34 @@ The `DromoUploader` constructor takes 4 parameters:
 
 ### Configuration Methods
 
-Once you have an instance, you can register callbacks and configure its behavior using the following methods. You can register callbacks for [running hooks](/hooks) and [receiving results](/results).
+Once you have an instance, you can register callbacks and configure its behavior using the following methods. You can register callbacks for [running hooks](/reference/hooks) and [receiving results](/reference/results).
 
 <ResponseField name="registerColumnHook(fieldKey: string, callback: ColumnHookFn) => void">
-  Used to register a [column hook](/hooks#column-hooks) callback on the field with the given field key.
+  Used to register a [column hook](/reference/hooks#column-hooks) callback on the field with the given field key.
 </ResponseField>
 
 <ResponseField name="registerRowHook(callback: RowHookFn) => void">
-  Used to register a standard [row hook](/hooks#standard-row-hooks) callback.
+  Used to register a standard [row hook](/reference/hooks#standard-row-hooks) callback.
 </ResponseField>
 
 <ResponseField name="registerBulkRowHook(callback: BulkRowHookFn) => void">
-  Used to register a bulk [row hook](/hooks#standard-row-hooks) callback.
+  Used to register a bulk [row hook](/reference/hooks#standard-row-hooks) callback.
 </ResponseField>
 
 <ResponseField name="registerStepHook(stepHookType: &quot;UPLOAD_STEP&quot; | &quot;REVIEW_STEP&quot; | &quot;REVIEW_STEP_POST_HOOKS&quot;, callback: StepHookFn) => void">
-  Used to register a [step hook](/hooks#column-hooks) callback of the given type.
+  Used to register a [step hook](/reference/hooks#column-hooks) callback of the given type.
 </ResponseField>
 
 <ResponseField name="registerRowDeleteHook(callback: RowDeleteHookFn) => void">
-  Used to register a [row delete hook](/hooks#row-delete-hooks) callback.
+  Used to register a [row delete hook](/reference/hooks#row-delete-hooks) callback.
 </ResponseField>
 
 <ResponseField name="beforeFinish(callback: BeforeFinishCallbackFn) => void">
-  Used to register a [beforeFinish callback](/results#the-beforefinish-callback).
+  Used to register a [beforeFinish callback](/reference/results#the-beforefinish-callback).
 </ResponseField>
 
 <ResponseField name="onResults(callback: OnResultsCallbackFn) => void">
-  Used to register an [onResults callback](/results#the-onresults-callback).
+  Used to register an [onResults callback](/reference/results#the-onresults-callback).
 </ResponseField>
 
 <ResponseField name="onCancel() => void">

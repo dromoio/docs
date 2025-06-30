@@ -20,14 +20,14 @@ This callback is called when the user completes the import flow. `onResults` is 
 
   The keys of each object will be the field keys of each mapped field, and the values will be the final value of that field, based on the field's type.
 
-  **Note: If a field is [`manyToOne`](/fields#manyToOne), the value will be an array.**
+  **Note: If a field is [`manyToOne`](/reference/fields/field-types#manytoone), the value will be an array.**
 </ResponseField>
 
 <ResponseField name="metadata" type="object">
   <ResponseField name="id" type="string | null">
-    Dromo assigns a unique ID to each completed import that is synced to the backend. This ID can be used to retrieve the import from the [Dromo API](/api).
+    Dromo assigns a unique ID to each completed import that is synced to the backend. This ID can be used to retrieve the import from the [Dromo API](/api-reference).
 
-    If [`backendSyncMode`](/settings#backendsyncmode) is `"DISABLED"`, the import ID will be `null`.
+    If [`backendSyncMode`](/reference/settings/settings#backendsyncmode) is `"DISABLED"`, the import ID will be `null`.
   </ResponseField>
 
   <ResponseField name="filename" type="string | null">
@@ -37,11 +37,11 @@ This callback is called when the user completes the import flow. `onResults` is 
   </ResponseField>
 
   <ResponseField name="importIdentifier" type="string">
-    The [`importIdentifier`](/settings#importidentifier) of this import
+    The [`importIdentifier`](/reference/settings/settings#importidentifier) of this import
   </ResponseField>
 
   <ResponseField name="user" type="User">
-    The [user](/users) associated with this import
+    The [user](/reference/users) associated with this import
   </ResponseField>
 
   <ResponseField name="rowsWithError" type="number[]">
@@ -68,15 +68,15 @@ This callback is called when the user completes the import flow. `onResults` is 
     </ResponseField>
 
     <ResponseField name="manyToOne" type="boolean">
-      Indicates if this field is [manyToOne](/fields/#manyToOne).
+      Indicates if this field is [manyToOne](/reference/fields/field-types#manytoone).
     </ResponseField>
 
     <ResponseField name="fileHeaders" type="string[]">
-      The headers that were mapped to the field if it is [manyToOne](/fields/#manyToOne).
+      The headers that were mapped to the field if it is [manyToOne](/reference/fields/field-types#manytoone).
     </ResponseField>
 
     <ResponseField name="fileHeaderIndexes" type="number[]">
-      The indexes of columns that were mapped to a [manyToOne](/fields/#manyToOne) field.
+      The indexes of columns that were mapped to a [manyToOne](/reference/fields/field-types#manytoone) field.
     </ResponseField>
   </ResponseField>
 </ResponseField>
@@ -111,11 +111,11 @@ Otherwise, if nothing is returned from the `beforeFinish` callback (or any other
   </ResponseField>
 
   <ResponseField name="importIdentifier" type="string">
-    The [`importIdentifier`](/settings#importidentifier) of this import
+    The [`importIdentifier`](/reference/settings/settings#importidentifier) of this import
   </ResponseField>
 
   <ResponseField name="user" type="User">
-    The [user](/users) associated with this import
+    The [user](/reference/users) associated with this import
   </ResponseField>
 
   <ResponseField name="rowsWithError" type="number[]">
@@ -142,15 +142,15 @@ Otherwise, if nothing is returned from the `beforeFinish` callback (or any other
     </ResponseField>
 
     <ResponseField name="manyToOne" type="boolean">
-      Indicates if this field is [manyToOne](/fields/#manyToOne).
+      Indicates if this field is [manyToOne](/reference/fields/field-types#manytoone).
     </ResponseField>
 
     <ResponseField name="fileHeaders" type="string[]">
-      The headers that were mapped to the field if it is [manyToOne](/fields/#manyToOne).
+      The headers that were mapped to the field if it is [manyToOne](/reference/fields/field-types#manytoone).
     </ResponseField>
 
     <ResponseField name="fileHeaderIndexes" type="number[]">
-      The indexes of columns that were mapped to a [manyToOne](/fields/#manyToOne) field.
+      The indexes of columns that were mapped to a [manyToOne](/reference/fields/field-types#manytoone) field.
     </ResponseField>
   </ResponseField>
 </ResponseField>
@@ -170,7 +170,7 @@ Otherwise, if nothing is returned from the `beforeFinish` callback (or any other
 
 ## Custom fields[​](#custom-fields "Direct link to Custom fields")
 
-If you have enabled [`allowCustomFields`](/settings#allowcustomfields), it will allow the user to add custom fields that are not part of the field schema. The name of the custom field will be added as a key to the result objects.
+If you have enabled [`allowCustomFields`](/reference/settings/settings#allowcustomfields), it will allow the user to add custom fields that are not part of the field schema. The name of the custom field will be added as a key to the result objects.
 
 As an example, if the user defines a column name "fav\_color", the response would look like the following:
 

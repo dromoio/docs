@@ -2,12 +2,12 @@
 title: "Using Field Types"
 ---
 
-Dromo’s field types define how a field accepts, transforms, validates, and outputs data. They ensure consistent data types across a field (e.g., `number` for numeric values, `string` for text). Field types cover categories like numbers, text, dates, and times.
+Dromo's field types define how a field accepts, transforms, validates, and outputs data. They ensure consistent data types across a field (e.g., `number` for numeric values, `string` for text). Field types cover categories like numbers, text, dates, and times.
 
 
 ### Selecting the Best Type
 
-By default, if you don't specify a type for a field, it uses the [`string` type](/fields/field-types#string%E2%80%8B). For example, below, we create a field for collecting email addresses:
+By default, if you don't specify a type for a field, it uses the [`string` type](/reference/fields/field-types#string%E2%80%8B). For example, below, we create a field for collecting email addresses:
 
 <CodeGroup>
 ```javascript JavaScript
@@ -49,7 +49,7 @@ const dromo = new DromoUploader('FRONTEND_API_KEY', fields, settings, user);
 
 Because we didn't specify a *type* in the above "Email Address" field, it uses the default `string` type.
 
-However, if we update the "Email address" field to use the [`email` type](/fields/field-types#email%E2%80%8B), that field gains the advantage of Dromo's built-in email address validation:
+However, if we update the "Email address" field to use the [`email` type](/reference/fields/field-types#email%E2%80%8B), that field gains the advantage of Dromo's built-in email address validation:
 
 <CodeGroup>
 ```javascript JavaScript
@@ -77,14 +77,14 @@ const fields = [
 </CodeGroup>
 
 <Check>
-  Selecting the ideal type for each field is essential to honing your Dromo workflow. [See all field types.](/fields/field-types)
+  Selecting the ideal type for each field is essential to honing your Dromo workflow. [See all field types.](/reference/fields/field-types)
 </Check>
 
 ### Configuring Field Types
 
 Certain field types offer different configuration options, enabling you to customize how data is validated, displayed to the user, and output.
 
-For example, we want a field that tracks prices in USD. We can add a "Price" field using the ["usd" preset](/fields/field-types#number%E2%80%8B):
+For example, we want a field that tracks prices in USD. We can add a "Price" field using the ["usd" preset](/reference/fields/field-types#number%E2%80%8B):
 
 <CodeGroup>
 ```javascript
@@ -137,7 +137,7 @@ const fields = [
   ```
   </CodeGroup>
 
-  To learn more about configuring your types without presets, see [customizing numbers](/fields/number-formatting/) or [customizing dates, times, and datetimes](/fields/datetime-formatting/).
+  To learn more about configuring your types without presets, see [customizing numbers](/reference/fields/field-types#number%E2%80%8B) or [customizing dates, times, and datetimes](/reference/fields/field-types#datetime%E2%80%8B).
 </Accordion>
 
 The "usd" preset ensures that this `number` field parses, validates, displays, and outputs values in dollars. Therefore, if a user attempts to insert a value that *can't* be parsed into USD (i.e., another currency), Dromo throws a validation error:
@@ -145,7 +145,7 @@ The "usd" preset ensures that this `number` field parses, validates, displays, a
 ![Validation error for inputting invalid currency](/images/guides/use_wrong_currency.png)
 
 <Note>
-  For numbers (and a few other field types) the display format is not what the field outputs. If you want to change how a field is output, the `outputFormat` configuration option enables you to do so. For example, if you wish to display *and* output a field into USD, you can use the ["usd" preset](/fields/number-formatting#usd) alongside an `outputFormat` option.
+  For numbers (and a few other field types) the display format is not what the field outputs. If you want to change how a field is output, the `outputFormat` configuration option enables you to do so. For example, if you want to convert a number into USD, you can use the ["usd" preset](/reference/fields/field-types#number%E2%80%8B) alongside an `outputFormat` option.
 
   <Expandable title="See code example">
     <CodeGroup>

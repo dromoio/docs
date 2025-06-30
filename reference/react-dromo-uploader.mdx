@@ -9,62 +9,62 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
   Your Dromo front-end license key, which can be found in [the Dromo dashboard](https://dashboard.dromo.io/).
 </ResponseField>
 
-<ResponseField name="fields" type="Field[]" href="/fields" required>
-  An array of [Field objects](/fields) which comprise your import schema.
+<ResponseField name="fields" type="Field[]" href="/reference/fields/fields" required>
+  An array of [Field objects](/reference/fields/fields) which comprise your import schema.
 </ResponseField>
 
-<ResponseField name="settings" type="Settings" href="/settings" required>
-  [Settings object](/settings) to change the behavior of the Dromo importer.
+<ResponseField name="settings" type="Settings" href="/reference/settings/settings" required>
+  [Settings object](/reference/settings/settings) to change the behavior of the Dromo importer.
 </ResponseField>
 
-<ResponseField name="user" type="User" href="/users" required>
-  [User metadata object](/users) to associate with the import.
+<ResponseField name="user" type="User" href="/reference/users" required>
+  [User metadata object](/reference/users) to associate with the import.
 </ResponseField>
 
 <ResponseField name="schemaId" type="string">
   The ID of a pre-existing schema created in Schema Studio. If provided, the `fields`, `settings` (except `importIdentifier` and `developmentMode`), and `hooks` props will be ignored in favor of the saved schema's configuration. See [Usage with saved schemas](/getting-started/react#usage-with-saved-schemas).
 </ResponseField>
 
-<ResponseField name="rowHooks" type="RowHook[]" href="/hooks#row-hooks">
-  An array of [row hook](/hooks#row-hooks) functions.
+<ResponseField name="rowHooks" type="RowHook[]" href="/reference/hooks#row-hooks">
+  An array of [row hook](/reference/hooks#row-hooks) functions.
 </ResponseField>
 
-<ResponseField name="bulkRowHooks" type="BulkRowHook[]" href="/hooks#bulk-row-hooks">
-  An array of [bulk row hook](/hooks#bulk-row-hooks) functions.
+<ResponseField name="bulkRowHooks" type="BulkRowHook[]" href="/reference/hooks#bulk-row-hooks">
+  An array of [bulk row hook](/reference/hooks#bulk-row-hooks) functions.
 </ResponseField>
 
-<ResponseField name="columnHooks" type="object[]" href="/hooks#column-hooks">
-  An array of [column hook](/hooks#column-hooks) objects. Each object has two entries:
+<ResponseField name="columnHooks" type="object[]" href="/reference/hooks#column-hooks">
+  An array of [column hook](/reference/hooks#column-hooks) objects. Each object has two entries:
 
   <div className="ml-8">
     <ResponseField name="fieldKey" type="string" required>
-      The [field key](/fields) of the field this column hook should run on.
+      The [field key](/reference/fields/fields) of the field this column hook should run on.
     </ResponseField>
-    <ResponseField name="callback" type="ColumnHookFn" href="/hooks#column-hooks" required>
-      The [column hook](/hooks#column-hooks) function.
+    <ResponseField name="callback" type="ColumnHookFn" href="/reference/hooks#column-hooks" required>
+      The [column hook](/reference/hooks#column-hooks) function.
     </ResponseField>
   </div>
 </ResponseField>
 
-<ResponseField name="stepHooks" type="object[]" href="/hooks#step-hooks">
-  An array of [step hook](/hooks#step-hooks) objects. Each object has two entries:
+<ResponseField name="stepHooks" type="object[]" href="/reference/hooks#step-hooks">
+  An array of [step hook](/reference/hooks#step-hooks) objects. Each object has two entries:
 
   <div className="ml-8">
     <ResponseField name="type" type="'UPLOAD_STEP' | 'REVIEW_STEP' | 'REVIEW_STEP_POST_HOOKS'" required>
       The type of step hook.
     </ResponseField>
-    <ResponseField name="callback" type="StepHookFn" href="/hooks#step-hooks" required>
+    <ResponseField name="callback" type="StepHookFn" href="/reference/hooks#step-hooks" required>
       A function matching the signature for the specified step hook type.
     </ResponseField>
   </div>
 </ResponseField>
 
-<ResponseField name="beforeFinish" type="BeforeFinishCallbackFn" href="/results#the-beforefinish-callback">
-  A [beforeFinish callback function](/results#the-beforefinish-callback) called immediately before completing the import to check results.
+<ResponseField name="beforeFinish" type="BeforeFinishCallbackFn" href="/reference/results#the-beforefinish-callback">
+  A [beforeFinish callback function](/reference/results#the-beforefinish-callback) called immediately before completing the import to check results.
 </ResponseField>
 
-<ResponseField name="onResults" type="OnResultsCallbackFn" href="/results#the-onresults-callback">
-  An [onResults callback function](/results#the-onresults-callback) called with the results after the user finishes the import.
+<ResponseField name="onResults" type="OnResultsCallbackFn" href="/reference/results#the-onresults-callback">
+  An [onResults callback function](/reference/results#the-onresults-callback) called with the results after the user finishes the import.
 </ResponseField>
 
 <ResponseField name="onCancel" type="() => void">

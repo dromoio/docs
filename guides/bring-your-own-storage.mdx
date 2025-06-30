@@ -18,6 +18,6 @@ The Dromo Solution Engineering team will guide you through the setup process.
 
 ## Using BYOS[​](#using-byos "Direct link to Using BYOS")
 
-Once configured, ensure [`settings: backendSycMode`](/settings#backendsyncmode) is set to `"FULL_DATA"`. All your imports will automatically be uploaded to the bucket associated with the account the API key belongs to. The raw import file will also be stored in your storage layer.
+Once configured, ensure [`settings: backendSycMode`](/reference/settings/settings#backendsyncmode) is set to `"FULL_DATA"`. All your imports will automatically be uploaded to the bucket associated with the account the API key belongs to. The raw import file will also be saved to your bucket.
 
-After the import is completed, Dromo's backend will send any configured webhooks for the import. You can also use the ID of the completed import to [fetch the import metadata](/api#tag/uploads/operation/getUploadMetadata) from Dromo's API.
+After the import is completed, Dromo's backend will send any configured webhooks for the import. You can also retrieve the metadata for any import using the [Get Upload Metadata API endpoint](/api-reference#tag/uploads/operation/getUploadMetadata).

@@ -106,7 +106,7 @@ Here is an example of a few different valid field type configurations:
 
   The `displayFormat` and `outputFormat` settings can be used for creating your own custom formats. The `displayFormat` is used for displaying the number to the user on the review screen. The `outputFormat`, if set, will determine how the number is output in the result JSON, as a string.
 
-  For more information on using `displayFormat` and `outputFormat`, see the [number formatting page](/fields/number-formatting).
+  For more information on using `displayFormat` and `outputFormat`, see the [number formatting section](/reference/fields/field-types#number%E2%80%8B).
 
   #### Validating minimum and maximum[​](#validating-minimum-and-maximum "Direct link to Validating minimum and maximum")
 
@@ -155,7 +155,7 @@ Here is an example of a few different valid field type configurations:
   | th-TH  | 27/3/2565              |
   | zh-CN  | 2022/3/27              |
 
-  You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+  You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting section](/reference/fields/field-types#datetime%E2%80%8B).
 </div>
 
 ### Datetime[​](#datetime "Direct link to Datetime")
@@ -197,7 +197,7 @@ Here is an example of a few different valid field type configurations:
   | th-TH  | 27/3/2565 15:20        |
   | zh-CN  | 2022/3/27 下午3:20       |
 
-  You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+  You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting section](/reference/fields/field-types#datetime%E2%80%8B).
 </div>
 
 ### Time[​](#time "Direct link to Time")
@@ -237,7 +237,7 @@ Here is an example of a few different valid field type configurations:
   | de-DE  | 15:20                  |
   | zh-CN  | 下午3:20                 |
 
-  You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting page](/fields/datetime-formatting).
+  You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting section](/reference/fields/field-types#datetime%E2%80%8B).
 </div>
 
 ### Select[​](#select "Direct link to Select")
@@ -273,10 +273,10 @@ Here is an example of a few different valid field type configurations:
   </Expandable>
 
   <Info>
-    `selectOptions` can be overridden for individual cells using a row hook. See the [row hook reference](/hooks#row-hooks) page for details.
+    `selectOptions` can be overridden for individual cells using a row hook. See the [Row Hooks](/reference/hooks#row-hooks) documentation for details.
   </Info>
 
-  Each select option can optionally include `alternateMatche`s`, an array of strings. If an input value matches any of these, it will be mapped to that option’s value.
+  Each select option can optionally include `alternateMatche`s`, an array of strings. If an input value matches any of these, it will be mapped to that option's value.
 
   <Note>
     For a given select field, the labels, values, and alternate matches should be unique across all options. Each of these parameters is used to map imported data to select options, so conflicts will occur if multiple select options share the same matches.

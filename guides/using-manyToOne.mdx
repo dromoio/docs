@@ -8,7 +8,7 @@ This guide demonstrates how to use field setting to map multiple columns to a si
   For more detail about the `manyToOne` setting, see the [reference](/fields#manyToOne) page.
 </Info>
 
-Suppose we’re collecting tax information: `email`, `primary_earnings`, and optional `additional_earnings`. Users upload spreadsheets with these columns, though the number of `additional_earnings` columns may vary. We’ll map them all to a single `additional_earnings` field and validate all earnings as USD currency.
+Suppose we're collecting tax information: `email`, `primary_earnings`, and optional `additional_earnings`. Users upload spreadsheets with these columns, though the number of `additional_earnings` columns may vary. We'll map them all to a single `additional_earnings` field and validate all earnings as USD currency.
 
 ## Field Configuration
 
@@ -76,7 +76,7 @@ Note that validations defined in a `manyToOne` field apply to all mapped columns
 
 ## Results
 
-Upon successful import, the [results and metadata](/results#the-onresults-callback) include all the values from the mapped columns and metadata indicating how the columns were mapped to the target schema.
+Upon successful import, the [results and metadata](/reference/results#the-onresults-callback) include all the values from the mapped columns and metadata indicating how the columns were mapped to the target schema.
 
 ### Result Data
 
@@ -171,7 +171,7 @@ The result metadata indicates which columns from the source file were mapped to 
 
 ### Row Hook
 
-`manyToOne` fields can have their values changed and their info messages and validations set in [row hooks](/hooks#row-hooks).
+`manyToOne` fields can have their values changed and their info messages and validations set in [row hooks](/reference/hooks#row-hooks).
 
 <CodeGroup>
 ```javascript JavaScript
@@ -206,7 +206,7 @@ dromo.registerRowHook(function (record) {
 
 ### Column Hooks
 
-For `manyToOne` fields, a [column hook](/hooks#column-hooks) callback registered for a `manyToOne` field will be invoked once for every mapped column.
+For `manyToOne` fields, a [column hook](/reference/hooks#column-hooks) callback registered for a `manyToOne` field will be invoked once for every mapped column.
 
 <CodeGroup>
 ```javascript JavaScript
@@ -250,7 +250,7 @@ dromo.registerColumnHook("additional_earnings", (values) => {
 
 ### Step Hooks
 
-[Step hooks](/hooks#step-hooks) `REVIEW_STEP` and `REVIEW_STEP_POST_HOOKS` can be used to inspect column mapping at run time to see which columns were mapped to `oneToMany` fields.
+[Step hooks](/reference/hooks#step-hooks) `REVIEW_STEP` and `REVIEW_STEP_POST_HOOKS` can be used to inspect column mapping at run time to see which columns were mapped to `oneToMany` fields.
 
 The full data object supplied as an argument to the step hook will resemble this:
 
