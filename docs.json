@@ -74,7 +74,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "index",
+              "welcome",
               "getting-started/javascript",
               "getting-started/react",
               "getting-started/angular",
@@ -95,10 +95,10 @@
               {
                 "group": "Advance Validations",
                 "pages": [
-                  "guides/using-beforeFinish",
-                  "guides/using-row-hooks",
+                  "guides/validate-multiple-rows",
+                  "guides/validate-external-data",
                   "guides/using-addField",
-                  "guides/exporting-errors"
+                  "guides/saving-progress"
                 ]
               },
               "guides/custom-styling",
@@ -117,24 +117,24 @@
               {
                 "group": "Settings",
                 "pages": [
-                  "settings/index",
-                  "settings/style-overrides",
-                  "settings/deprecated"
+                  "reference/settings/settings",
+                  "reference/settings/style-overrides",
+                  "reference/settings/deprecated"
                 ]
               },
               {
                 "group": "Fields",
                 "pages": [
-                  "settings/fields",
-                  "settings/field-types",
-                  "settings/field-validators"
+                  "reference/fields/fields",
+                  "reference/fields/field-types",
+                  "reference/fields/field-validators"
                 ]
               },
-              "settings/hooks",
-              "settings/users",
-              "settings/results",
-              "settings/custom-file-parsers",
-              "settings/webhooks"
+              "reference/hooks",
+              "reference/users",
+              "reference/results",
+              "reference/custom-file-parsers",
+              "reference/webhooks"
             ]
           },
           {
@@ -166,5 +166,57 @@
         "href": "https://changelog.dromo.io/"
       }
     ]
-  }
+  },
+  "redirects": [
+    {
+      "source": "/guides/exporting-errors",
+      "destination": "/guides/saving-progress",
+      "permanent": true
+    },
+    {
+      "source": "/guides/using-beforeFinish",
+      "destination": "/guides/validate-multiple-rows",
+      "permanent": true
+    },
+    {
+      "source": "/guides/using-row-hooks",
+      "destination": "/guides/validate-external-data",
+      "permanent": true
+    },
+    {
+      "source": "/settings",
+      "destination": "/reference/settings/settings",
+      "permanent": true
+    },
+    {
+      "source": "/fields",
+      "destination": "/reference/fields/fields",
+      "permanent": true
+    },
+    {
+      "source": "/hooks",
+      "destination": "/reference/hooks",
+      "permanent": true
+    },
+    {
+      "source": "/users",
+      "destination": "/reference/users",
+      "permanent": true
+    },
+    {
+      "source": "/results",
+      "destination": "/reference/results",
+      "permanent": true
+    },
+    {
+      "source": "/custom-file-parsers",
+      "destination": "/reference/custom-file-parsers",
+      "permanent": true
+    },
+    {
+      "source": "/webhooks",
+      "destination": "/reference/webhooks",
+      "permanent": true
+    }
+  ]
 }
