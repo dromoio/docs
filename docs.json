@@ -13,38 +13,6 @@
     "dark": "/images/logo.png",
     "href": "https://dromo.io"
   },
-  "topbarCtaButton": {
-    "type": "github",
-    "url": "https://github.com/dromoio"
-  },
-  "topbarLinks": [
-    {
-      "name": "Dashboard",
-      "url": "https://dashboard.dromo.io"
-    },
-    {
-      "name": "Demo",
-      "url": "https://demo.dromo.io"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "API Reference",
-      "icon": "code",
-      "url": "api-reference",
-      "color": "#2563EB"
-    },
-    {
-      "name": "Community",
-      "icon": "discord",
-      "url": "https://discord.gg/dromo"
-    },
-    {
-      "name": "Changelog",
-      "icon": "list",
-      "url": "https://changelog.dromo.io"
-    }
-  ],
   "footerSocials": {
     "website": "https://dromo.io",
     "github": "https://github.com/dromoio",
