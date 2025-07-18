@@ -2,9 +2,163 @@
 title: "Changelog"
 ---
 
-# Changelog
+<Update label="February 2025" description="API Update" tags={["API", "Deprecation"]}>
+## DEPRECATION of api/v1/upload/\<id\>/data/ endpoint
 
-Stay up to date with the latest features, improvements, and bug fixes in Dromo.
+Dromo is deprecating the `api/v1/upload/<id>/data/` endpoint due to a partial outage caused by endpoint abuse.
+
+### What's Changing
+- **Deprecated Endpoint**: `api/v1/upload/<id>/data/`
+- **New Endpoint**: `api/v1/upload/<id>/url/` - returns a URL with the data
+- **Impact**: Users currently using the deprecated endpoint will see a 410 error
+
+### Migration Required
+Most users will not need to take action. However, if you're currently using the deprecated endpoint, you must migrate to the new endpoint.
+
+**Documentation**: [API Reference](https://developer.dromo.io/api#tag/uploads/operation/getUploadUrl)
+</Update>
+
+<Update label="October 2024" description="v3.2.0" tags={["File Parsing", "AI"]}>
+## Custom File Parsers & AI Transformations
+
+Major expansion of file processing capabilities with custom parsers and AI-powered data transformations.
+
+### Custom File Parsers
+- **Support for Custom Formats**: Process PDFs, images, fixed-width formats, XML, and any file type with extractable tabular data
+- **Industry-Leading Parsing**: Builds on Dromo's existing CSV, text-delimited, and Excel support
+- **Documentation**: [Custom File Parsers Guide](https://developer.dromo.io/custom-file-parsers)
+- **Example**: [PDF Import Guide](https://developer.dromo.io/guides/importing-a-pdf)
+
+### AI User Transformations
+- **Bulk Data Editing**: Users can now edit import data using plain language AI
+- **Transform Data Button**: New feature in the Review Step
+- **Setting**: Enable with `reviewStep.enableUserTransformations = true`
+- **Guide**: [Using Transform Data](https://developer.dromo.io/guides/using-transform-data)
+
+### Automatic Date Format Fixing
+- Enhanced date parsing and automatic format correction
+- Improved handling of various date formats across different file types
+</Update>
+
+<Update label="August 2024" description="v3.1.0" tags={["Search", "UI", "Customization"]}>
+## Enhanced Review Experience
+
+Significant improvements to the data review process with new search capabilities and customization options.
+
+### Search on Review Step
+Users can now easily search and filter data during the Review Step using the new search icon.
+
+![Search functionality in review step](/images/changelog/search-review-step.png)
+
+### Submission Dialog Customization
+- **Override Confirmation Dialog**: Customize submission confirmation messages
+- **Technical Implementation**: Use `REVIEW_STEP_PRE_SUBMIT` step hook with `setConfirmationMessage` method
+- **Enhanced UX**: Create tailored user interaction experiences
+
+### UI Improvements
+- **Redesigned Table Info Messages**: Enhanced tooltips with improved visual design
+- **Multiple Messages Support**: Display multiple message levels (error, warning, info) per cell
+- **HTML Markup Support**: Basic HTML markup support in info messages
+- **Documentation**: [Working with Info Messages](https://developer.dromo.io/hooks#working-with-info-messages)
+</Update>
+
+<Update label="June 2024" description="v3.0.5" tags={["Schema Builder", "Developer Tools"]}>
+## Advanced Schema Configuration & Developer Tools
+
+Powerful new tools for advanced users and developers to have more control over import configuration.
+
+### Code Editor for Schema Studio
+- **JSON Editing**: Direct JSON editing for schema settings and fields
+- **Code Completion**: Instant code completion and validation
+- **Hook Writing**: Write row, column, and step hooks directly in Schema Studio
+- **Toggle Feature**: "Edit JSON" option for power users
+
+### Enhanced Configuration Options
+- **Step Skipping**: New options to streamline imports
+  - "Always use first row for headers" (`matchingStep.headerRowOverride = 0`)
+  - "Remember mapped headers and values" (`autoMapHeaders = true`)
+- **Initial File Setting**: Pass files directly with `initialFile` setting (similar to `initialData`)
+- **Import Management**: Delete imports directly from dashboard with trash icon
+
+### Row and Submission Control
+- **Empty Submission Control**: New `allowEmptySubmit` setting to prevent empty imports
+- **Row Manipulation Settings**: 
+  - `reviewStep.allowAddingRows` - Control user ability to add rows
+  - `reviewStep.allowRemovingRows` - Control user ability to remove rows
+- **Documentation**: [Settings Reference](https://developer.dromo.io/settings)
+</Update>
+
+<Update label="May 2024" description="v3.0.0" tags={["Data Mapping", "Advanced Features"]}>
+## Advanced Data Mapping & Column Handling
+
+Enhanced data mapping capabilities with more granular control over field mapping and data processing.
+
+### Enhanced Field Mapping
+- **Select Field Limits**: `maxMappableSelectFields` setting to control option mapping UI
+- **Unmapped Column Access**: `passThroughUnmappedColumns` setting to preserve all original data
+- **Help Text Configuration**: Add guidance with `matchValuesStep.helpText`
+
+### Data Processing Improvements
+- **Complete Data Preservation**: Access all columns from original file via `$unmapped` key
+- **Flexible Mapping Control**: Override default limits for complex datasets
+- **Better User Guidance**: Enhanced help text for value matching steps
+
+Example unmapped data structure:
+```json
+{
+    "$unmapped": {
+        "1": "Phillips",
+        "3": "(124) 246-3980",
+        "4": "United States"
+    },
+    "firstName": "Michael",
+    "email": "jason@moxie.xyz"
+}
+```
+</Update>
+
+<Update label="November 2023" description="v2.8.0" tags={["Authentication", "Data Features"]}>
+## Authentication & Advanced Data Features
+
+New authentication options and powerful data manipulation features.
+
+### Google Sign-In
+- **Simplified Login**: Sign in to the dashboard with your Google account
+- **Reduced Account Management**: One less account to keep track of
+
+### Many-to-One Field Mapping
+- **Multiple Column Mapping**: Map multiple file columns to a single schema field
+- **Array Results**: Results returned as arrays when `manyToOne` is enabled
+- **Use Cases**: Map "primary email" and "secondary email" to single "email" field
+- **Guide**: [Using manyToOne](https://developer.dromo.io/guides/using-manyToOne)
+
+### Find and Replace
+- **Bulk Error Correction**: Quick correction of errors across datasets
+- **Flexible Matching**: Case-sensitive options and substring matching
+- **Scope Control**: Apply to specific columns or entire import dataset
+- **Review Step Integration**: Accessible from review step toolbar
+</Update>
+
+<Update label="October 2023" description="v2.7.0" tags={["File Handling", "Import Management"]}>
+## Enhanced File Handling & Import Management
+
+Improved file processing and new import management capabilities.
+
+### File Processing Improvements
+- **Improved Excel Date Parsing**: More reliable date parsing regardless of locale-specific formatting
+- **Original File Access**: Download original uploaded files via `raw_upload.download_url`
+- **Better Data Integrity**: Compare original and transformed files
+
+### Import Management
+- **Hosted Imports**: Create public links directly from Schema Studio dashboard
+- **No-Code Solution**: Share import links without writing code
+- **Simplified Sharing**: Third option alongside embedding and API methods
+
+### User Management
+- **Dashboard User Roles**: Specify user roles when inviting team members
+  - **Admins**: Full access including user management and billing
+  - **Users**: Access to schemas and imports, limited admin functions
+</Update>
 
 <Update label="July 2023" description="v2.1.0" tags={["Headless API", "Pro"]}>
 ## Announcing the Headless API
