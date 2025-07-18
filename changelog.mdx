@@ -1,0 +1,151 @@
+---
+title: "Changelog"
+---
+
+# Changelog
+
+Stay up to date with the latest features, improvements, and bug fixes in Dromo.
+
+<Update label="July 2023" description="v2.1.0" tags={["Headless API", "Pro"]}>
+## Announcing the Headless API
+
+We're excited to announce the launch of our **Headless API** as a premium Dromo Pro add-on! This powerful new feature enables developers to integrate Dromo's data import capabilities directly into their applications.
+
+### Key Features
+- **Saved Schema API**: Programmatically manage and retrieve your import schemas
+- **Enhanced API Documentation**: Comprehensive guides and examples
+- **Zapier Integration**: Connect Dromo with thousands of other apps
+- **Improved Schema Studio**: Better tools for schema management
+- **New Website**: Fresh design and improved user experience
+</Update>
+
+<Update label="May 2023" description="v2.0.5" tags={["Localization", "UX"]}>
+## Enhanced User Experience & Multilingual Support
+
+### New Features
+- **Multilingual Support**: Dromo now supports 30+ languages for a global user experience
+- **Enhanced Error Filtering**: Better tools to identify and resolve data issues
+- **Schema-based Column Matching**: Smarter automatic column detection
+- **Programmatic Row Management**: More control over data processing
+
+### Improvements
+- More customization options across the platform
+- Streamlined user workflows
+- Better error messaging and guidance
+</Update>
+
+<Update label="April 2023" description="v2.0.0" tags={["Major Release", "UI Redesign"]}>
+## Version 2 - Complete Platform Redesign
+
+We've completely rebuilt Dromo from the ground up with a focus on simplicity and power.
+
+### Major Updates
+- **Complete UI Redesign**: Fresh, modern interface that's easier to navigate
+- **Streamlined Header Row Selection**: Simplified process for identifying data headers
+- **Simplified Column Matching**: Intuitive drag-and-drop column mapping
+- **New Data Wizard**: Step-by-step guidance through the import process
+- **Rich Error Export**: Detailed error reports with actionable insights
+- **Excel Parsing in Private Mode**: Enhanced security for sensitive data processing
+
+### Under the Hood
+- Improved performance and reliability
+- Better error handling and user feedback
+- Enhanced data validation capabilities
+</Update>
+
+<Update label="March 2023" description="v1.9.0" tags={["Schema Builder", "File Support"]}>
+## Schema Builder Enhancements & Broader File Support
+
+### Schema Builder Improvements
+- Enhanced settings and configuration options
+- Better field management capabilities
+- Improved validation rules setup
+
+### File Type Expansion
+- Support for additional file formats
+- Better parsing accuracy across different file types
+- Enhanced encoding detection
+
+### Developer Experience
+- New field mapping requirements for better data accuracy
+- Preparation and foundation work for Version 2
+- Improved API responses and error handling
+</Update>
+
+<Update label="February 2023" description="v1.8.0" tags={["Schema Builder", "BYOS", "AI"]}>
+## Schema Builder Launch & Major Feature Additions
+
+### 🎉 Schema Builder
+Introducing our powerful **Schema Builder** - create and manage import schemas with a visual interface.
+
+- **Drag & Drop Interface**: Build schemas visually
+- **Field Validation**: Set up complex validation rules
+- **Preview Mode**: Test your schemas before deployment
+
+### Bring Your Own Storage (BYOS)
+- **Custom Storage Integration**: Use your own cloud storage solutions
+- **Data Sovereignty**: Keep your data where you need it
+- **Enterprise Security**: Enhanced security for sensitive data
+
+### Advanced Features
+- **Hidden Fields**: Include fields in processing without displaying them to users
+- **Field Removal**: Dynamically remove unnecessary fields during import
+- **Dynamic Select Options**: Create dropdown fields with dynamic option lists
+- **Improved AI Column Matching**: Smarter automatic field detection and mapping
+
+### Developer Tools
+- Enhanced API capabilities
+- Better webhook support
+- Improved error handling and logging
+</Update>
+
+<Update label="June 2022" description="v1.7.0" tags={["Automation", "Validation", "UX"]}>
+## Automatic Column Matching & Enhanced Validation
+
+### Smart Automation
+- **Automatic Column Matching**: Column mapping is now automatically skipped if all headers exactly match the schema field names
+- Skip the mapping step entirely when your data structure is consistent
+
+### Enhanced Validation
+- **Custom Select Field Validation**: Added `invalidValueMessage` for select fields
+- Better error messaging for validation failures
+- More granular control over validation rules
+
+![Custom validation messages](/images/changelog/invalidValueMessage.png)
+
+### User Experience
+- **Simplified Sign-up Flow**: Streamlined registration process - just email and password
+- Faster onboarding for new users
+- Reduced friction in the user journey
+
+### Bug Fixes
+- **Column Labeling**: Fixed issues with column labeling beyond 26 columns (AA, AB, AC...)
+- **Character Encoding**: Enhanced detection and handling of different character encodings
+- Improved overall stability and performance
+</Update>
+
+<Update label="June 2022" description="v1.6.5" tags={["Data Handling", "API"]}>
+## Enhanced Data Processing & Invalid Data Management
+
+### Invalid Data Behavior Configuration
+Introducing the new `invalidDataBehavior` configuration option - "More options for dealing with unresolved errors" - with three modes:
+
+- **`REMOVE_INVALID_ROWS`** (default): Automatically filter out rows with validation errors
+- **`INCLUDE_INVALID_ROWS`**: Include invalid rows in the final dataset with error flags
+- **`BLOCK_SUBMIT`**: Prevent submission until all validation errors are resolved
+
+### API Enhancements
+- **Filename in Callbacks**: The original filename is now available in the `onResults` callback
+- Better metadata tracking for imported files
+- Enhanced error reporting in API responses
+
+### Data Processing
+- **Smart Column Handling**: Empty columns are automatically dropped during import
+- Reduced noise in your final dataset
+- Better performance with large files containing empty columns
+
+### Developer Experience
+- More flexible error handling options
+- Better integration with existing validation workflows
+- Enhanced debugging capabilities
+</Update>

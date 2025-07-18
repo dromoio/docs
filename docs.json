@@ -131,7 +131,7 @@
       },
       {
         "tab": "Changelog",
-        "href": "https://changelog.dromo.io/"
+        "pages": ["changelog"]
       }
     ]
   },
