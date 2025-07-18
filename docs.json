@@ -106,8 +106,8 @@
             ]
           },
           {
-            "group": "FAQs",
-            "pages": ["faqs"]
+            "group": "FAQ & Changelog",
+            "pages": ["faqs", "changelog"]
           }
         ]
       },
@@ -128,10 +128,6 @@
             }
           }
         ]
-      },
-      {
-        "tab": "Changelog",
-        "pages": ["changelog"]
       }
     ]
   },

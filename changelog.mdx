@@ -2,6 +2,55 @@
 title: "Changelog"
 ---
 
+<Update label="July 2025" description="v3.3.2" tags={["Data Processing", "Error Handling"]}>
+## Smarter Date Handling & Improved Reliability
+
+Enhanced date processing and more reliable import experience.
+
+### Automatic Date Detection & Fixing
+- **Smart Date Recognition**: Automatically detects and fixes date format issues across your entire dataset
+- **Bulk Date Correction**: Fix multiple date columns at once instead of row by row
+- **Better Format Support**: Handles more date formats automatically without manual intervention
+- **Reduced Manual Work**: Less time spent manually correcting date formatting errors
+
+### More Reliable Imports
+- **Fewer Import Failures**: Improved stability means fewer interrupted imports
+- **Better Error Recovery**: Imports continue smoothly even when encountering data issues
+- **Cleaner Experience**: Reduced unexpected errors during the import process
+</Update>
+
+<Update label="June 2025" description="v3.3.1" tags={["Performance", "Reliability"]}>
+## Faster Uploads & Smoother Experience
+
+Improved upload performance and streamlined user experience.
+
+### Upload Improvements
+- **Faster File Uploads**: Significantly improved upload speeds, especially for large files
+- **More Reliable Uploads**: Reduced upload failures and timeouts
+- **Better Progress Tracking**: Clearer visibility into upload progress and status
+
+### Streamlined Experience
+- **Smoother Workflow**: Removed unnecessary barriers that could interrupt your import process
+- **Faster Processing**: Quicker data processing means less waiting time
+- **Enhanced Reliability**: More consistent performance across all import operations
+</Update>
+
+<Update label="May 2025" description="v3.3.0" tags={["UI", "Performance", "UX"]}>
+## Better Performance with Large Datasets
+
+Dramatically improved performance when working with large amounts of data and options.
+
+### Faster Dropdown Performance
+- **Handle Thousands of Options**: Select fields with thousands of options now load instantly
+- **Smooth Scrolling**: No more lag when browsing through large lists of choices
+- **Responsive Interface**: UI stays fast and responsive even with complex datasets
+
+### Streamlined Workflows
+- **Skip Unnecessary Steps**: Automatically bypasses empty field matching to save time
+- **Cleaner Interface**: Improved layout prevents data from being cut off or hidden
+- **Better Error Displays**: Clearer presentation of issues that need your attention
+</Update>
+
 <Update label="February 2025" description="API Update" tags={["API", "Deprecation"]}>
 ## DEPRECATION of api/v1/upload/\<id\>/data/ endpoint
 
@@ -16,6 +65,25 @@ Dromo is deprecating the `api/v1/upload/<id>/data/` endpoint due to a partial ou
 Most users will not need to take action. However, if you're currently using the deprecated endpoint, you must migrate to the new endpoint.
 
 **Documentation**: [API Reference](https://developer.dromo.io/api#tag/uploads/operation/getUploadUrl)
+</Update>
+
+<Update label="October 2024" description="v3.2.1" tags={["Field Types", "Validation"]}>
+## More Field Types & Smarter Validation
+
+Expanded support for different data types and more intelligent validation.
+
+### New Data Types
+- **Percentage Fields**: Properly handle and format percentage data
+- **Currency Fields**: Support for different currencies with proper formatting
+- **Phone Numbers**: Validate and format phone numbers from different countries
+- **URLs**: Ensure web addresses are properly formatted and valid
+- **Advanced Text**: Better handling of complex text patterns and formats
+
+### Smarter Validation
+- **Context-Aware Rules**: Validation that considers relationships between different fields
+- **Automatic Type Detection**: Dromo can guess the right field type based on your data
+- **Better Error Messages**: More helpful explanations when validation fails
+- **Flexible Rules**: Set up validation that adapts based on other field values
 </Update>
 
 <Update label="October 2024" description="v3.2.0" tags={["File Parsing", "AI"]}>
@@ -115,6 +183,41 @@ Example unmapped data structure:
     "email": "jason@moxie.xyz"
 }
 ```
+</Update>
+
+<Update label="December 2023" description="v2.8.2" tags={["Performance"]}>
+## Faster Processing & Better Reliability
+
+Significant improvements to import speed and overall platform reliability.
+
+### Faster Imports
+- **Quicker Large File Processing**: Import large datasets much faster than before
+- **Reduced Wait Times**: Less time spent waiting for imports to complete
+- **Better Memory Usage**: Handle bigger files without performance issues
+- **Improved Response Times**: Faster navigation and interaction throughout the platform
+
+### Enhanced Reliability
+- **Fewer Errors**: More robust system that handles edge cases better
+- **Better Uptime**: Improved platform stability and availability
+- **Stronger Security**: Enhanced protection for your data and imports
+</Update>
+
+<Update label="November 2023" description="v2.8.1" tags={["Validation", "User Experience"]}>
+## Smarter Validation & Better User Experience
+
+More intelligent data validation and improved interface design.
+
+### Enhanced Data Validation
+- **Context-Aware Validation**: Validation rules that consider relationships between fields
+- **Cross-Row Consistency**: Ensure data consistency across your entire dataset
+- **Clearer Error Messages**: Better explanations of what needs to be fixed
+- **Faster Validation**: Quicker validation processing for large imports
+
+### Improved Interface
+- **Better Error Display**: Clearer presentation of issues that need attention
+- **Smoother Navigation**: More intuitive flow between import steps
+- **Mobile-Friendly**: Better experience on phones and tablets
+- **Helpful Loading States**: Know exactly what's happening during processing
 </Update>
 
 <Update label="November 2023" description="v2.8.0" tags={["Authentication", "Data Features"]}>
@@ -278,6 +381,49 @@ Introducing our powerful **Schema Builder** - create and manage import schemas w
 - Improved overall stability and performance
 </Update>
 
+<Update label="August 2022" description="v1.7.2" tags={["Performance", "Data Quality"]}>
+## Faster Processing & Better Data Quality
+
+Significant improvements to import speed and data accuracy detection.
+
+### Performance Improvements
+- **Faster Large File Imports**: Process big files much quicker
+- **More Efficient Processing**: Handle complex datasets without slowdowns
+- **Better Progress Tracking**: See exactly how your import is progressing
+
+### Enhanced Data Quality
+- **Smarter Duplicate Detection**: Automatically identify potential duplicate records
+- **Data Consistency Checks**: Spot inconsistencies across your dataset
+- **Quality Insights**: Get automatic feedback on your data quality
+- **Better Error Highlighting**: Easily spot and fix data issues
+
+### Improved Workflow
+- **Bulk Operations**: Fix multiple issues at once instead of one by one
+- **Clearer Status Updates**: Always know what's happening with your import
+</Update>
+
+<Update label="July 2022" description="v1.7.1" tags={["Security", "Enterprise"]}>
+## Enhanced Security & Enterprise Features
+
+Stronger security and new enterprise capabilities.
+
+### Improved Security
+- **Better Data Protection**: Enhanced encryption and security measures
+- **Stronger Access Controls**: More control over who can access what
+- **Complete Activity Tracking**: Full audit trail of all actions taken
+- **Reliable Authentication**: More secure and stable login system
+
+### Enterprise Features
+- **Single Sign-On**: Use your company's existing login system
+- **Custom Domains**: Use your own domain for the import experience
+- **Advanced Monitoring**: Better visibility into system performance and usage
+
+### API Improvements
+- **More Reliable Webhooks**: Better delivery of real-time notifications
+- **Faster Response Times**: Quicker API responses for better integration performance
+- **Enhanced Documentation**: More examples and clearer guidance for developers
+</Update>
+
 <Update label="June 2022" description="v1.6.5" tags={["Data Handling", "API"]}>
 ## Enhanced Data Processing & Invalid Data Management
 
@@ -302,4 +448,72 @@ Introducing the new `invalidDataBehavior` configuration option - "More options f
 - More flexible error handling options
 - Better integration with existing validation workflows
 - Enhanced debugging capabilities
+</Update>
+
+<Update label="March 2022" description="v1.6.0" tags={["UI", "Validation"]}>
+## Redesigned Interface & Real-time Validation
+
+Major visual improvements and instant validation feedback.
+
+### New Look and Feel
+- **Modern Interface**: Fresh, cleaner design that's easier to use
+- **Mobile-Friendly**: Better experience on all device sizes
+- **Improved Accessibility**: More accessible for users with disabilities
+- **Smoother Navigation**: Easier movement between import steps
+
+### Instant Validation
+- **Real-time Feedback**: See validation errors immediately as you work
+- **Custom Business Rules**: Set up validation that matches your specific needs
+- **Bulk Validation**: Check multiple records at once for efficiency
+- **Reusable Rules**: Save validation templates for repeated use
+
+### Better Performance
+- **Faster Loading**: Large datasets display quicker
+- **Smoother Experience**: No more waiting for the interface to catch up
+</Update>
+
+<Update label="January 2022" description="v1.5.5" tags={["Integration", "Export"]}>
+## Better Integrations & Export Options
+
+Expanded ways to connect Dromo with other tools and export your data.
+
+### Enhanced Integrations
+- **More App Connections**: Connect with popular business applications
+- **Reliable Webhooks**: More dependable real-time notifications
+- **Better Error Messages**: Clearer feedback when integrations have issues
+- **Flexible API Options**: More control over how you integrate with Dromo
+
+### Improved Export Options
+- **Multiple File Formats**: Export as CSV, Excel, JSON, and more
+- **Automated Exports**: Schedule exports to run automatically
+- **Custom Export Templates**: Create reusable export formats
+- **Bulk Export**: Export multiple imports at once
+
+### Developer Experience
+- **Better SDKs**: Improved libraries for different programming languages
+- **Testing Tools**: Easier ways to test your integrations
+- **Comprehensive Documentation**: More examples and clearer guidance
+</Update>
+
+<Update label="November 2021" description="v1.5.0" tags={["File Support", "User Experience"]}>
+## Expanded File Support & Streamlined Experience
+
+Better support for different file types and a simpler import process.
+
+### More File Types Supported
+- **Broader Format Support**: Handle more file formats and character encodings
+- **Better Error Detection**: Catch and explain file issues more clearly
+- **Advanced Data Transformation**: More ways to clean and modify your data during import
+- **Stronger Validation**: Better checking to ensure your data meets requirements
+
+### Simplified Workflow
+- **Fewer Steps**: Streamlined import process gets you to results faster
+- **Better Progress Visibility**: Always know how your import is progressing
+- **Improved Error Recovery**: Easier ways to fix issues when they occur
+- **Contextual Help**: Get guidance right when and where you need it
+
+### Enhanced Performance
+- **Faster Processing**: Quicker handling of your data imports
+- **Handle Larger Files**: Better support for big datasets
+- **More Reliable**: Fewer failed imports and better error handling
 </Update>
