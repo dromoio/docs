@@ -34,6 +34,18 @@
       "display": "simple"
     }
   },
+  "navbar": {
+    "links": [
+      {
+        "label": "Login",
+        "href": "https://dashboard.dromo.io"
+      },
+      {
+        "label": "Contact Sales",
+        "href": "https://dromo.io/get-a-quote"
+      }
+    ]
+  },
   "navigation": {
     "tabs": [
       {
