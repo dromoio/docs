@@ -1,0 +1,33 @@
+#sidebar > ul li {
+    border: 1px solid #EEE;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    list-style: none;
+}
+
+#sidebar > ul li:hover {
+    background-color: #EEE;
+}
+
+#sidebar > ul li:nth-child(2) {
+    background-color: #2563EB;
+    color: white;
+}
+
+#sidebar > ul li:nth-child(2) a, #sidebar > ul li:nth-child(2) svg {
+    color: white;
+}
+
+#sidebar > ul li:nth-child(2):hover {
+    background-color: #FFF;
+    color: inherit;
+}
+
+#sidebar > ul li:nth-child(2):hover a {
+    color: rgb(var(--gray-700));
+}
+
+#sidebar > ul li:nth-child(2):hover svg {
+    stroke: rgb(var(--gray-400));
+}
