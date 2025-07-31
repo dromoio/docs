@@ -125,7 +125,8 @@ Here is an example of a few different valid field type configurations:
     "type": ["date", {
       "locale": "<locale string>",
       "displayFormat": "<format string>",
-      "outputFormat": "<format string>"
+      "outputFormat": "<format string>",
+      "autofix": "<boolean>"
     }]
   }
   ```
@@ -137,6 +138,19 @@ Here is an example of a few different valid field type configurations:
   When using a date field, Dromo will attempt to determine the date format of the imported data and suggest fixing it to the user during the Bulk Fix step.
 
   ![Suggesting date fixes during the bulk edit step](/images/assets/images/date_fixing.png)
+
+  #### Automatic Date Fixing[​](#automatic-date-fixing "Direct link to Automatic Date Fixing")
+
+  You can control whether date format fixes are applied automatically or require user approval using the `autofix` parameter:
+
+  - **`autofix: true`** (default): Date format fixes are applied automatically without requiring user interaction. If all date fields in your schema have autofix enabled, the Bulk Fix step will be skipped entirely.
+  - **`autofix: false`**: Date format fixes are suggested to the user during the Bulk Fix step, requiring manual approval before being applied.
+
+  This is particularly useful when you want to ensure users review date formatting changes, or when you want to streamline the import process for trusted data sources.
+
+  <Note>
+  The `autofix` parameter is currently only available for date fields. Datetime and time fields do not support this feature.
+  </Note>
 
   By default, dates are output to the results in ISO-8601 format (e.g. `"2022-03-27"`).
 
