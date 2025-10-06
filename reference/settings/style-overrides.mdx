@@ -63,6 +63,22 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
 
           The border color of the modal
         </ResponseField>
+
+        <ResponseField name="textColor" type="string" default="">
+          The general text color for UI elements
+        </ResponseField>
+
+        <ResponseField name="successColor" type="string" default="">
+          Color used for success states and messages
+        </ResponseField>
+
+        <ResponseField name="warningColor" type="string" default="">
+          Color used for warning states and messages
+        </ResponseField>
+
+        <ResponseField name="backdropBlur" type="boolean" default="true">
+          Whether to apply a blur effect to the background when modals are open
+        </ResponseField>
       </div>
     </ResponseField>
 
@@ -102,6 +118,40 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
 
     <ResponseField name="secondaryButton" type="object" default="{}">
       Style overrides for the secondary action button
+
+      <div className="ml-8">
+        <ResponseField name="borderRadius" type="string">
+          The radius of the button
+        </ResponseField>
+
+        <ResponseField name="backgroundColor" type="string">
+          The background color of the button
+        </ResponseField>
+
+        <ResponseField name="textColor" type="string">
+          The color of the text in the button
+        </ResponseField>
+
+        <ResponseField name="border" type="string">
+          The `border` shorthand property to apply to the button
+        </ResponseField>
+
+        <ResponseField name="hoverBackgroundColor" type="string">
+          The background color of the button while hovering
+        </ResponseField>
+
+        <ResponseField name="hoverTextColor" type="string">
+          The text color of the button while hovering
+        </ResponseField>
+
+        <ResponseField name="hoverBorder" type="string">
+          The `border` shorthand property to apply to the button while hovering
+        </ResponseField>
+      </div>
+    </ResponseField>
+
+    <ResponseField name="tertiaryButton" type="object" default="{}">
+      Style overrides for the tertiary action button
 
       <div className="ml-8">
         <ResponseField name="borderRadius" type="string">
@@ -228,6 +278,78 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
           Added in v2
 
           The bottom border separating the stepper bar from the rest of the modal
+        </ResponseField>
+      </div>
+    </ResponseField>
+
+    <ResponseField name="dataTable" type="object" default="{}">
+      Style overrides for the data table (Handsontable) component
+
+      <div className="ml-8">
+        <ResponseField name="headerFontWeight" type="string">
+          The font weight of column headers
+        </ResponseField>
+
+        <ResponseField name="headerBackgroundColor" type="string">
+          The background color of column headers
+        </ResponseField>
+
+        <ResponseField name="headerTextColor" type="string">
+          The text color of column headers
+        </ResponseField>
+
+        <ResponseField name="rowHeaderBackgroundColor" type="string">
+          The background color of row headers (row numbers)
+        </ResponseField>
+
+        <ResponseField name="rowHeaderTextColor" type="string">
+          The text color of row headers (row numbers)
+        </ResponseField>
+
+        <ResponseField name="cornerHeaderBackgroundColor" type="string">
+          The background color of the corner header (top-left cell)
+        </ResponseField>
+
+        <ResponseField name="cellSelectionBorderColor" type="string">
+          The border color of selected cells
+        </ResponseField>
+
+        <ResponseField name="cellSelectionBackgroundColor" type="string">
+          The background color of selected cells
+        </ResponseField>
+
+        <ResponseField name="accentColor" type="string">
+          General accent color that affects various interactive elements in the table
+        </ResponseField>
+
+        <ResponseField name="headerActiveBackgroundColor" type="string">
+          The background color of active column headers
+        </ResponseField>
+
+        <ResponseField name="headerActiveTextColor" type="string">
+          The text color of active column headers
+        </ResponseField>
+
+        <ResponseField name="headerHighlightedBackgroundColor" type="string">
+          The background color of highlighted column headers
+        </ResponseField>
+
+        <ResponseField name="headerHighlightedTextColor" type="string">
+          The text color of highlighted column headers
+        </ResponseField>
+      </div>
+    </ResponseField>
+
+    <ResponseField name="modalOverlay" type="object" default="{}">
+      Style overrides for modal overlay backdrop
+
+      <div className="ml-8">
+        <ResponseField name="backgroundColor" type="string">
+          The background color of the modal overlay
+        </ResponseField>
+
+        <ResponseField name="opacity" type="string" default="50">
+          The opacity of the modal overlay (0-100)
         </ResponseField>
       </div>
     </ResponseField>

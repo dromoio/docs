@@ -64,7 +64,7 @@ Here is an example of a few different valid field type configurations:
   }
   ```
 
-  #### For all kinds of numeric values[​](#for-all-kinds-of-numeric-values "Direct link to For all kinds of numeric values")
+#### For all kinds of numeric values[​](#for-all-kinds-of-numeric-values "Direct link to For all kinds of numeric values")
 
   The field type parses many common number formats and displays the number in a user-friendly format.
 
@@ -72,7 +72,7 @@ Here is an example of a few different valid field type configurations:
 
   Unless an output format is specified, the number is output to the result JSON as a number.
 
-  #### Presets[​](#presets "Direct link to Presets")
+#### Presets[​](#presets "Direct link to Presets")
 
   The number type has several presets available to handle the most common number formats. You can use a preset by passing the name of the preset with the field type, such as `type: ["number", "usd"]`.
 
@@ -98,7 +98,7 @@ Here is an example of a few different valid field type configurations:
   | `percent_3`                                      | 0.1234560.34     | 12.346%34.000%         |
   | `percent_4`                                      | 0.123456780.34   | 12.3457%34.0000%       |
 
-  #### Custom configuration[​](#custom-configuration "Direct link to Custom configuration")
+#### Custom configuration[​](#custom-configuration "Direct link to Custom configuration")
 
   If none of the presets meet your needs, you can define your own rounding, display format and output format behavior.
 
@@ -108,7 +108,7 @@ Here is an example of a few different valid field type configurations:
 
   For more information on using `displayFormat` and `outputFormat`, see the [number formatting section](/reference/fields/field-types#number%E2%80%8B).
 
-  #### Validating minimum and maximum[​](#validating-minimum-and-maximum "Direct link to Validating minimum and maximum")
+#### Validating minimum and maximum[​](#validating-minimum-and-maximum "Direct link to Validating minimum and maximum")
 
   You can validate that the number falls within a given range using the `min` and `max` settings.
 
@@ -131,20 +131,36 @@ Here is an example of a few different valid field type configurations:
   }
   ```
 
-  #### For handling date values (with no time)[​](#for-handling-date-values-with-no-time "Direct link to For handling date values (with no time)")
+#### For handling date values (with no time)[​](#for-handling-date-values-with-no-time "Direct link to For handling date values (with no time)")
 
-  The date type parses dates in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale. If a time is also given, it is allowed, but ignored. If a input date cannot be parsed, a validation error will be added to the cell.
+  The date type parses dates in several formats including:
 
-  When using a date field, Dromo will attempt to determine the date format of the imported data and suggest fixing it to the user during the Bulk Fix step.
+- **ISO-8601** (e.g., `2024-03-27`, `2024-03-27T10:30`)
+- **RFC-2822** (e.g., `27 Mar 2024`)
+- **Common date formats** (e.g., `03/27/2024`, `27/03/2024`, `27.03.2024`)
+- **Two-digit years** (e.g., `03/27/24` → `2024-03-27`)
+- **Unpadded dates** (e.g., `3/7/2024` → `2024-03-07`)
+- **Various separator styles** (dots, slashes, dashes)
+
+  If a time is also given, it is allowed but ignored. If an input date cannot be parsed, a validation error will be added to the cell.
+
+  When using a date field, Dromo's enhanced date detection will analyze the imported data and suggest appropriate formatting fixes during the Bulk Fix step. The system uses heuristic-based detection to identify various date patterns and recommend the most likely correct interpretation.
 
   ![Suggesting date fixes during the bulk edit step](/images/assets/images/date_fixing.png)
 
-  #### Automatic Date Fixing[​](#automatic-date-fixing "Direct link to Automatic Date Fixing")
+#### Automatic Date Fixing[​](#automatic-date-fixing "Direct link to Automatic Date Fixing")
 
   You can control whether date format fixes are applied automatically or require user approval using the `autofix` parameter:
 
-  - **`autofix: true`** (default): Date format fixes are applied automatically without requiring user interaction. If all date fields in your schema have autofix enabled, the Bulk Fix step will be skipped entirely.
-  - **`autofix: false`**: Date format fixes are suggested to the user during the Bulk Fix step, requiring manual approval before being applied.
+- **`autofix: true`** (default): Date format fixes are applied automatically without requiring user interaction. If all date fields in your schema have autofix enabled, the Bulk Fix step will be skipped entirely.
+- **`autofix: false`**: Date format fixes are suggested to the user during the Bulk Fix step, requiring manual approval before being applied.
+
+  The enhanced date detection system can automatically handle:
+
+- **Ambiguous date formats** (e.g., distinguishing between MM/DD/YYYY and DD/MM/YYYY based on data patterns)
+- **Mixed formats within the same column** (e.g., some rows using `03/27/2024` and others using `27-Mar-2024`)
+- **Two-digit year conversion** with intelligent century detection
+- **Locale-aware parsing** that respects the field's configured locale for format interpretation
 
   This is particularly useful when you want to ensure users review date formatting changes, or when you want to streamline the import process for trusted data sources.
 
@@ -170,6 +186,7 @@ Here is an example of a few different valid field type configurations:
   | zh-CN  | 2022/3/27              |
 
   You can define your own display and/or output formats with a format string. For more information, see the [datetime formatting section](/reference/fields/field-types#datetime%E2%80%8B).
+
 </div>
 
 ### Datetime[​](#datetime "Direct link to Datetime")
@@ -188,7 +205,7 @@ Here is an example of a few different valid field type configurations:
   }
   ```
 
-  #### For handling a date and time together in one field[​](#for-handling-a-date-and-time-together-in-one-field "Direct link to For handling a date and time together in one field")
+#### For handling a date and time together in one field[​](#for-handling-a-date-and-time-together-in-one-field "Direct link to For handling a date and time together in one field")
 
   The datetime type parses datetimes in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale.
 
@@ -230,7 +247,7 @@ Here is an example of a few different valid field type configurations:
   }
   ```
 
-  #### For handling a time-of-day independent of date (i.e., a clock time)[​](#for-handling-a-time-of-day-independent-of-date-ie-a-clock-time "Direct link to For handling a time-of-day independent of date (i.e., a clock time)")
+#### For handling a time-of-day independent of date (i.e., a clock time)[​](#for-handling-a-time-of-day-independent-of-date-ie-a-clock-time "Direct link to For handling a time-of-day independent of date (i.e., a clock time)")
 
   The time type parses datetimes in several formats: ISO-8601, RFC-2822, and the configured display format in the configured locale.
 
@@ -264,7 +281,7 @@ Here is an example of a few different valid field type configurations:
   >     label: string,
   >     value: string,
   >     alternateMatches?: string[],
-  >     exactMatchOnly?: boolean 
+  >     exactMatchOnly?: boolean
   >   }, ...
   >]
   > ```
@@ -391,7 +408,7 @@ Here is an example of a few different valid field type configurations:
 
   URL fields can be used to validate and normalize all URLs. You can optionally specify a list of accepted protocols (like `https`) and/or domains (`like dromo.io`).
 
-  The value of the URL will be normalized to strip extra dashes and relative path references. For example, an input of https:///dromo.io/foo/../bar is a valid URL, but will be normalized to the value https://dromo.io/bar.
+  The value of the URL will be normalized to strip extra dashes and relative path references. For example, an input of https:///dromo.io/foo/../bar is a valid URL, but will be normalized to the value <https://dromo.io/bar>.
 </div>
 
 ### US State/Territory[​](#us-stateterritory "Direct link to US State/Territory")
@@ -411,10 +428,12 @@ Here is an example of a few different valid field type configurations:
   > ```
 
   US Zipcode fields can be used to validate values against US zip codes, either the 5-digit or 9-digit "ZIP+4" variant, specified by the `format` option.
-  * `5-digit` format accepts 5  or 9 digit values (with or without dashes), but truncates 9-digit inputs to the first 5 digits. Shorter values are left-padded with zeros (e.g., `342` → `00342`).
-  * `9-digit` format does not accept 5 digit values. It will accept only 9 digits, with our without dashes.
+
+- `5-digit` format accepts 5  or 9 digit values (with or without dashes), but truncates 9-digit inputs to the first 5 digits. Shorter values are left-padded with zeros (e.g., `342` → `00342`).
+- `9-digit` format does not accept 5 digit values. It will accept only 9 digits, with or without dashes.
 
   Any value that contains characters other than dashes or digits will be invalid.
+
 </div>
 
 ### UUID[​](#uuid "Direct link to UUID")
