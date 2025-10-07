@@ -49,3 +49,39 @@ const settings = {
   }
 }
 ```
+
+## Table Styling
+
+You can also customize the appearance of the data table including headers, selection, and cell styling:
+
+```js
+const settings = {
+  styleOverrides: {
+    dataTable: {
+      // Column header styling
+      headerBackgroundColor: "#f8f9fa",
+      headerTextColor: "#495057",
+      headerFontWeight: "600",
+
+      // Active/highlighted headers
+      headerActiveBackgroundColor: "#e9ecef",
+      headerActiveTextColor: "#212529",
+
+      // Row numbers styling
+      rowHeaderBackgroundColor: "#f1f3f4",
+      rowHeaderTextColor: "#6c757d",
+
+      // Cell selection
+      cellSelectionBorderColor: "#007bff",
+      cellSelectionBackgroundColor: "rgba(0, 123, 255, 0.1)",
+
+      // General accent color for interactive elements
+      accentColor: "#007bff"
+    },
+    modalOverlay: {
+      backgroundColor: "#000000",
+      opacity: "30"
+    }
+  }
+}
+```

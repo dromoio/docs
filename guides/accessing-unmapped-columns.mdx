@@ -1,0 +1,245 @@
+---
+title: "Accessing Unmapped Columns"
+description: "How to capture and process columns that weren't mapped to your schema fields."
+---
+
+When users upload files that contain more columns than are defined in your schema, you might want to access those unmapped columns for additional processing. Dromo provides a straightforward way to capture this data.
+
+## Setup Required
+
+### 1. Enable passthrough in settings
+
+First, enable the `passThroughUnmappedColumns` setting in your Dromo configuration:
+
+```javascript
+const settings = {
+  passThroughUnmappedColumns: true,
+  // ... other settings
+};
+```
+
+<Note>
+When enabled, each row in your results will include a special `$unmapped` property containing the unmapped column data.
+</Note>
+
+### 2. Update your resultsCallback
+
+Modify your results callback to process both mapped and unmapped data:
+
+```javascript
+const config = {
+  // ... other config
+  resultsCallback: (data, metadata) => {
+    // Process your normal mapped data
+    console.table(data);
+
+    // Extract unmapped columns with proper header names
+    const unmappedData = data.map(row => {
+      if (row.$unmapped && metadata.rawHeaders) {
+        const unmappedWithHeaders = {};
+        Object.entries(row.$unmapped).forEach(([index, value]) => {
+          const headerName = metadata.rawHeaders[parseInt(index)];
+          if (headerName) {
+            unmappedWithHeaders[headerName] = value;
+          }
+        });
+        return unmappedWithHeaders;
+      }
+      return {};
+    });
+
+    console.log("Unmapped columns:", unmappedData);
+
+    // Process both datasets as needed
+    processMainData(data);
+    processUnmappedData(unmappedData);
+  }
+};
+```
+
+## How It Works
+
+### Data Structure
+
+When `passThroughUnmappedColumns` is enabled:
+
+- **`$unmapped` property**: Added to each row containing unmapped column values
+- **Format**: `{ "0": "value1", "2": "value2" }` (column index → value)
+- **`metadata.rawHeaders`**: Array containing original file headers in order
+- **Header mapping**: Convert column indexes to actual column names using `rawHeaders[index]`
+
+### Example Walkthrough
+
+#### Original CSV File
+
+```csv
+Name,Email,Phone,Department,Notes,Start Date
+John Doe,john@example.com,555-1234,Engineering,New hire,2024-01-15
+Jane Smith,jane@example.com,555-5678,Marketing,Manager,2024-02-01
+```
+
+#### Schema Definition
+
+Let's say your schema only maps two fields:
+
+```javascript
+const schema = [
+  { key: "name", label: "Full Name" },
+  { key: "email", label: "Email Address" }
+];
+```
+
+#### Processed Results
+
+With `passThroughUnmappedColumns: true`, you'll receive:
+
+```javascript
+// Main data (mapped columns)
+[
+  {
+    name: "John Doe",
+    email: "john@example.com",
+    $unmapped: { "2": "555-1234", "3": "Engineering", "4": "New hire", "5": "2024-01-15" }
+  },
+  {
+    name: "Jane Smith",
+    email: "jane@example.com",
+    $unmapped: { "2": "555-5678", "3": "Marketing", "4": "Manager", "5": "2024-02-01" }
+  }
+]
+
+// metadata.rawHeaders
+["Name", "Email", "Phone", "Department", "Notes", "Start Date"]
+```
+
+#### Converted Unmapped Data
+
+After processing with header names:
+
+```javascript
+[
+  {
+    "Phone": "555-1234",
+    "Department": "Engineering",
+    "Notes": "New hire",
+    "Start Date": "2024-01-15"
+  },
+  {
+    "Phone": "555-5678",
+    "Department": "Marketing",
+    "Notes": "Manager",
+    "Start Date": "2024-02-01"
+  }
+]
+```
+
+## Common Use Cases
+
+### Audit Trail
+
+Store unmapped columns for compliance or auditing purposes:
+
+```javascript
+function storeAuditData(mainData, unmappedData) {
+  mainData.forEach((row, index) => {
+    const auditRecord = {
+      processedData: row,
+      additionalColumns: unmappedData[index],
+      timestamp: new Date(),
+      uploadId: getCurrentUploadId()
+    };
+
+    saveToAuditLog(auditRecord);
+  });
+}
+```
+
+### Dynamic Field Processing
+
+Process specific unmapped columns based on their header names:
+
+```javascript
+function processUnmappedColumns(unmappedData) {
+  return unmappedData.map(row => {
+    const processed = {};
+
+    Object.entries(row).forEach(([header, value]) => {
+      // Handle phone numbers
+      if (header.toLowerCase().includes('phone')) {
+        processed.phoneNumber = formatPhoneNumber(value);
+      }
+
+      // Handle dates
+      if (header.toLowerCase().includes('date')) {
+        processed.dates = processed.dates || [];
+        processed.dates.push({
+          field: header,
+          value: parseDate(value)
+        });
+      }
+
+      // Store everything else as metadata
+      processed.metadata = processed.metadata || {};
+      processed.metadata[header] = value;
+    });
+
+    return processed;
+  });
+}
+```
+
+### Flexible Schema Extension
+
+Allow users to map additional fields in a second pass:
+
+```javascript
+function enableSecondaryMapping(unmappedData) {
+  const availableColumns = Object.keys(unmappedData[0] || {});
+
+  // Present UI for mapping additional fields
+  const secondaryMappingOptions = availableColumns.map(header => ({
+    original: header,
+    suggested: suggestFieldMapping(header),
+    values: unmappedData.slice(0, 3).map(row => row[header]) // Preview values
+  }));
+
+  return secondaryMappingOptions;
+}
+```
+
+## Best Practices
+
+### Performance Considerations
+
+For large datasets, consider processing unmapped data asynchronously, since you can't know how many unmapped columns there will be:
+
+```javascript
+resultsCallback: async (data, metadata) => {
+  // Process main data immediately
+  await processMainData(data);
+
+  // Queue unmapped data processing
+  if (hasUnmappedColumns(data, metadata)) {
+    queueUnmappedProcessing(data, metadata);
+  }
+}
+```
+
+### Data Validation
+
+Validate unmapped data before processing:
+
+```javascript
+function validateUnmappedData(unmappedData) {
+  return unmappedData.filter(row => {
+    return Object.values(row).some(value =>
+      value !== null &&
+      value !== undefined &&
+      value.toString().trim() !== ''
+    );
+  });
+}
+```
+
+This feature gives you complete flexibility to handle any data structure your users might upload, while maintaining a clean separation between your core schema and additional data capture.
+
