@@ -193,6 +193,20 @@ Dromo uses industry-standard best practices to secure your data on our servers.
   If the uploaded file does not have sheets (e.g. a CSV), or the uploaded file has only one sheet, this setting has no effect.
 </ResponseField>
 
+<ResponseField name="templateDownloadOverrideURL" type="string" default="null">
+  If set, the template download button will download from this URL instead of generating a CSV template from your schema fields.
+
+  This allows you to provide a custom template file that may include additional formatting, instructions, or example data beyond what can be captured in the basic CSV template.
+
+  The file will be downloaded with the same filename that would be used for the generated template.
+
+  ```javascript
+  uploadStep: {
+    templateDownloadOverrideURL: "https://your-domain.com/custom-template.xlsx"
+  }
+  ```
+</ResponseField>
+
 ### `matchingStep`[​](#matchingstep "Direct link to matchingstep")
 
 object
