@@ -22,14 +22,17 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 ```
 </CodeGroup>
 
-The `onResults` callback returns an array of objects, where each object represents a record. You can use a simple loop to write each record as a new document directly to a Firebase collection.
+The `onResults` callback returns an array of objects, where each object represents a record. The callback also receives a `metadata` object containing information about the import process.
 
 <CodeGroup>
 ```javascript
-dromo.onResults(function (data) {
+dromo.onResults(function (data, metadata) {
+  console.log('Import metadata:', metadata);
+
   // Loop through each item in the data array and add it as a document in Firebase
   data.forEach(async (record) => {
     try {
@@ -41,4 +44,53 @@ dromo.onResults(function (data) {
   })
 });
 ```
+
 </CodeGroup>
+
+## Working with Metadata
+
+The `metadata` object contains useful information about the import:
+
+```javascript
+dromo.onResults(function (data, metadata) {
+  console.log('Total rows processed:', metadata.totalRows);
+  console.log('Valid rows:', metadata.validRows);
+  console.log('Invalid rows:', metadata.invalidRows);
+  console.log('Original headers:', metadata.rawHeaders);
+});
+```
+
+## Handling Unmapped Columns
+
+If you've enabled the `passThroughUnmappedColumns` setting, your data will include unmapped columns that weren't part of your schema:
+
+```javascript
+dromo.onResults(function (data, metadata) {
+  data.forEach(async (record) => {
+    // Process main mapped data
+    const mappedData = { ...record };
+    delete mappedData.$unmapped;
+
+    // Handle unmapped columns separately if they exist
+    if (record.$unmapped && metadata.rawHeaders) {
+      const unmappedData = {};
+      Object.entries(record.$unmapped).forEach(([index, value]) => {
+        const headerName = metadata.rawHeaders[parseInt(index)];
+        if (headerName) {
+          unmappedData[headerName] = value;
+        }
+      });
+
+      // Store unmapped data in a separate collection or field
+      console.log('Unmapped data:', unmappedData);
+    }
+
+    // Save to Firebase
+    await addDoc(collection(db, 'collectionName'), mappedData);
+  });
+});
+```
+
+<Note>
+  For a comprehensive guide on working with unmapped columns, see the [Accessing Unmapped Columns guide](/guides/accessing-unmapped-columns).
+</Note>

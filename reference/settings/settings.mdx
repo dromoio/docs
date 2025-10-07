@@ -23,6 +23,7 @@ description: "Settings are supplied as an object to the Dromo instance on initia
   |                                    `REMOVE_INVALID_ROWS`                                   |                                    `INCLUDE_INVALID_ROWS`                                   |                                   `BLOCK_SUBMIT`                                  |
   | :----------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
   | ![](/images/assets/images/invalidData_remove_invalid.png) | ![](/images/assets/images/invalidData_include_invalid.png) | ![](/images/assets/images/invalidData_block.png) |
+
 </ResponseField>
 
 <ResponseField name="allowEmptySubmit" type="boolean" default="true">
@@ -72,13 +73,13 @@ Dromo uses industry-standard best practices to secure your data on our servers.
 
   You can supply this data in one of two forms:
 
-  * As an array of objects, where each object represents a row. The object itself is a mapping of the `key` specified in [fields](/fields) and the value for that field in that row. As an example you could pass in:
+* As an array of objects, where each object represents a row. The object itself is a mapping of the `key` specified in [fields](/fields) and the value for that field in that row. As an example you could pass in:
 
   ```
   [  {    name: "Jack",    email_address: "jack@thehill.com",  },  {    name: "Jill",    email_address: "jill@thehill.com",  },];
   ```
 
-  * As an array of arrays of strings, where each row is represented by an array, with the fields matching the order specified by [`fields`](/fields). For example:
+* As an array of arrays of strings, where each row is represented by an array, with the fields matching the order specified by [`fields`](/fields). For example:
 
   ```
   [  ["Jack", "jack@thehill.com"],  ["Jill", "jill@thehill.com"],];
@@ -130,15 +131,50 @@ Dromo uses industry-standard best practices to secure your data on our servers.
 </ResponseField>
 
 <ResponseField name="passThroughUnmappedColumns" type="boolean" default="false">
-  With this setting on, Dromo will include all columns not mapped or added as custom fields in the result payload.
+  With this setting enabled, Dromo will include all columns not mapped or added as custom fields in the result payload.
 
   The values for each row will be in an object with the key `$unmapped`. The key for each value will correspond to the column index in the original file.
 
+  Additionally, the `metadata` object passed to your `resultsCallback` will include a `rawHeaders` array containing the original column headers in order, allowing you to map column indexes to their actual header names.
+
   In the example below, we only mapped two columns to `firstName` and `email`. The remaining unmapped columns were added to the `$unmapped` object.
 
+  ```javascript
+  // Example results
+  [
+    {
+      "$unmapped": {
+        "1": "Phillips",
+        "3": "(124) 246-3980",
+        "4": "United States",
+        "5": "93715",
+        "6": "",
+        "7": "proposed terms"
+      },
+      "firstName": "Michael",
+      "email": "jason@moxie.xyz"
+    },
+    {
+      "$unmapped": {
+        "1": "Kukreja",
+        "3": "+1 124 246 3981",
+        "4": "Canada",
+        "5": "J6R",
+        "6": "17-Dec-91",
+        "7": "qualifying lead"
+      },
+      "firstName": "Mohit",
+      "email": "info@hub.inc"
+    }
+  ]
+
+  // metadata.rawHeaders
+  ["Name", "Last Name", "Email", "Phone", "Country", "Zip", "Birthday", "Notes"]
   ```
-  // example results[{    "$unmapped": {        "1": "Phillips",        "3": "(124) 246-3980",        "4": "United States",        "5": "93715",        "6": "",        "7": "proposed terms"    },    "firstName": "Michael",    "email": "jason@moxie.xyz"},{    "$unmapped": {        "1": "Kukreja",        "3": "+1 124 246 3981",        "4": "Canada",        "5": "J6R",        "6": "17-Dec-91",        "7": "qualifying lead"    },    "firstName": "Mohit",    "email": "info@hub.inc"}...]
-  ```
+
+  <Note>
+    For a complete guide on working with unmapped columns including how to use `rawHeaders` to convert column indexes to header names, see the [Accessing Unmapped Columns guide](/guides/accessing-unmapped-columns).
+  </Note>
 </ResponseField>
 
 <ResponseField name="uploadStep" type="object" default="{}">
@@ -155,6 +191,20 @@ Dromo uses industry-standard best practices to secure your data on our servers.
   If set, the sheet selection modal will be skipped if a sheet matching the string is found in the workbook.
 
   If the uploaded file does not have sheets (e.g. a CSV), or the uploaded file has only one sheet, this setting has no effect.
+</ResponseField>
+
+<ResponseField name="templateDownloadOverrideURL" type="string" default="null">
+  If set, the template download button will download from this URL instead of generating a CSV template from your schema fields.
+
+  This allows you to provide a custom template file that may include additional formatting, instructions, or example data beyond what can be captured in the basic CSV template.
+
+  The file will be downloaded with the same filename that would be used for the generated template.
+
+  ```javascript
+  uploadStep: {
+    templateDownloadOverrideURL: "https://your-domain.com/custom-template.xlsx"
+  }
+  ```
 </ResponseField>
 
 ### `matchingStep`[​](#matchingstep "Direct link to matchingstep")
@@ -244,12 +294,12 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
 <ResponseField name="highlightAutoFixes" type="boolean" default="false">
   If true, Dromo will highlight any cell that had substantive changes made by automatic transformations, such as:
 
-  * Rounded number values
-  * Modified datetime values
-  * Select values changed from alternate matches
-  * Left-padded zip codes or removed last 4 digits
-  * Modified URLs
-  * Adjusted phone numbers
+* Rounded number values
+* Modified datetime values
+* Select values changed from alternate matches
+* Left-padded zip codes or removed last 4 digits
+* Modified URLs
+* Adjusted phone numbers
 
   <Expandable title="an example">
     ![](/images/assets/images/highlightAutoFixes.png)

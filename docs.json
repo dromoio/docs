@@ -86,6 +86,7 @@
               "guides/zapier-integration",
               "guides/using-manyToOne",
               "guides/using-transform-data",
+              "guides/accessing-unmapped-columns",
               "guides/importing-a-pdf"
             ]
           },
