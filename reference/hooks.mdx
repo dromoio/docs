@@ -3,13 +3,23 @@ title: "Hooks"
 description: "Dromo's Hooks help you reformat, validate, and correct data automatically via custom functions per column and/or row. For example, using these hooks you can automatically reformat area codes or country codes, remove special characters, validate emails against external data, or anything else you can think of."
 ---
 
+Hooks are a powerful feature that allow you to programmatically validate, transform, and enhance data during the import process. They integrate seamlessly with [field validation](/reference/fields/field-validators) and [results handling](/reference/results) to give you complete control over your data pipeline.
+
+<Tip>
+  Looking for simpler validation options? Check out [field validators](/reference/fields/field-validators) for built-in validation rules, or see the [validation guide](/guides/validation) for best practices.
+</Tip>
+
 The diagram below shows the general flow for Dromo. Column hooks run first and only once after the "column matching" stage. After these run, row hooks will run for each record. Row hooks will also run on a record after it is updated by the user. If you only want to run a row hook on init or on change, you can configure it accordingly.
 
 ![](\images\assets\images\hooks_flow_chart.png)
 
 ## Column hooks[​](#column-hooks "Direct link to Column hooks")
 
-Column hooks run on a specified column at the beginning of the data review step. They are run before the row hooks and will only run once during the import process.
+Column hooks run on a specified column at the beginning of the data review step. They are run before the row hooks and will only run once during the import process. Column hooks are ideal for batch operations like API lookups or data enrichment for entire columns.
+
+<Note>
+  To register column hooks, use `registerColumnHook()` in the [JavaScript SDK](/reference/dromo-uploader-sdk) or the `columnHooks` prop in the [React component](/reference/react-dromo-uploader).
+</Note>
 
 Column hooks are called with a single argument, `values`, with an array of objects. Each object corresponds to one value in the column, and has two parameters.
 
@@ -177,6 +187,10 @@ Column hooks may return the value async, wrapped in a promise.
 
 Row hooks run validation on each record (row) of data and return the record with new data and/or user messages. Row hooks come in two variants: standard and bulk.
 
+<Note>
+  To register row hooks, use `registerRowHook()` or `registerBulkRowHook()` in the [JavaScript SDK](/reference/dromo-uploader-sdk), or the `rowHooks`/`bulkRowHooks` props in the [React component](/reference/react-dromo-uploader).
+</Note>
+
 Row hooks are run once in `"init"` mode after the column matching step and before the user begins the review step, and are run with the full dataset.
 
 Row hooks are run again in `"update"` mode after each time the user changes any data, with only the changed rows.
@@ -187,61 +201,61 @@ Standard row hooks are invoked once for every row on `init`, and once for every 
 
 Standard row hooks are called with two arguments.
 
-* recordobject
-
-  * indexnumber
-
+<ResponseField name="record" type="object">
+  <ResponseField name="index" type="number">
     The index of this row
+  </ResponseField>
 
-  * rowobject
-
+  <ResponseField name="row" type="object">
     The `row` object will have keys matching the field key of each mapped field. Each of these keys will contain an object with data and metadata of that field in the given row.
 
-    * valuestring
-
+    <ResponseField name="value" type="string">
       The value of this field at this row, as displayed to the user
+    </ResponseField>
 
-    * resultValuestring | boolean | number | null
-
+    <ResponseField name="resultValue" type="string | boolean | number | null">
       The value of this field at this row, as it will appear in the result data
+    </ResponseField>
 
-    * info[InfoMessage\[\]](#working-with-info-messages)
-
+    <ResponseField name="info" type="InfoMessage[]" href="#working-with-info-messages">
       An array of any info messages you have previously added to this cell
+    </ResponseField>
 
-    * selectOptions\{ label: string, value: string }\[]
-
+    <ResponseField name="selectOptions" type="{ label: string, value: string }[]">
       Overridden selectOptions previously added to this cell
+    </ResponseField>
+  </ResponseField>
+</ResponseField>
 
-* mode"init" | "update"
-
+<ResponseField name="mode" type='"init" | "update"'>
   Mode will be `"init"` if running before the start of the review step, and `"update"` if running due to a user change.
+</ResponseField>
 
-* manyToOne\{ value: string, resultValue: string | boolean | number | null, info: InfoMessage\[], selectOptions: \{ label: string, value: string }\[] }\[]
-
+<ResponseField name="manyToOne" type="{ value: string, resultValue: string | boolean | number | null, info: InfoMessage[], selectOptions: { label: string, value: string }[] }[]">
   If the field is [manyToOne](/reference/fields/field-types#manytoone), every mapped cell for this row appears as an array.
+</ResponseField>
 
 Row hooks should return the updated record in a similar format.
 
 Row hooks may return the value async, wrapped in a promise.
 
-* rowobjectRequired
-
+<ResponseField name="row" type="object" required>
   The `row` object should contain keys matching the field key of each mapped field. If a mapped field is omitted, it will remain unchanged.
 
   Each field key object may have the following entries:
 
-  * valuestring
-
+  <ResponseField name="value" type="string">
     The new value for this row
+  </ResponseField>
 
-  * info[InfoMessage\[\]](#working-with-info-messages)
-
+  <ResponseField name="info" type="InfoMessage[]" href="#working-with-info-messages">
     New messages for this row. Messages returned will replace any previously set messages. If `info` is omitted, messages will remain unchanged.
+  </ResponseField>
 
-  * selectOptions\{ label: string, value: string }\[]
-
+  <ResponseField name="selectOptions" type="{ label: string, value: string }[]">
     Select option overrides for this cell. If provided, the cell will use these select options for transforming values and validating instead of those set when the field was declared.
+  </ResponseField>
+</ResponseField>
 
 <Info>
   When fetching external data, we recommend that you make any API calls in a column hook and then validate that the data remains correct using a row hook in `update` mode.
@@ -425,27 +439,27 @@ Row delete hooks are called when a row (or rows) is removed from the table by th
 
 Row delete hooks are called once for each row that was removed.
 
-* recordobject
-
-  * indexnumber
-
+<ResponseField name="record" type="object">
+  <ResponseField name="index" type="number">
     The index of this row
+  </ResponseField>
 
-  * rowobject
-
+  <ResponseField name="row" type="object">
     The `row` object will have keys matching the field key of each mapped field. Each of these keys will contain an object with data and metadata of that field in the given row.
 
-    * valuestring
-
+    <ResponseField name="value" type="string">
       The value of this field at this row, as displayed to the user
+    </ResponseField>
 
-    * resultValuestring | boolean | number | null
-
+    <ResponseField name="resultValue" type="string | boolean | number | null">
       The value of this field at this row, as it will appear in the result data
+    </ResponseField>
 
-    * info[InfoMessage\[\]](#working-with-info-messages)
-
+    <ResponseField name="info" type="InfoMessage[]" href="#working-with-info-messages">
       An array of any info messages you have previously added to this cell
+    </ResponseField>
+  </ResponseField>
+</ResponseField>
 
 <Accordion title="Row delete hook example">
   <CodeGroup>
@@ -471,19 +485,23 @@ Row delete hooks are called once for each row that was removed.
 
 Step hooks are callbacks that are invoked at different parts of the import process. In addition to fetching metadata about the import at that time, you can use them to call mutation functions like [`addField`](#instanceaddfield).
 
+<Note>
+  To register step hooks, use `registerStepHook()` in the [JavaScript SDK](/reference/dromo-uploader-sdk) or the `stepHooks` prop in the [React component](/reference/react-dromo-uploader). See the [using addField guide](/guides/using-addField) for advanced use cases.
+</Note>
+
 ### `UPLOAD_STEP` hook[​](#upload_step-hook "Direct link to upload_step-hook")
 
 This hook is called when the user has completed uploading a file and provides you with a 20 row data preview of that data.
 
 The function is called with two arguments.
 
-* instance[DromoUploader](#the-dromo-uploader-instance)
-
+<ResponseField name="instance" type="DromoUploader" href="#the-dromo-uploader-instance">
   The Dromo Uploader instance which you can call mutation methods on
+</ResponseField>
 
-* previewDatastring\[]\[]
-
+<ResponseField name="previewData" type="string[][]">
   An array of arrays containing the first 20 rows of raw uploaded data
+</ResponseField>
 
 <Accordion title="Upload step hook example">
   <CodeGroup>
@@ -524,47 +542,47 @@ This hook is triggered just before the final review screen loads (and before any
 
 The function is called with two arguments.
 
-* instance[DromoUploader](#the-dromo-uploader-instance)
-
+<ResponseField name="instance" type="DromoUploader" href="#the-dromo-uploader-instance">
   The Dromo Uploader instance which you can call mutation methods on
+</ResponseField>
 
-* reviewStepDataobject
-
-  * rawHeadersstring\[] | null
-
+<ResponseField name="reviewStepData" type="object">
+  <ResponseField name="rawHeaders" type="string[] | null">
     The raw headers from the uploaded file. If no file was uploaded (e.g. manual entry was used), this will be `null`.
+  </ResponseField>
 
-  * headerMapping\{ \[header: string]: string }
-
+  <ResponseField name="headerMapping" type="{ [header: string]: string }">
     An object whose keys are the file headers and values are the field keys of the field the header was mapped to
+  </ResponseField>
 
-  * fieldsobject
-
+  <ResponseField name="fields" type="object">
     An object whose keys are the field keys and values are objects containing metadata about that field
 
-    * fileHeaderstring | null
-
+    <ResponseField name="fileHeader" type="string | null">
       The header this field was mapped to. `null` if no file was uploaded.
+    </ResponseField>
 
-    * fileHeaderIndexnumber | null
-
+    <ResponseField name="fileHeaderIndex" type="number | null">
       The column header index this field was mapped to. `null` if no file was uploaded.
+    </ResponseField>
 
-    * isCustomboolean
-
+    <ResponseField name="isCustom" type="boolean">
       Whether this field was added by the user as a custom field
+    </ResponseField>
 
-    * manyToOneboolean
-
+    <ResponseField name="manyToOne" type="boolean">
       Indicates if this field is [`manyToOne`](/reference/fields/field-types#manytoone).
+    </ResponseField>
 
-    * fileHeadersstring\[]
-
+    <ResponseField name="fileHeaders" type="string[]">
       The headers that were mapped to the field if it is [`manyToOne`](/reference/fields/field-types#manytoone).
+    </ResponseField>
 
-    * fileHeaderIndexesnumber\[]
-
+    <ResponseField name="fileHeaderIndexes" type="number[]">
       The indexes of columns that were mapped to a [`manyToOne`](/reference/fields/field-types#manytoone) field.
+    </ResponseField>
+  </ResponseField>
+</ResponseField>
 
 <Accordion title="Review step hook example">
   <CodeGroup>
@@ -605,31 +623,31 @@ This hook is triggered during the review step after all of the initial row and c
 
 The function is called with two arguments.
 
-* instance[DromoUploader](#the-dromo-uploader-instance)
-
+<ResponseField name="instance" type="DromoUploader" href="#the-dromo-uploader-instance">
   The Dromo Uploader instance which you can call mutation methods on
+</ResponseField>
 
-* reviewStepDataobject
-
-  * headerMapping\{ \[header: string]: string }
-
+<ResponseField name="reviewStepData" type="object">
+  <ResponseField name="headerMapping" type="{ [header: string]: string }">
     An object whose keys are the file headers and values are the field keys of the field the header was mapped to
+  </ResponseField>
 
-  * fieldsobject
-
+  <ResponseField name="fields" type="object">
     An object whose keys are the field keys and values are objects containing metadata about that field
 
-    * fileHeaderstring | null
-
+    <ResponseField name="fileHeader" type="string | null">
       The header this field was mapped to. `null` if no file was uploaded.
+    </ResponseField>
 
-    * fileHeaderIndexnumber | null
-
+    <ResponseField name="fileHeaderIndex" type="number | null">
       The column header index this field was mapped to. `null` if no file was uploaded.
+    </ResponseField>
 
-    * isCustomboolean
-
+    <ResponseField name="isCustom" type="boolean">
       Whether this field was added by the user as a custom field
+    </ResponseField>
+  </ResponseField>
+</ResponseField>
 
 <Accordion title="Review step post hooks example">
   <CodeGroup>
@@ -678,31 +696,31 @@ This hook is triggered during the review step right after the user clicks 'Finis
 
 The function is called with two arguments.
 
-* instance[DromoUploader](#the-dromo-uploader-instance)
-
+<ResponseField name="instance" type="DromoUploader" href="#the-dromo-uploader-instance">
   The Dromo Uploader instance which you can call mutation methods on
+</ResponseField>
 
-* reviewStepDataobject
-
-  * headerMapping\{ \[header: string]: string }
-
+<ResponseField name="reviewStepData" type="object">
+  <ResponseField name="headerMapping" type="{ [header: string]: string }">
     An object whose keys are the file headers and values are the field keys of the field the header was mapped to
+  </ResponseField>
 
-  * fieldsobject
-
+  <ResponseField name="fields" type="object">
     An object whose keys are the field keys and values are objects containing metadata about that field
 
-    * fileHeaderstring | null
-
+    <ResponseField name="fileHeader" type="string | null">
       The header this field was mapped to. `null` if no file was uploaded.
+    </ResponseField>
 
-    * fileHeaderIndexnumber | null
-
+    <ResponseField name="fileHeaderIndex" type="number | null">
       The column header index this field was mapped to. `null` if no file was uploaded.
+    </ResponseField>
 
-    * isCustomboolean
-
+    <ResponseField name="isCustom" type="boolean">
       Whether this field was added by the user as a custom field
+    </ResponseField>
+  </ResponseField>
+</ResponseField>
 
 <Accordion title="Review step pre submit example">
   <CodeGroup>
@@ -745,25 +763,27 @@ The function is called with two arguments.
 
 ## Working with info messages[​](#working-with-info-messages "Direct link to Working with info messages")
 
-Dromo offers the ability to add info messages to data cells to enable custom validation and provide other feedback to the user.
+Dromo offers the ability to add info messages to data cells to enable custom validation and provide other feedback to the user. Info messages are a key part of the validation system and work alongside [field validators](/reference/fields/field-validators).
 
 You can add and update info messages via [column hooks](#column-hooks), [row hooks](#row-hooks), and [the updateInfoMessages method](#instanceupdateinfomessages) in step hooks.
 
+<Tip>
+  For simple validation scenarios, consider using [built-in field validators](/reference/fields/field-validators) before implementing custom validation with info messages.
+</Tip>
+
 Info messages are provided as objects with these parameters.
 
-* messagestringRequired
-
+<ResponseField name="message" type="string" required>
   The message to be displayed to the user in the review screen when they hover over the corresponding cell
+</ResponseField>
 
-* level"info" | "warning" | "error"
-
-  Default: "error"
-
+<ResponseField name="level" type='"info" | "warning" | "error"' default="error">
   The nature of the message.
 
   * A cell with an `"error"` message is highlighted in red. It is considered a validation error and impacts the user's submission options based on [`invalidDataBehavior`](/reference/settings/settings#invaliddatabehavior)
   * A cell with a `"warning"` message is highlighted in yellow
   * A cell with an `"info"` message is highlighted in blue
+</ResponseField>
 
 ## The Dromo Uploader instance[​](#the-dromo-uploader-instance "Direct link to The Dromo Uploader instance")
 
@@ -777,15 +797,15 @@ By default, the field will be added to the end of the fields.
 
 You may optionally provide a position object specifying where in the list of fields to insert the new one.
 
-* field[Field](/fields#field-object-reference)Required
-
+<ResponseField name="field" type="Field" href="/reference/fields/fields#field-object-reference" required>
   A field spec for the new field to add
+</ResponseField>
 
-* position\{ before: string } | \{ after: string }
-
+<ResponseField name="position" type="{ before: string } | { after: string }">
   Specifies where in the list of fields to add the new one.
 
   If provided, must be an object of the form `{ before: fieldKey }` or `{ after: fieldKey }` where `fieldKey` is the `key` of a mapped field. If no mapped field with the given key exists, the new field will be added to the end.
+</ResponseField>
 
 <Check>
   For an example of concatenating or splitting fields, see the [Guide](/guides/using-addField).
@@ -799,9 +819,9 @@ The field will no longer be visible on the data review screen nor included in th
 
 Can be used in conjuction with [`addField`](/reference/hooks#instanceaddfield) to concatenate columns and remove the originals, i.e. combine `firstName` + `lastName` into `fullName` and remove `firstName` and `lastName` from the result data.
 
-* fieldKeystringRequired
-
+<ResponseField name="fieldKey" type="string" required>
   Key of the field to be deleted.
+</ResponseField>
 
 <Check>
   For an example of concatenating or splitting fields, see the [Guide](/guides/using-addField).
@@ -811,27 +831,27 @@ Can be used in conjuction with [`addField`](/reference/hooks#instanceaddfield) t
 
 Updates the messages for targeted cells, overwriting any previous messages.
 
-* updatesobject\[]Required
-
+<ResponseField name="updates" type="object[]" required>
   An array of objects with an object for each cell to update the messages on
 
-  * rowIndexnumberRequired
-
+  <ResponseField name="rowIndex" type="number" required>
     The 0-indexed position of the row you are targeting
+  </ResponseField>
 
-  * fieldKeystringRequired
+  <ResponseField name="fieldKey" type="string" required>
+    The key of the [field](/reference/fields/fields) you are targeting
+  </ResponseField>
 
-    The key of the [field](/fields) you are targeting
-
-  * manyToOneIndexnumber
-
+  <ResponseField name="manyToOneIndex" type="number">
     If `manyToOne` is enabled on a field, you can use this property to select which mapped column shall receive the updates.
+  </ResponseField>
 
-  * messages[InfoMessage\[\]](#working-with-info-messages)Required
-
+  <ResponseField name="messages" type="InfoMessage[]" href="#working-with-info-messages" required>
     An array of [infoMessages](#working-with-info-messages) which will be set for the cell at the specified row and field.
 
     An empty array will clear existing messages from the cell.
+  </ResponseField>
+</ResponseField>
 
 <Accordion title="updateInfoMessages example">
   In this case, if you had previously set a message on the email field of row 3 or the phone field of row 8, these messages would be replaced with the new ones.
@@ -858,48 +878,48 @@ Updates the messages for targeted cells, overwriting any previous messages.
 
 Adds rows to the dataset. Returns an array of row IDs for the rows that were just added.
 
-* rowsobject\[]Required
-
+<ResponseField name="rows" type="object[]" required>
   Rows to be added to the dataset.
 
-  * indexnumber
-
+  <ResponseField name="index" type="number">
     Index where this row will be inserted. If omitted, row will be added to end of the dataset.
+  </ResponseField>
 
-  * rowobject
-
+  <ResponseField name="row" type="object">
     The `row` object should contain keys matching the field key of each mapped field. If a mapped field is omitted, it will remain unchanged.
 
     Each field key object may have the following entries:
 
-    * valuestring
-
+    <ResponseField name="value" type="string">
       The new value for this row
+    </ResponseField>
 
-    * info[InfoMessage\[\]](#working-with-info-messages)
-
+    <ResponseField name="info" type="InfoMessage[]" href="#working-with-info-messages">
       Info messages for this row.
+    </ResponseField>
 
-    * selectOptions\{ label: string, value: string }\[]
-
+    <ResponseField name="selectOptions" type="{ label: string, value: string }[]">
       Select option overrides for this cell. If provided, the cell will use these select options for transforming values and validating instead of those set when the field was declared.
+    </ResponseField>
+  </ResponseField>
+</ResponseField>
 
 ### `instance.removeRows`[​](#instanceremoverows "Direct link to instanceremoverows")
 
 Removes rows rows the dataset.
 
-* rowIdsstring\[]Required
-
+<ResponseField name="rowIds" type="string[]" required>
   Rows to be removed. Row IDs can be read on any row or column hooks.
+</ResponseField>
 
 ### `instance.setConfirmationMessage`[​](#instancesetconfirmationmessage "Direct link to instancesetconfirmationmessage")
 
 Allows customization of the messaged displayed to the user after they click 'Finish'. Content can be plain text or HTML.
 
-* messageHTMLstringRequired
-
+<ResponseField name="messageHTML" type="string" required>
   Message for finish confirmation alert modal. Text or HTML for embedding links or media.
+</ResponseField>
 
-* options\{ submitButtonText?: string, cancelButtonText?: string }
-
+<ResponseField name="options" type="{ submitButtonText?: string, cancelButtonText?: string }">
   Optionally override text for submit and cancel buttons.
+</ResponseField>
