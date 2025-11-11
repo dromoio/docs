@@ -6,7 +6,9 @@ title: "Customizing Styles"
   For more detail about possible style overrides, see the [Reference](/reference/settings/style-overrides) page.
 </Info>
 
-You can customize styles for almost all the visual elements throughout the Dromo Uploader. ![Upload screen](/images/guides/style_overrides_upload.png)
+You can customize styles for almost all the visual elements throughout the Dromo Uploader, allowing you to seamlessly integrate the uploader with your application's design system and brand identity.
+
+![Upload screen](/images/guides/style_overrides_upload.png)
 
 ![Set header screen](/images/guides/style_overrides_header.png)
 
@@ -16,9 +18,9 @@ You can customize styles for almost all the visual elements throughout the Dromo
 
 ![Review screen](/images/guides/style_overrides_review.png)
 
-## Basic Example[​](#basic-example "Direct link to Basic Example")
+## Basic Example
 
-In this example, we change the text color to dark gray, the primary button to blue, and the secondary button to red.
+In this example, we change the text color to dark gray, the primary button to blue, and the secondary button to red. This demonstrates the fundamental approach to customizing Dromo's appearance.
 
 ```js
 const settings = {
@@ -43,8 +45,164 @@ const settings = {
       textColor: "#ffffff",
       border: "1px solid #b0276b",
       hoverBackgroundColor: "#5c656d",
-      hoverTextColor: "#fffff",
+      hoverTextColor: "#ffffff",
       hoverBorder: "1px solid #5c656d"
+    }
+  }
+}
+```
+
+## Global Styling
+
+The `global` section controls application-wide styles that affect multiple components throughout the uploader. These settings provide a foundation for your design system and ensure visual consistency across all screens.
+
+### Text Colors
+
+Control the color hierarchy for text throughout the application:
+
+- **`textColor`** - Default text color for body text and general content
+- **`primaryTextColor`** - Emphasized text such as headings, labels, and important information
+- **`secondaryTextColor`** - De-emphasized text like descriptions, hints, and supplementary information
+
+### Status Colors
+
+Define colors for conveying state and feedback to users:
+
+- **`successColor`** - Indicates successful operations, valid data, and positive states
+- **`warningColor`** - Highlights warnings, potential issues, and cautionary information
+
+### Typography
+
+Integrate your brand's typography:
+
+- **`customFontURL`** - URL to load custom fonts (e.g., Google Fonts, Adobe Fonts, or self-hosted fonts)
+- **`customFontFamily`** - CSS font-family declaration to apply the custom font
+
+<Info>
+  When using custom fonts, ensure the font URL is accessible and supports CORS. The font will be loaded asynchronously to avoid blocking the uploader initialization.
+</Info>
+
+### Container Styling
+
+Control the appearance of modal containers and panels:
+
+- **`backgroundColor`** - Background color for the main uploader container
+- **`borderRadius`** - Corner radius for rounded elements (e.g., "8px", "0.5rem")
+- **`borderWidth`** - Thickness of borders throughout the application
+- **`borderColor`** - Default border color for dividers and containers
+- **`borderStyle`** - Border style (e.g., "solid", "dashed", "dotted")
+
+### Visual Effects
+
+- **`backdropBlur`** - Boolean to enable/disable the blur effect on the modal backdrop. When enabled, the background behind the modal will have a frosted glass effect.
+
+```js
+const settings = {
+  styleOverrides: {
+    global: {
+      // Text color hierarchy
+      textColor: "#1f2937",           // Body text
+      primaryTextColor: "#374151",     // Headings and labels
+      secondaryTextColor: "#6b7280",   // Descriptions and hints
+
+      // Status colors for feedback
+      successColor: "#10b981",         // Green for success states
+      warningColor: "#f59e0b",         // Amber for warnings
+
+      // Custom brand font
+      customFontURL: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap",
+      customFontFamily: "'Inter', sans-serif",
+
+      // Container appearance
+      backgroundColor: "#ffffff",
+      borderRadius: "8px",
+      borderWidth: "1px",
+      borderColor: "#e5e7eb",
+      borderStyle: "solid",
+
+      // Visual effects
+      backdropBlur: true               // Enable backdrop blur
+    }
+  }
+}
+```
+
+## Button Styling
+
+Dromo uses three button types throughout the interface: primary (main actions), secondary (alternative actions), and tertiary (subtle actions). Each button type can be fully customized with normal and hover states.
+
+### Primary Buttons
+
+Primary buttons are used for the main call-to-action on each screen (e.g., "Continue", "Submit", "Finish"). These should be the most visually prominent buttons.
+
+**Use cases:**
+- Advancing to the next step in the workflow
+- Submitting final data
+- Confirming important actions
+
+### Secondary Buttons
+
+Secondary buttons provide alternative or less critical actions (e.g., "Back", "Skip", "Cancel").
+
+**Use cases:**
+- Navigating back to previous steps
+- Canceling or closing modals
+- Secondary actions that complement the primary action
+
+### Tertiary Buttons
+
+Tertiary buttons are the most subtle option, typically used for optional actions or inline controls.
+
+**Use cases:**
+- "View details" or "Show more" links
+- Inline editing actions
+- Optional helper actions
+
+### Button Properties
+
+Each button type supports the following properties:
+
+- **`borderRadius`** - Corner radius (e.g., "0.375rem", "4px")
+- **`backgroundColor`** - Fill color
+- **`textColor`** - Text/label color
+- **`border`** - Border style (e.g., "1px solid #3b82f6")
+- **`hoverBackgroundColor`** - Fill color on mouse hover
+- **`hoverTextColor`** - Text color on mouse hover
+- **`hoverBorder`** - Border style on mouse hover
+
+<Warning>
+  If you specify a `backgroundColor` but not a `hoverBackgroundColor`, Dromo will automatically use the same color for the hover state. For better UX, explicitly define hover states that are slightly darker or lighter than the normal state.
+</Warning>
+
+```js
+const settings = {
+  styleOverrides: {
+    primaryButton: {
+      borderRadius: "0.375rem",
+      backgroundColor: "#3b82f6",          // Blue background
+      textColor: "#ffffff",                // White text
+      border: "1px solid #3b82f6",         // Matching border
+      hoverBackgroundColor: "#2563eb",     // Darker blue on hover
+      hoverTextColor: "#ffffff",
+      hoverBorder: "1px solid #2563eb"
+    },
+    secondaryButton: {
+      borderRadius: "0.375rem",
+      backgroundColor: "#f3f4f6",          // Light gray background
+      textColor: "#374151",                // Dark text
+      border: "1px solid #d1d5db",         // Gray border
+      hoverBackgroundColor: "#e5e7eb",     // Slightly darker gray on hover
+      hoverTextColor: "#1f2937",           // Darker text on hover
+      hoverBorder: "1px solid #9ca3af"
+    },
+    tertiaryButton: {
+      borderRadius: "0.375rem",
+      backgroundColor: "transparent",       // No background
+      textColor: "#3b82f6",                // Blue text
+      border: "1px solid transparent",     // No border
+      hoverBackgroundColor: "#eff6ff",     // Light blue background on hover
+      hoverTextColor: "#2563eb",           // Darker blue text on hover
+      hoverBorder: "1px solid #3b82f6"     // Blue border on hover
     }
   }
 }
@@ -52,36 +210,611 @@ const settings = {
 
 ## Table Styling
 
-You can also customize the appearance of the data table including headers, selection, and cell styling:
+The data table (powered by Handsontable) is the core interface where users view, edit, and validate their data. Extensive styling options allow you to match your application's design while maintaining usability.
+
+### Column Headers
+
+Headers identify each column and show field names from your schema.
+
+- **`headerBackgroundColor`** - Background color for column headers
+- **`headerTextColor`** - Text color for column headers
+- **`headerFontWeight`** - Font weight (e.g., "400", "500", "600", "700", "bold")
+
+### Active & Highlighted Headers
+
+When users interact with columns (selecting, mapping, or hovering), headers can change appearance to provide visual feedback.
+
+- **`headerActiveBackgroundColor`** - Background when the column is currently active/selected
+- **`headerActiveTextColor`** - Text color when active
+- **`headerHighlightedBackgroundColor`** - Background when the column is highlighted (e.g., during drag operations)
+- **`headerHighlightedTextColor`** - Text color when highlighted
+
+**Use case:** During the column matching step, when a user selects a column to map to a schema field, the active header styling helps them identify which column they're working with.
+
+### Row Headers
+
+The leftmost column displays row numbers to help users reference specific data rows.
+
+- **`rowHeaderBackgroundColor`** - Background color for the row number column
+- **`rowHeaderTextColor`** - Text color for row numbers
+
+### Corner Header
+
+The top-left cell where the row header and column header intersect.
+
+- **`cornerHeaderBackgroundColor`** - Background color for the corner cell
+
+### Cell Styling
+
+Basic styling for data cells in the table.
+
+- **`cellBackgroundColor`** - Default background for all cells
+- **`cellTextColor`** - Default text color for cell content
+- **`cellHoverBackgroundColor`** - Background when hovering over a cell
+- **`cellHoverTextColor`** - Text color when hovering
+
+### Alternating Rows
+
+Improve readability with zebra-striping (alternating row colors).
+
+- **`oddRowBackgroundColor`** - Background color for odd-numbered rows
+
+<Tip>
+  Use a subtle color difference between even and odd rows (e.g., white and light gray) to help users track data across columns without being distracting.
+</Tip>
+
+### Selection Styling
+
+Visual feedback when users select cells or rows.
+
+- **`cellSelectionBorderColor`** - Border color around selected cells
+- **`cellSelectionBackgroundColor`** - Background color for selected cells (use semi-transparent colors like "rgba(59, 130, 246, 0.1)")
+- **`rowSelectedBackgroundColor`** - Background color for entire selected rows
+- **`rowSelectedBorderColor`** - Border color for selected rows
+
+### Borders & Dividers
+
+Control the table's grid lines and borders.
+
+- **`borderColor`** - Main border color for the table's outer edges
+- **`dividerColor`** - Color for grid lines between rows and columns
+
+### Cell States
+
+Cells can display validation states using different colors to communicate errors, warnings, or informational messages.
+
+**Error States** (validation failures, required fields missing):
+- **`errorCellBackgroundColor`** - Background for cells with errors
+- **`errorCellHoverBackgroundColor`** - Background when hovering over error cells
+
+**Warning States** (potential issues, data that needs attention):
+- **`warningCellBackgroundColor`** - Background for cells with warnings
+- **`warningCellHoverBackgroundColor`** - Background when hovering over warning cells
+
+**Info States** (suggestions, transformations, helpful information):
+- **`infoCellBackgroundColor`** - Background for cells with informational messages
+- **`infoCellHoverBackgroundColor`** - Background when hovering over info cells
+
+<Info>
+  Use distinct but harmonious colors for different states. For example, light red for errors, light yellow for warnings, and light blue for info. Ensure sufficient contrast for accessibility.
+</Info>
+
+### Read-Only Cells
+
+Some cells may be locked from editing based on your field configuration.
+
+- **`readOnlyCellBackgroundColor`** - Background for non-editable cells
+- **`readOnlyCellTextColor`** - Text color for read-only content
+
+### Accent Color
+
+A general-purpose accent color used for various interactive elements in the table.
+
+- **`accentColor`** - Primary accent color for controls, highlights, and interactive elements
 
 ```js
 const settings = {
   styleOverrides: {
     dataTable: {
-      // Column header styling
-      headerBackgroundColor: "#f8f9fa",
-      headerTextColor: "#495057",
+      // Column headers
+      headerBackgroundColor: "#f9fafb",
+      headerTextColor: "#111827",
       headerFontWeight: "600",
 
-      // Active/highlighted headers
-      headerActiveBackgroundColor: "#e9ecef",
-      headerActiveTextColor: "#212529",
+      // Active/highlighted headers (interaction feedback)
+      headerActiveBackgroundColor: "#eff6ff",
+      headerActiveTextColor: "#1e40af",
+      headerHighlightedBackgroundColor: "#dbeafe",
+      headerHighlightedTextColor: "#1e3a8a",
 
-      // Row numbers styling
-      rowHeaderBackgroundColor: "#f1f3f4",
-      rowHeaderTextColor: "#6c757d",
+      // Row numbers (left column)
+      rowHeaderBackgroundColor: "#f9fafb",
+      rowHeaderTextColor: "#6b7280",
 
-      // Cell selection
-      cellSelectionBorderColor: "#007bff",
-      cellSelectionBackgroundColor: "rgba(0, 123, 255, 0.1)",
+      // Top-left corner cell
+      cornerHeaderBackgroundColor: "#f3f4f6",
 
-      // General accent color for interactive elements
-      accentColor: "#007bff"
-    },
-    modalOverlay: {
-      backgroundColor: "#000000",
-      opacity: "30"
+      // Cell styling
+      cellBackgroundColor: "#ffffff",
+      cellTextColor: "#1f2937",
+      cellHoverBackgroundColor: "#f9fafb",
+      cellHoverTextColor: "#111827",
+
+      // Alternating row colors (zebra striping)
+      oddRowBackgroundColor: "#f9fafb",
+
+      // Selection styling
+      cellSelectionBorderColor: "#3b82f6",
+      cellSelectionBackgroundColor: "rgba(59, 130, 246, 0.1)",
+      rowSelectedBackgroundColor: "rgba(59, 130, 246, 0.08)",
+      rowSelectedBorderColor: "#3b82f6",
+
+      // Borders and grid lines
+      borderColor: "#e5e7eb",
+      dividerColor: "#e5e7eb",
+
+      // Cell validation states
+      errorCellBackgroundColor: "#fef2f2",
+      errorCellHoverBackgroundColor: "#fee2e2",
+      warningCellBackgroundColor: "#fffbeb",
+      warningCellHoverBackgroundColor: "#fef3c7",
+      infoCellBackgroundColor: "#eff6ff",
+      infoCellHoverBackgroundColor: "#dbeafe",
+
+      // Read-only cells
+      readOnlyCellBackgroundColor: "#f9fafb",
+      readOnlyCellTextColor: "#6b7280",
+
+      // General accent color
+      accentColor: "#3b82f6"
     }
   }
 }
 ```
+
+## Card Styling
+
+Cards are used throughout Dromo for displaying field mappings, data enhancement options, and review summaries. Card styling helps organize information into digestible sections.
+
+### Card Properties
+
+- **`backgroundColor`** - Background color for individual cards
+- **`containerBackgroundColor`** - Background color for the area containing multiple cards
+- **`borderColor`** - Border color around cards
+- **`borderWidth`** - Thickness of card borders
+- **`borderRadius`** - Corner radius for rounded cards
+- **`textColor`** - Default text color within cards
+- **`expandedBackgroundColor`** - Background color when a card is expanded (for cards with collapsible content)
+- **`iconColor`** - Color for icons displayed within cards
+
+**Use cases:**
+- Column matching screen: Each field in your schema is displayed as a card
+- Data enhancement screen: Suggested fixes and transformations appear in cards
+- Review screen: Summary information is organized in cards
+
+```js
+const settings = {
+  styleOverrides: {
+    card: {
+      backgroundColor: "#ffffff",
+      containerBackgroundColor: "#f9fafb",
+      borderColor: "#e5e7eb",
+      borderWidth: "1px",
+      borderRadius: "0.5rem",
+      textColor: "#1f2937",
+      expandedBackgroundColor: "#ffffff",
+      iconColor: "#6b7280"
+    }
+  }
+}
+```
+
+## Dropdown Styling
+
+Dropdown menus (select components) are used for field mapping, choosing data types, and selecting transformation options.
+
+### Dropdown Properties
+
+- **`backgroundColor`** - Background color of the closed dropdown
+- **`borderColor`** - Border color around the dropdown
+- **`textColor`** - Text color for the selected value
+- **`menuBackgroundColor`** - Background color of the opened dropdown menu
+- **`optionHoverBackgroundColor`** - Background color when hovering over an option
+- **`optionSelectedBackgroundColor`** - Background color for the currently selected option
+
+**Use cases:**
+- Selecting which schema field a column maps to
+- Choosing date formats during data transformation
+- Selecting validation rules
+
+```js
+const settings = {
+  styleOverrides: {
+    dropdown: {
+      backgroundColor: "#ffffff",
+      borderColor: "#d1d5db",
+      textColor: "#374151",
+      menuBackgroundColor: "#ffffff",
+      optionHoverBackgroundColor: "#f3f4f6",
+      optionSelectedBackgroundColor: "#eff6ff"
+    }
+  }
+}
+```
+
+## Additional UI Elements
+
+### Dropzone (File Upload Area)
+
+The dropzone is the drag-and-drop area on the upload screen where users can drop files or click to browse.
+
+#### Properties
+
+- **`borderWidth`** - Thickness of the dropzone border (number, e.g., 2)
+- **`borderRadius`** - Corner radius (number, e.g., 8)
+- **`borderColor`** - Border color
+- **`borderStyle`** - Border style (e.g., "dashed", "solid", "dotted")
+- **`backgroundColor`** - Background color
+- **`color`** - Text color for the dropzone message
+- **`outline`** - CSS outline property (e.g., "none", "2px solid blue")
+
+<Tip>
+  A dashed border is commonly used for dropzones to visually distinguish them as interactive upload areas. Consider using your brand's accent color for the border when a file is being dragged over the dropzone.
+</Tip>
+
+```js
+const settings = {
+  styleOverrides: {
+    dropzone: {
+      borderWidth: 2,
+      borderRadius: 8,
+      borderColor: "#d1d5db",
+      borderStyle: "dashed",
+      backgroundColor: "#f9fafb",
+      color: "#374151",
+      outline: "none"
+    }
+  }
+}
+```
+
+### Help Text
+
+Help text appears throughout the interface to provide guidance, tips, and contextual information to users.
+
+#### Properties
+
+- **`textColor`** - Color of help text
+- **`backgroundColor`** - Background color for help text sections (if applicable)
+
+**Use cases:**
+- Instructions on the upload screen
+- Field descriptions during column matching
+- Tips for fixing data errors
+
+```js
+const settings = {
+  styleOverrides: {
+    helpText: {
+      textColor: "#6b7280",
+      backgroundColor: "#f9fafb"
+    }
+  }
+}
+```
+
+### Stepper Bar (Progress Indicator)
+
+The stepper bar displays the user's progress through the multi-step upload workflow (Upload → Set Headers → Match Columns → Clean Data → Review).
+
+#### Properties
+
+- **`completeColor`** - Color for completed steps
+- **`incompleteColor`** - Color for steps not yet reached
+- **`currentColor`** - Color for the current step
+- **`fontSize`** - Font size for step labels
+- **`completeFontWeight`** - Font weight for completed step labels
+- **`incompleteFontWeight`** - Font weight for incomplete step labels
+- **`currentFontWeight`** - Font weight for the current step label
+- **`backgroundColor`** - Background color of the stepper bar
+- **`borderBottom`** - Border at the bottom of the stepper bar
+
+<Info>
+  Use distinct colors that clearly communicate progress. A common pattern is green for completed, gray for incomplete, and blue for the current step.
+</Info>
+
+```js
+const settings = {
+  styleOverrides: {
+    stepperBar: {
+      completeColor: "#10b981",        // Green for completed
+      incompleteColor: "#d1d5db",      // Gray for not started
+      currentColor: "#3b82f6",         // Blue for current step
+      fontSize: "0.875rem",
+      completeFontWeight: "600",       // Bold completed steps
+      incompleteFontWeight: "400",     // Normal weight for future steps
+      currentFontWeight: "600",        // Bold current step
+      backgroundColor: "#ffffff",
+      borderBottom: "1px solid #e5e7eb"
+    }
+  }
+}
+```
+
+### Modal Overlay
+
+The semi-transparent overlay that appears behind the uploader modal, covering the parent application.
+
+#### Properties
+
+- **`backgroundColor`** - Color of the overlay (typically black or dark gray)
+- **`opacity`** - Opacity value from "0" to "100" (string)
+
+<Warning>
+  Be careful with opacity values. Too low (below 30) may not provide enough visual separation from the background. Too high (above 70) may make the overlay too dark and imposing.
+</Warning>
+
+```js
+const settings = {
+  styleOverrides: {
+    modalOverlay: {
+      backgroundColor: "#000000",
+      opacity: "50"                    // 50% opacity
+    }
+  }
+}
+```
+
+## Complete Examples
+
+### Light Theme Example
+
+Here's a comprehensive example that demonstrates how to combine multiple style overrides to create a cohesive, branded experience. This example uses a blue and gray color palette typical of modern SaaS applications.
+
+```js
+const settings = {
+  styleOverrides: {
+    // Global application styles
+    global: {
+      textColor: "#1f2937",
+      primaryTextColor: "#111827",
+      secondaryTextColor: "#6b7280",
+      successColor: "#10b981",
+      warningColor: "#f59e0b",
+      customFontURL: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap",
+      customFontFamily: "'Inter', sans-serif",
+      borderRadius: "0.5rem",
+      backgroundColor: "#ffffff",
+      borderColor: "#e5e7eb",
+      backdropBlur: true
+    },
+
+    // Button styles
+    primaryButton: {
+      backgroundColor: "#3b82f6",
+      textColor: "#ffffff",
+      borderRadius: "0.375rem",
+      hoverBackgroundColor: "#2563eb"
+    },
+    secondaryButton: {
+      backgroundColor: "#f3f4f6",
+      textColor: "#374151",
+      borderRadius: "0.375rem",
+      hoverBackgroundColor: "#e5e7eb"
+    },
+    tertiaryButton: {
+      backgroundColor: "transparent",
+      textColor: "#3b82f6",
+      borderRadius: "0.375rem",
+      hoverBackgroundColor: "#eff6ff"
+    },
+
+    // Data table
+    dataTable: {
+      headerBackgroundColor: "#f9fafb",
+      headerTextColor: "#111827",
+      headerFontWeight: "600",
+      headerActiveBackgroundColor: "#eff6ff",
+      cellBackgroundColor: "#ffffff",
+      oddRowBackgroundColor: "#f9fafb",
+      cellSelectionBorderColor: "#3b82f6",
+      cellSelectionBackgroundColor: "rgba(59, 130, 246, 0.1)",
+      errorCellBackgroundColor: "#fef2f2",
+      warningCellBackgroundColor: "#fffbeb",
+      infoCellBackgroundColor: "#eff6ff",
+      readOnlyCellBackgroundColor: "#f9fafb",
+      accentColor: "#3b82f6"
+    },
+
+    // Cards
+    card: {
+      backgroundColor: "#ffffff",
+      containerBackgroundColor: "#f9fafb",
+      borderColor: "#e5e7eb",
+      borderRadius: "0.5rem",
+      textColor: "#1f2937"
+    },
+
+    // Dropdowns
+    dropdown: {
+      backgroundColor: "#ffffff",
+      borderColor: "#d1d5db",
+      textColor: "#374151",
+      optionHoverBackgroundColor: "#f3f4f6"
+    },
+
+    // File upload dropzone
+    dropzone: {
+      borderWidth: 2,
+      borderRadius: 8,
+      borderColor: "#d1d5db",
+      borderStyle: "dashed",
+      backgroundColor: "#f9fafb"
+    },
+
+    // Progress stepper
+    stepperBar: {
+      completeColor: "#10b981",
+      currentColor: "#3b82f6",
+      incompleteColor: "#d1d5db",
+      completeFontWeight: "600",
+      currentFontWeight: "600"
+    },
+
+    // Modal overlay
+    modalOverlay: {
+      backgroundColor: "#000000",
+      opacity: "50"
+    }
+  }
+}
+```
+
+### Dark Mode Example
+
+Create a modern dark theme for applications that support dark mode or prefer a darker aesthetic. This example uses dark grays and blues with carefully adjusted contrast ratios for readability.
+
+```js
+const settings = {
+  styleOverrides: {
+    // Global dark theme styles
+    global: {
+      backgroundColor: "#1a1a1a",
+      primaryTextColor: "#f9fafb",
+      secondaryTextColor: "#9ca3af",
+      textColor: "#e5e7eb",
+      successColor: "#10b981",
+      warningColor: "#f59e0b",
+      borderColor: "#374151",
+      borderRadius: "8px",
+      backdropBlur: true
+    },
+
+    // Dark mode cards
+    card: {
+      backgroundColor: "#1f2937",
+      containerBackgroundColor: "#111827",
+      borderColor: "#374151",
+      borderWidth: "1px",
+      borderRadius: "0.75rem",
+      textColor: "#f9fafb",
+      expandedBackgroundColor: "#111827",
+      iconColor: "#9ca3af"
+    },
+
+    // Dark mode data table
+    dataTable: {
+      // Headers
+      headerBackgroundColor: "#111827",
+      headerTextColor: "#f9fafb",
+      headerFontWeight: "500",
+      headerActiveBackgroundColor: "#1e3a8a",
+      headerActiveTextColor: "#ffffff",
+      headerHighlightedBackgroundColor: "#1e40af",
+      headerHighlightedTextColor: "#ffffff",
+
+      // Row headers
+      rowHeaderBackgroundColor: "#111827",
+      rowHeaderTextColor: "#f9fafb",
+      cornerHeaderBackgroundColor: "#111827",
+
+      // Cells
+      cellBackgroundColor: "#1f2937",
+      cellTextColor: "#e5e7eb",
+      cellHoverBackgroundColor: "#374151",
+      cellHoverTextColor: "#f9fafb",
+      oddRowBackgroundColor: "#374151",
+
+      // Selection
+      cellSelectionBorderColor: "#3b82f6",
+      cellSelectionBackgroundColor: "rgba(59, 130, 246, 0.1)",
+      rowSelectedBackgroundColor: "rgba(59, 130, 246, 0.3)",
+      rowSelectedBorderColor: "#3b82f6",
+
+      // Borders
+      borderColor: "#374151",
+      dividerColor: "#4b5563",
+
+      // Cell states
+      errorCellBackgroundColor: "#7f1d1d",
+      errorCellHoverBackgroundColor: "#991b1b",
+      warningCellBackgroundColor: "#713f12",
+      warningCellHoverBackgroundColor: "#854d0e",
+      infoCellBackgroundColor: "#1e3a8a",
+      infoCellHoverBackgroundColor: "#1e40af",
+
+      // Read-only
+      readOnlyCellBackgroundColor: "#374151",
+      readOnlyCellTextColor: "#9ca3af",
+
+      accentColor: "#3b82f6"
+    },
+
+    // Dark mode buttons
+    primaryButton: {
+      backgroundColor: "#3b82f6",
+      textColor: "#ffffff",
+      borderRadius: "0.375rem",
+      hoverBackgroundColor: "#2563eb",
+      hoverTextColor: "#ffffff"
+    },
+    secondaryButton: {
+      backgroundColor: "#374151",
+      textColor: "#f9fafb",
+      border: "1px solid #4b5563",
+      borderRadius: "0.375rem",
+      hoverBackgroundColor: "#4b5563",
+      hoverTextColor: "#f9fafb"
+    },
+    tertiaryButton: {
+      backgroundColor: "transparent",
+      textColor: "#3b82f6",
+      border: "1px solid transparent",
+      borderRadius: "0.375rem",
+      hoverBackgroundColor: "#1f2937",
+      hoverTextColor: "#60a5fa"
+    },
+
+    // Dark mode dropdowns
+    dropdown: {
+      backgroundColor: "#1f2937",
+      borderColor: "#374151",
+      textColor: "#f9fafb",
+      menuBackgroundColor: "#1f2937",
+      optionHoverBackgroundColor: "#374151",
+      optionSelectedBackgroundColor: "#4b5563"
+    },
+
+    // Dark mode dropzone
+    dropzone: {
+      borderWidth: 2,
+      borderRadius: 8,
+      backgroundColor: "#1f2937",
+      borderColor: "#4b5563",
+      borderStyle: "dashed",
+      color: "#f9fafb"
+    },
+
+    // Dark mode stepper
+    stepperBar: {
+      backgroundColor: "#111827",
+      borderBottom: "1px solid #374151",
+      currentColor: "#3b82f6",
+      completeColor: "#10b981",
+      incompleteColor: "#6b7280",
+      completeFontWeight: "600",
+      currentFontWeight: "600"
+    },
+
+    // Dark mode overlay
+    modalOverlay: {
+      backgroundColor: "#000000",
+      opacity: "75"
+    }
+  }
+}
+```
+
+<Tip>
+  When implementing dark mode, pay special attention to contrast ratios. Dark backgrounds require lighter text colors, and selection/highlight colors often need higher opacity to be visible. Test your dark theme with actual content to ensure readability.
+</Tip>
