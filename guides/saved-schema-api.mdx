@@ -109,9 +109,13 @@ All types of function declarations are accepted:
 
     <CodeGroup>
     ```javascript
-    (record, mode) => {
-      record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0');
-      return record;
+    {
+      "rowHooks": [
+        (record, mode) => {
+          record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0');
+          return record;
+        }
+      ]
     }
     ```
     </CodeGroup>
@@ -122,8 +126,15 @@ All types of function declarations are accepted:
 
     <CodeGroup>
     ```javascript
-    (instance) => {
-      instance.addField({ label: 'Full Name', key: 'fullName' });
+    {
+      "stepHooks": [
+        {
+          type: "REVIEW_STEP",
+          callback: (instance) => {
+            instance.addField({ label: 'Full Name', key: 'fullName' });
+          }
+        }
+      ]
     }
     ```
     </CodeGroup>
