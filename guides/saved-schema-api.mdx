@@ -111,7 +111,10 @@ All types of function declarations are accepted:
     ```json
     {
       "rowHooks": [
-        "(record, mode) => { record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0'); return record; }"
+        "(record, mode) => { 
+          record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0'); 
+          return record; 
+        }"
       ]
     }
     ```
@@ -127,7 +130,9 @@ All types of function declarations are accepted:
       "stepHooks": [
         {
           "type": "REVIEW_STEP",
-          "callback": "(instance) => instance.addField({ label: 'Full Name', key: 'fullName' })"
+          "callback": "(instance) => { 
+            instance.addField({ label: 'Full Name', key: 'fullName' }); 
+          }"
         }
       ]
     }
