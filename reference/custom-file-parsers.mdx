@@ -38,14 +38,74 @@ File parsers may return the value async, wrapped in a promise.
   AAPL023367GOOG016968TSLA025952
   ```
 
-  * JavaScript
-  * React
+  <CodeGroup>
+  ```javascript JavaScript
+  const fields = [
+    {
+      label: "Stock Symbol",
+      key: "stock_symbol",
+    },
+    {
+      label: "Stock Price",
+      key: "stock_price",
+    },
+  ];
 
-  ```
-  const fields = [    {        label: "Stock Symbol",        key: "stock_symbol",    },    {        label: "Stock Price",        key: "stock_price",    },];const settings = {  importIdentifier: "Custom Parser Example",};const user = {  id: "12345",};const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);dromo.registerFileParser({    extensions: ["txt"],    parseFile: async (buffer, fileName) => {        const stockData = new TextDecoder().decode(buffer);        const headers = ["Stock Symbol", "Stock Price"];        const data: string[][] = stockData          .split("\n")          .map((line) => [line.slice(0, 4), line.slice(4, -1)]);        return [headers, ...data];    },});
+  const settings = {
+    importIdentifier: "Custom Parser Example",
+  };
+
+  const user = {
+    id: "12345",
+  };
+
+  const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);
+
+  dromo.registerFileParser({
+    extensions: ["txt"],
+    parseFile: async (buffer, fileName) => {
+      const stockData = new TextDecoder().decode(buffer);
+      const headers = ["Stock Symbol", "Stock Price"];
+      const data: string[][] = stockData
+        .split("\n")
+        .map((line) => [line.slice(0, 4), line.slice(4, -1)]);
+      return [headers, ...data];
+    },
+  });
   ```
 
+  ```jsx React
+  <DromoUploader
+    licenseKey={"FRONTEND_API_KEY"}
+    user={{ id: "12345" }}
+    fields={[
+      {
+        label: "Stock Symbol",
+        key: "stock_symbol",
+      },
+      {
+        label: "Stock Price",
+        key: "stock_price",
+      },
+    ]}
+    settings={{
+      importIdentifier: "Custom Parser Example",
+    }}
+    fileParsers={[
+      {
+        extensions: ["txt"],
+        parseFile: (buffer, _fileName) => {
+          const stockData = new TextDecoder().decode(buffer);
+          const headers = ["Stock Symbol", "Stock Price"];
+          const data: string[][] = stockData
+            .split("\n")
+            .map((line) => [line.slice(0, 4), line.slice(4, -1)]);
+          return [headers, ...data];
+        },
+      },
+    ]}>
+    Import Users
+  </DromoUploader>
   ```
-  <DromoUploader  licenseKey={"FRONTEND_API_KEY"}  user={{ id: "12345" }}  fields={[    {        label: "Stock Symbol",        key: "stock_symbol",    },    {        label: "Stock Price",        key: "stock_price",    },  ]}  settings={{    importIdentifier: "Custom Parser Example",  }}  fileParsers={[    {        extensions: ["txt"],        parseFile: (buffer, _fileName) => {            const stockData = new TextDecoder().decode(buffer);            const headers = ["Stock Symbol", "Stock Price"];            const data: string[][] = stockData                .split("\n")                .map((line) => [line.slice(0, 4), line.slice(4, -1)]);            return [headers, ...data];        },    },  ]}>  Import Users</DromoUploader>
-  ```
+  </CodeGroup>
 </Accordion>
