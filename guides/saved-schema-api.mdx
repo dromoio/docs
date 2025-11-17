@@ -108,13 +108,13 @@ All types of function declarations are accepted:
     To define a row hook, you could pass the following to the API's `hooks` parameter:
 
     <CodeGroup>
-    ```json
+    ```javascript
     {
       "rowHooks": [
-        "(record, mode) => { 
-          record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0'); 
-          return record; 
-        }"
+        (record, mode) => {
+          record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0');
+          return record;
+        }
       ]
     }
     ```
@@ -125,14 +125,14 @@ All types of function declarations are accepted:
     To define a step hook, you could pass the following to the API's `hooks` parameter:
 
     <CodeGroup>
-    ```json
+    ```javascript
     {
       "stepHooks": [
         {
-          "type": "REVIEW_STEP",
-          "callback": "(instance) => { 
-            instance.addField({ label: 'Full Name', key: 'fullName' }); 
-          }"
+          type: "REVIEW_STEP",
+          callback: (instance) => {
+            instance.addField({ label: 'Full Name', key: 'fullName' });
+          }
         }
       ]
     }
