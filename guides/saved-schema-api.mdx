@@ -105,55 +105,28 @@ All types of function declarations are accepted:
 
 <AccordionGroup>
   <Accordion title="Row hook example">
-    Define your row hook as a JavaScript function:
+    To define a row hook, you could pass the following to the API's `hooks` parameter:
 
     <CodeGroup>
-    ```javascript JavaScript Function
+    ```javascript
     (record, mode) => {
       record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0');
       return record;
     }
     ```
-
-    ```json API Payload
-    {
-      "rowHooks": [
-        "(record, mode) => { record.row.zipCode.value = record.row.zipCode.value.padStart(5, '0'); return record; }"
-      ]
-    }
-    ```
     </CodeGroup>
-
-    <Note>
-      When passing to the API, the function must be stringified on a single line as shown in the API Payload tab.
-    </Note>
   </Accordion>
 
   <Accordion title="Step hook example">
-    Define your step hook as a JavaScript function:
+    To define a step hook, you could pass the following to the API's `hooks` parameter:
 
     <CodeGroup>
-    ```javascript JavaScript Function
+    ```javascript
     (instance) => {
       instance.addField({ label: 'Full Name', key: 'fullName' });
     }
     ```
-
-    ```json API Payload
-    {
-      "stepHooks": [
-        {
-          "type": "REVIEW_STEP",
-          "callback": "(instance) => { instance.addField({ label: 'Full Name', key: 'fullName' }); }"
-        }
-      ]
-    }
-    ```
     </CodeGroup>
-
-    <Note>
-      When passing to the API, the function must be stringified on a single line as shown in the API Payload tab.
-    </Note>
   </Accordion>
 </AccordionGroup>
 
