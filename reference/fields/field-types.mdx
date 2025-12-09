@@ -275,17 +275,19 @@ Here is an example of a few different valid field type configurations:
 
 <div class="ml-8">
   > ```json
-  > type: "select",
-  > selectOptions: [
-  >   {
-  >     label: string,
-  >     value: string,
-  >     alternateMatches?: string[],
-  >     exactMatchOnly?: boolean
-  >   }, ...
-  >]
+  > {
+  >   "type": "select",
+  >   "selectOptions": [
+  >     {
+  >       "label": "string",
+  >       "value": "string",
+  >       "alternateMatches": ["string"],
+  >       "exactMatchOnly": true
+  >     }
+  >   ]
+  > }
   > ```
-  > or `type: ["select", { allowCustom: <boolean> }]`
+  > or `type: ["select", { "allowCustom": true }]`
 
   Select fields let users choose from predefined options. You must provide an array of valid `selectOptions`, where the `label` is shown in the UI; the `value` is saved in the output.
 
@@ -322,8 +324,16 @@ Here is an example of a few different valid field type configurations:
     </ResponseField>
     For example, this is how you would enable both custom values and exact matches:
       ```json
-      type: ["select", { allowCustom: true, exactMatchOnly: true }],
-      selectOptions: [{ label: string, value: string, alternateMatches?: string[] }, ...]
+      {
+        "type": ["select", { "allowCustom": true, "exactMatchOnly": true }],
+        "selectOptions": [
+          {
+            "label": "string",
+            "value": "string",
+            "alternateMatches": ["string"]
+          }
+        ]
+      }
       ```
   </Expandable>
 </div>
@@ -332,23 +342,27 @@ Here is an example of a few different valid field type configurations:
 
 <div class="ml-8">
   > ```json
-  > type: "multi-select",
-  > selectOptions: [
-  >   {
-  >     label: string,
-  >     value: string,
-  >     alternateMatches?: string[]
-  >   }, ...
-  > ]
+  > {
+  >   "type": "multi-select",
+  >   "selectOptions": [
+  >     {
+  >       "label": "string",
+  >       "value": "string",
+  >       "alternateMatches": ["string"]
+  >     }
+  >   ]
+  > }
   > ```
   > or
   > ```json
-  > type: ["multi-select", {
-  >   delimiter?: string,
-  >   trimValues?: boolean
-  > }],
-  > selectOptions: [...],
-  > manyToOne?: boolean
+  > {
+  >   "type": ["multi-select", {
+  >     "delimiter": ",",
+  >     "trimValues": true
+  >   }],
+  >   "selectOptions": [],
+  >   "manyToOne": true
+  > }
   > ```
 
 #### For fields that allow selecting multiple values from predefined options[​](#for-fields-that-allow-selecting-multiple-values-from-predefined-options "Direct link to For fields that allow selecting multiple values from predefined options")
