@@ -328,6 +328,108 @@ Here is an example of a few different valid field type configurations:
   </Expandable>
 </div>
 
+### Multi-Select[​](#multi-select "Direct link to Multi-Select")
+
+<div class="ml-8">
+  > ```json
+  > type: "multi-select",
+  > selectOptions: [
+  >   {
+  >     label: string,
+  >     value: string,
+  >     alternateMatches?: string[]
+  >   }, ...
+  > ]
+  > ```
+  > or
+  > ```json
+  > type: ["multi-select", {
+  >   delimiter?: string,
+  >   trimValues?: boolean
+  > }],
+  > selectOptions: [...],
+  > manyToOne?: boolean
+  > ```
+
+#### For fields that allow selecting multiple values from predefined options[​](#for-fields-that-allow-selecting-multiple-values-from-predefined-options "Direct link to For fields that allow selecting multiple values from predefined options")
+
+  Multi-select fields let users choose multiple values from predefined options. You must provide an array of valid `selectOptions`, where the `label` is shown in the UI; the `value` is saved in the output. The field outputs as an array of strings (`string[]`) containing the selected option values.
+
+  Multi-select fields are treated differently during the import process. Expand the section below to learn more.
+
+  <Expandable title="more about how multi-select fields work">
+    After the column matching step, the user will be prompted to match the values in their file to the given select options (similar to select fields).
+
+    ![Multi Select option matching](/images/guides/multi-select.png)
+    On the review screen, the field will show as a multi-select dropdown or chip interface that the user can pick multiple options from.
+
+    A validation error will be shown if a value was not matched and does not equal one of the option labels.
+  </Expandable>
+
+  <Info>
+    `selectOptions` can be overridden for individual cells using a row hook. See the [Row Hooks](/reference/hooks#row-hooks) documentation for details.
+  </Info>
+
+  Each select option can optionally include `alternateMatches`, an array of strings. If an input value matches any of these, it will be mapped to that option's value.
+
+  <Note>
+    For a given multi-select field, the labels, values, and alternate matches should be unique across all options. Each of these parameters is used to map imported data to select options, so conflicts will occur if multiple select options share the same matches.
+  </Note>
+
+#### Delimiter Configuration[​](#delimiter-configuration "Direct link to Delimiter Configuration")
+
+  By default, multi-select fields parse input data using a comma (`,`) as the delimiter. You can customize this behavior:
+
+  <ResponseField name="delimiter" type="string" default=",">
+    The character used to separate multiple values in the input data. Common delimiters include `,`, `;`, `|`, or any custom character.
+  </ResponseField>
+
+  <ResponseField name="trimValues" type="boolean" default="true">
+    Whether to trim whitespace from individual values after splitting. When `true`, values like `" apple , banana "` will be parsed as `["apple", "banana"]`.
+  </ResponseField>
+
+  Example configuration with custom delimiter:
+  ```json
+  {
+    "key": "skills",
+    "label": "Skills",
+    "type": ["multi-select", { "delimiter": ";", "trimValues": true }],
+    "selectOptions": [
+      { "label": "JavaScript", "value": "js" },
+      { "label": "Python", "value": "py" },
+      { "label": "Java", "value": "java" }
+    ]
+  }
+  ```
+
+#### Many-to-One Mapping[​](#many-to-one-mapping "Direct link to Many-to-One Mapping")
+
+  Multi-select fields support many-to-one column mapping by setting `manyToOne: true` on the field definition. This allows multiple source columns to be combined into a single multi-select field. This is useful when your input data has multiple columns that should be merged into one multi-select output.
+
+  For example, if you have columns `"Interest1"`, `"Interest2"`, and `"Interest3"` in your CSV, you can map all of them to a single multi-select field with `manyToOne: true`, and the values will be combined into one array in the output.
+
+  Example:
+  ```json
+  {
+    "key": "interests",
+    "label": "Interests",
+    "type": "multi-select",
+    "selectOptions": [
+      { "label": "Reading", "value": "reading" },
+      { "label": "Gaming", "value": "gaming" },
+      { "label": "Music", "value": "music" }
+    ],
+    "manyToOne": true
+  }
+  ```
+
+#### Validation[​](#validation "Direct link to Validation")
+
+  Multi-select fields automatically validate that all selected values match one of the provided select options. Invalid values will result in an error message on the review screen.
+
+  The field also checks for duplicate values within the same cell and displays a warning (not an error) if duplicates are found.
+</div>
+
 ### Checkbox[​](#checkbox "Direct link to Checkbox")
 
 > `type: "checkbox"`
