@@ -614,7 +614,7 @@
         ]
       }
     },
-    "/headless/sftp_credentials/": {
+    "/headless/sftp/credentials/": {
       "get": {
         "tags": ["sftp-credentials"],
         "summary": "List SFTP credentials",
@@ -698,7 +698,7 @@
         }
       }
     },
-    "/headless/sftp_credentials/{id}/": {
+    "/headless/sftp/credentials/{id}/": {
       "get": {
         "tags": ["sftp-credentials"],
         "summary": "Retrieve SFTP credentials",
@@ -802,7 +802,7 @@
         }
       }
     },
-    "/headless/sftp_credentials/{id}/test_connection/": {
+    "/headless/sftp/credentials/{id}/test_connection/": {
       "post": {
         "tags": ["sftp-credentials"],
         "summary": "Test SFTP connection",
@@ -844,7 +844,7 @@
         }
       }
     },
-    "/headless/sftp_connectors/": {
+    "/headless/sftp/connectors/": {
       "get": {
         "tags": ["sftp-connectors"],
         "summary": "List SFTP connectors",
@@ -931,7 +931,7 @@
         }
       }
     },
-    "/headless/sftp_connectors/{id}/": {
+    "/headless/sftp/connectors/{id}/": {
       "get": {
         "tags": ["sftp-connectors"],
         "summary": "Retrieve SFTP connector",
