@@ -2,6 +2,34 @@
 title: "Changelog"
 ---
 
+<Update label="December 2025" description="v3.6.0" tags={["Field Types", "API", "Integrations"]}>
+
+## Multi-Select Field Type & SFTP API Integration
+
+New multi-select field type for handling multiple selections, plus powerful SFTP APIs for automated file imports.
+
+### Multi-Select Field Type
+
+- **Multiple Value Selection**: New `multi-select` field type allows users to choose multiple values from predefined options
+- **Array Output**: Results returned as `string[]` containing selected option values
+- **Custom Delimiters**: Configure custom delimiters (`,`, `;`, `|`, etc.) for parsing input data
+- **Value Trimming**: Automatic whitespace trimming for cleaner data processing
+- **Many-to-One Mapping**: Map multiple source columns to a single multi-select field with `manyToOne` support
+- **Validation**: Automatic validation of selected values against predefined options with duplicate detection
+- **Flexible Matching**: Support for `alternateMatches` for fuzzy value mapping
+- **Documentation**: [Multi-Select Field Type Reference](https://developer.dromo.io/reference/fields/field-types#multi-select)
+
+### SFTP API Integration
+
+New public APIs for programmatic SFTP integration.
+
+- **SFTP Credentials API** (`/api/v1/headless/sftp/credentials/`): Full CRUD for SFTP credentials with key-based and password authentication, connection testing, and encrypted storage
+- **SFTP Connectors API** (`/api/v1/headless/sftp/connectors/`): Full CRUD for SFTP connectors with scheduled imports, configurable directory paths, and file regex patterns
+- **Flexible Authentication**: Supports OAuth2, JWT, and Backend License Key authentication
+- **Documentation**: [SFTP API Reference](https://developer.dromo.io/api-reference/sftp-credentials/list-sftp-credentials)
+
+</Update>
+
 <Update label="November 2025" description="v3.5.0" tags={["Styling", "Customization"]}>
 
 ## Enhanced Style Override Configuration
