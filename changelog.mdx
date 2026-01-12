@@ -2,6 +2,22 @@
 title: "Changelog"
 ---
 
+<Update label="January 2026" description="v3.7.0" tags={["Sessions", "Progress", "User Experience"]}>
+
+## Session Management & Progress Saving
+
+New session management capabilities that enable auto-saving and restoring user progress during import sessions.
+
+### Progress Auto-Save & Restoration
+
+- **Auto-Save Progress**: New `savePartialSession` setting enables automatic saving of user progress throughout the import flow
+- **Backend Storage**: Session state automatically saved to backend with intelligent debouncing (~700ms after changes)
+- **Full State Capture**: Saves current stage, column mappings, transformations, row data, and uploaded files
+- **Automatic Cleanup**: Completed imports automatically clear saved sessions to prevent clutter
+- **Documentation**: [Session Settings Reference](https://developer.dromo.io/reference/settings/settings#savepartialsession)
+
+</Update>
+
 <Update label="December 2025" description="v3.6.0" tags={["Field Types", "API", "Integrations"]}>
 
 ## Multi-Select Field Type & SFTP API Integration
