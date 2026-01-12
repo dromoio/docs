@@ -349,3 +349,61 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
     * **zh_TW** (Chinese - Traditional)
   </Expandable>
 </ResponseField>
+
+<ResponseField name="savePartialSession" type="boolean" default="false">
+  Requires [backendSyncMode](#backendsyncmode) = "FULL_DATA"
+
+  When enabled, Dromo will automatically save user progress throughout the import flow, allowing users to resume their session if they navigate away or close the browser.
+
+  **Auto-Save Behavior:**
+  - Progress is automatically saved to the backend with intelligent debouncing (~700ms after changes)
+  - Captures the complete state at each stage: upload, header selection, column matching, and data review
+  - Includes column mappings, transformations, row data, and the uploaded file
+  - Sessions are stored server-side and linked to a unique session identifier
+
+  **Use Cases:**
+  - Long-running imports where users may need to step away
+  - Complex data mappings that take time to configure
+  - Preventing data loss from accidental browser closures
+  - Multi-session workflows where users return to complete imports later
+
+  **Note:** Completed imports automatically clear their saved session data. Use with [`sessionId`](#sessionid) to restore a saved session.
+
+  ```javascript
+  settings: {
+    backendSyncMode: "FULL_DATA",
+    savePartialSession: true
+  }
+  ```
+</ResponseField>
+
+<ResponseField name="sessionId" type="string" default="null">
+  Requires [backendSyncMode](#backendsyncmode) = "FULL_DATA"
+
+  When provided, Dromo will restore a previously saved import session, allowing users to resume exactly where they left off.
+
+  **Restoration Behavior:**
+  - Fetches the saved session from the backend using the provided session ID
+  - Validates that the session matches the current `importIdentifier`
+  - Downloads and restores the uploaded file data
+  - Rehydrates the UI to the exact stage where the user left off:
+    - **Sheet Selection** → Returns to upload step
+    - **Header Selection** → Restores headers and jumps to header selection
+    - **Column Matching** → Restores mappings and jumps to column matching
+    - **Data Review** → Restores full data grid and jumps to review step
+  - Preserves all user work including mappings, transformations, and data edits
+
+  **Use Cases:**
+  - Resume workflows where users receive a session link to continue an import
+  - Multi-step approval processes where different users complete different stages
+  - Scheduled or delayed import completion
+
+  **Note:** Use with [`savePartialSession`](#savepartialsession) enabled to create sessions that can be restored.
+
+  ```javascript
+  settings: {
+    backendSyncMode: "FULL_DATA",
+    sessionId: "session_abc123xyz"
+  }
+  ```
+</ResponseField>
