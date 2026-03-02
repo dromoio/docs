@@ -2,6 +2,45 @@
 title: "Changelog"
 ---
 
+<Update label="February 2026" description="v3.8.0" tags={["Customization", "Deployment"]}>
+
+## Text Overrides
+
+New customization options
+### New Features
+
+- **Text Overrides for UI**: Developers can now override in-importer modal text via `textOverrides.ui`. Supported keys: `COLUMN_MATCH_SUBTITLE`, `BULK_FIX_SUBTITLE`
+
+### Bug Fixes
+
+- **Column Matching**: Fixed incorrect labels and missing cross/remove symbol in column match and select match cards
+- **Percentage Numbers**: Fixed parsing and formatting of percentage-formatted number values
+- **Select Field Options**: Fixed an issue where select options were not resolving correctly during data actions
+
+</Update>
+
+<Update label="January 2026" description="v3.7.0" tags={["Sessions", "Accessibility", "Bug Fixes"]}>
+
+## Session Restore & Accessibility Improvements
+
+Session restore support, WCAG accessibility enhancements, and critical bug fixes.
+
+### New Features
+
+- **Restore User Session**: Added session restore support with `sessionId` setting; session ID is now returned via the step hook callback
+- **Progress Auto-Save**: New `savePartialSession` setting enables automatic saving of user progress throughout the import flow
+- **Accessibility Fixes**: WCAG improvements across the Column Match and Empty Field card components
+- **Documentation**: [Session Settings Reference](https://developer.dromo.io/reference/settings/settings#savepartialsession)
+
+### Bug Fixes
+
+- **Find & Replace Modal**: Fixed broken modal interactions and select behavior in the Find & Replace flow
+- **Date Parsing**: Multiple fixes for bulk date fixing and edge cases in date parsing
+- **Multi-Select Dropdown**: Fixed multi-select renderer opening multiple dropdowns simultaneously
+- **Keyboard Tabbing**: Fixed tab navigation inside modals
+
+</Update>
+
 <Update label="December 2025" description="v3.6.0" tags={["Field Types", "API", "Integrations"]}>
 
 ## Multi-Select Field Type & SFTP API Integration
