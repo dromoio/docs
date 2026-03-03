@@ -113,6 +113,18 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="hoverBorder" type="string">
           The `border` shorthand property to apply to the button while hovering
         </ResponseField>
+
+        <ResponseField name="disabledBackgroundColor" type="string" default="#e5e7eb">
+          The background color of the button when it is disabled
+        </ResponseField>
+
+        <ResponseField name="disabledTextColor" type="string" default="#6b7280">
+          The text color of the button when it is disabled
+        </ResponseField>
+
+        <ResponseField name="padding" type="string" default="8px 12px">
+          The padding of the button
+        </ResponseField>
       </div>
     </ResponseField>
 
@@ -147,9 +159,66 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="hoverBorder" type="string">
           The `border` shorthand property to apply to the button while hovering
         </ResponseField>
+
+        <ResponseField name="disabledBackgroundColor" type="string" default="#e5e7eb">
+          The background color of the button when it is disabled
+        </ResponseField>
+
+        <ResponseField name="disabledTextColor" type="string" default="#6b7280">
+          The text color of the button when it is disabled
+        </ResponseField>
+
+        <ResponseField name="padding" type="string" default="8px 12px">
+          The padding of the button
+        </ResponseField>
       </div>
     </ResponseField>
 
+    <ResponseField name="tertiaryButton" type="object" default="{}">
+      Style overrides for the tertiary action button
+
+      <div className="ml-8">
+        <ResponseField name="borderRadius" type="string">
+          The radius of the button
+        </ResponseField>
+
+        <ResponseField name="backgroundColor" type="string">
+          The background color of the button
+        </ResponseField>
+
+        <ResponseField name="textColor" type="string">
+          The color of the text in the button
+        </ResponseField>
+
+        <ResponseField name="border" type="string">
+          The `border` shorthand property to apply to the button
+        </ResponseField>
+
+        <ResponseField name="hoverBackgroundColor" type="string">
+          The background color of the button while hovering
+        </ResponseField>
+
+        <ResponseField name="hoverTextColor" type="string">
+          The text color of the button while hovering
+        </ResponseField>
+
+        <ResponseField name="hoverBorder" type="string">
+          The `border` shorthand property to apply to the button while hovering
+        </ResponseField>
+
+        <ResponseField name="disabledBackgroundColor" type="string" default="#e5e7eb">
+          The background color of the button when it is disabled
+        </ResponseField>
+
+        <ResponseField name="disabledTextColor" type="string" default="#6b7280">
+          The text color of the button when it is disabled
+        </ResponseField>
+
+        <ResponseField name="padding" type="string" default="8px 12px">
+          The padding of the button
+        </ResponseField>
+      </div>
+    </ResponseField>
 
     <ResponseField name="dropzone" type="object" default="{}">
       Style overrides for the file dropzone on the upload screen
