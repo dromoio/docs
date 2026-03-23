@@ -2,19 +2,23 @@
 title: "Changelog"
 ---
 
-<Update label="March 2026" description="v3.9.0" tags={["Customization", "Styling"]}>
+<Update label="March 2026" description="v3.9.0" tags={["Customization", "Styling", "AI", "File Parsing"]}>
 
-## Button Style Overrides
-
-New styling properties for `primaryButton`, `secondaryButton`, and `tertiaryButton` in `styleOverrides`.
+## XML Import, AI Hook Generator & Schema Studio Settings
 
 ### New Features
 
-- **`disabledBackgroundColor`**: Sets the background color of a button when it is disabled
-- **`disabledTextColor`**: Sets the text color of a button when it is disabled
-- **`padding`**: Controls button padding (default: `8px 12px`)
+- **XML File Import**: Dromo now supports client-side parsing of XML files. Configure via `xmlParsingOptions` with support for force array tags, header aliases, custom data sources, and auto plural heuristics. No backend processing required.
+- **AI-Powered Hook Generator**: A new `HookGeneratorModal` with a "Generate" button (sparkle wand icon) lets users generate hook code from a plain-language prompt. Available across all hook editors — Column hooks, Row hooks, Bulk row hooks, and Step hooks.
+- **Schema Studio Settings Panels**: Three new settings sections added to Schema Studio: General, Localization, and Step Customization.
 
-These properties are available on all three button types and can be configured via the `styleOverrides` object passed during Dromo initialization.
+### Improvements
+
+- **Button Style Overrides**: Extended style override schema with new properties for `primaryButton`, `secondaryButton`, and `tertiaryButton`:
+  - **`disabledBackgroundColor`**: Sets the background color of a button when it is disabled
+  - **`disabledTextColor`**: Sets the text color of a button when it is disabled
+  - **`padding`**: Controls button padding (default: `8px 12px`)
+- **Style System Updates**: Updated `ErrorFilterButton` and `ModalHeader` styling for better customizability.
 
 </Update>
 
