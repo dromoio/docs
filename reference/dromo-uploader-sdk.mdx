@@ -55,6 +55,10 @@ Once you have an instance, you can register callbacks and configure its behavior
   Used to register a [row delete hook](/reference/hooks#row-delete-hooks) callback.
 </ResponseField>
 
+<ResponseField name="registerCustomStep(config) => void">
+  Registers a [custom step](/reference/custom-steps) to be inserted into the import flow. Call before `open()`. Multiple steps at the same `insertAfter` position are presented in registration order.
+</ResponseField>
+
 <ResponseField name="beforeFinish(callback: BeforeFinishCallbackFn) => void">
   Used to register a [beforeFinish callback](/reference/results#the-beforefinish-callback).
 </ResponseField>

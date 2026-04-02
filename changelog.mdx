@@ -2,6 +2,21 @@
 title: "Changelog"
 ---
 
+<Update label="April 2026" description="v3.10.0" tags={["Customization", "Custom Steps"]}>
+
+## Custom Steps
+
+### New Features
+
+- **`registerCustomStep()`**: Inject your own UI into the Dromo import flow at any point — after `HEADER_SELECT`, `COLUMN_MATCH`, or `SELECT_MATCH`.
+- **Iframe mode**: Custom steps render a hosted `<iframe>` inside Dromo's standard modal. The page drives navigation by posting `DROMO_NEXT` or `DROMO_BACK` to `window.parent`.
+- **`onMessage` callback**: The iframe can post `DROMO_MESSAGE` with an arbitrary payload to trigger a callback with the uploader instance — use it to call `addField`, `addRows`, and more.
+- **Multiple steps**: Register multiple custom steps at the same position — they are presented in registration order.
+
+See the [Building a Custom Step UI](/guides/custom-steps) guide for full details and examples.
+
+</Update>
+
 <Update label="March 2026" description="v3.9.0" tags={["Customization", "Styling", "AI", "File Parsing"]}>
 
 ## XML Import, AI Hook Generator & Schema Studio Settings
