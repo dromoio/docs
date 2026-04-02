@@ -1,0 +1,148 @@
+---
+title: "Custom Steps"
+description: "Reference for the custom step configuration and the postMessage API for injecting custom UI into the Dromo import flow."
+---
+
+Custom steps allow you to insert your own UI between any two built-in steps in the Dromo import flow. See the [Custom Steps guide](/guides/custom-steps) for a walkthrough and examples.
+
+## Configuration
+
+<ResponseField name="id" type="string" required>
+  Unique identifier for this step. Used as a fallback label in the stepper progress bar if `label` is omitted.
+</ResponseField>
+
+<ResponseField name="insertAfter" type='"HEADER_SELECT" | "COLUMN_MATCH" | "SELECT_MATCH"' required>
+  Which built-in step this custom step is inserted after.
+
+  | Value | Inserted after |
+  |---|---|
+  | `"HEADER_SELECT"` | Header row detection |
+  | `"COLUMN_MATCH"` | Column mapping |
+  | `"SELECT_MATCH"` | Select field matching, just before Review |
+</ResponseField>
+
+<ResponseField name="label" type="string">
+  Text shown in the stepper progress bar. Defaults to `id` if omitted.
+</ResponseField>
+
+<ResponseField name="url" type="string">
+  URL of the page to render inside an `<iframe>` within Dromo's modal. Dromo appends `?stepId=…&stepLabel=…` as query parameters.
+</ResponseField>
+
+<ResponseField name="onMessage" type="(uploader, payload: unknown) => void | Promise<void>">
+  Called when the iframe posts `{ type: "DROMO_MESSAGE", payload }`. The `uploader` argument exposes the same mutation methods available in [step hooks](/reference/hooks#the-dromo-uploader-instance).
+
+  All uploader methods return `Promise<void>` — await them when order matters.
+</ResponseField>
+
+<ResponseField name="allowedOrigin" type="string">
+  Restricts which origin can send `postMessage` events to Dromo. Defaults to the origin derived from `url`. Set explicitly when the iframe is served from a different origin than `url`.
+</ResponseField>
+
+---
+
+## Registering custom steps
+
+### JavaScript / TypeScript
+
+```typescript
+dromo.registerCustomStep(config): void
+```
+
+Call `registerCustomStep` on the `DromoUploader` instance before `open()`. Multiple calls at the same `insertAfter` position are presented in registration order.
+
+### React
+
+Pass an array of config objects to the `customSteps` prop:
+
+```tsx
+<DromoUploader
+  customSteps={[
+    {
+      id: "terms",
+      insertAfter: "SELECT_MATCH",
+      label: "Terms & Conditions",
+      url: "https://your-app.com/terms-step.html",
+    },
+  ]}
+  {/* other required props */}
+>
+  Import
+</DromoUploader>
+```
+
+### Angular
+
+Bind a config array to the `[customSteps]` input on `lib-dromo-uploader`:
+
+```typescript
+customSteps = [
+  {
+    id: "terms",
+    insertAfter: "SELECT_MATCH",
+    label: "Terms & Conditions",
+    url: "https://your-app.com/terms-step.html",
+  },
+];
+```
+
+```html
+<lib-dromo-uploader [customSteps]="customSteps" ...>
+  Import with Dromo!
+</lib-dromo-uploader>
+```
+
+---
+
+## postMessage API
+
+Your iframe page communicates with Dromo by posting messages to `window.parent`.
+
+### Navigation messages
+
+<ResponseField name='{ type: "DROMO_NEXT" }'>
+  Advance to the next step.
+</ResponseField>
+
+<ResponseField name='{ type: "DROMO_BACK" }'>
+  Return to the previous step.
+</ResponseField>
+
+<ResponseField name='{ type: "DROMO_MESSAGE", payload: any }'>
+  Trigger the `onMessage` callback with the uploader instance and `payload`. Does not automatically navigate — post `DROMO_NEXT` separately when ready.
+</ResponseField>
+
+### Query parameters
+
+Dromo appends the following query parameters to your iframe `url`:
+
+| Parameter | Value |
+|---|---|
+| `stepId` | The `id` from the step config |
+| `stepLabel` | The `label` from the step config (or `id` if `label` was omitted) |
+
+---
+
+## Uploader methods in `onMessage`
+
+The `uploader` instance passed to `onMessage` exposes the following methods. These are the same mutation methods available in [step hooks](/reference/hooks#the-dromo-uploader-instance).
+
+<ResponseField name="addField(field, position?) => Promise<void>">
+  Dynamically add a field to the import schema. See [`instance.addField`](/reference/hooks#instanceaddfield).
+</ResponseField>
+
+<ResponseField name="removeField(key) => Promise<void>">
+  Remove a field from the schema. See [`instance.removeField`](/reference/hooks#instanceremovefield).
+</ResponseField>
+
+<ResponseField name="addRows(rows) => Promise<string[]>">
+  Inject rows into the dataset. Returns the IDs of the added rows. See [`instance.addRows`](/reference/hooks#instanceaddrows).
+</ResponseField>
+
+<ResponseField name="removeRows(ids) => Promise<void>">
+  Remove rows from the dataset by ID. See [`instance.removeRows`](/reference/hooks#instanceremoverows).
+</ResponseField>
+
+<ResponseField name="setUser(user) => Promise<void>">
+  Update the current user associated with the import.
+</ResponseField>

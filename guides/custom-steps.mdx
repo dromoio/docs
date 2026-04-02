@@ -1,0 +1,336 @@
+---
+title: "Building a Custom Step UI"
+description: "Inject your own UI into the Dromo import flow between any two built-in steps using iframes and postMessage."
+---
+
+Custom steps let you insert your own UI into the Dromo import flow — between any two built-in steps — without breaking the standard modal experience. Your page loads inside an `<iframe>` embedded in Dromo's modal chrome, and communicates back via `postMessage`.
+
+## The import flow
+
+The default step order is:
+
+```
+UPLOAD → HEADER_SELECT → COLUMN_MATCH → SELECT_MATCH → REVIEW
+```
+
+Custom steps can be inserted **after** any of these steps (except `REVIEW`):
+
+| `insertAfter` | Inserted after |
+|---|---|
+| `"HEADER_SELECT"` | Header row detection |
+| `"COLUMN_MATCH"` | Column mapping |
+| `"SELECT_MATCH"` | Select field matching — just before Review |
+
+---
+
+## Quick start
+
+Register a custom step before calling `open()`. The `url` is the page Dromo will load inside the iframe.
+
+<CodeGroup>
+```javascript JavaScript
+import DromoUploader from "dromo-uploader-js";
+
+const dromo = new DromoUploader(licenseKey, fields, settings, user);
+
+dromo.registerCustomStep({
+  id: "terms",
+  insertAfter: "SELECT_MATCH",
+  label: "Terms & Conditions",
+  url: "https://your-app.com/dromo-custom-step.html",
+});
+
+dromo.open();
+```
+
+```jsx React
+import { DromoUploader } from "dromo-uploader-react";
+
+<DromoUploader
+  licenseKey={licenseKey}
+  fields={fields}
+  settings={settings}
+  user={user}
+  customSteps={[
+    {
+      id: "terms",
+      insertAfter: "SELECT_MATCH",
+      label: "Terms & Conditions",
+      url: "https://your-app.com/dromo-custom-step.html",
+    },
+  ]}
+  onResults={(data, metadata) => console.log(data)}
+>
+  Import
+</DromoUploader>
+```
+
+```typescript Angular
+// component.ts
+customSteps: ICustomStepConfig[] = [
+  {
+    id: "terms",
+    insertAfter: "SELECT_MATCH",
+    label: "Terms & Conditions",
+    url: "https://your-app.com/dromo-custom-step.html",
+  },
+];
+```
+
+```html Angular template
+<lib-dromo-uploader [customSteps]="customSteps" ...>
+  Import with Dromo!
+</lib-dromo-uploader>
+```
+</CodeGroup>
+
+---
+
+## Driving navigation from the iframe
+
+Your iframe page posts messages to `window.parent` to control navigation.
+
+| Message | Effect |
+|---|---|
+| `{ type: "DROMO_NEXT" }` | Advance to the next step |
+| `{ type: "DROMO_BACK" }` | Return to the previous step |
+| `{ type: "DROMO_MESSAGE", payload: any }` | Trigger the `onMessage` callback |
+
+```javascript
+// Advance to the next step
+window.parent.postMessage({ type: "DROMO_NEXT" }, "*");
+
+// Go back
+window.parent.postMessage({ type: "DROMO_BACK" }, "*");
+
+// Send data to onMessage, then advance
+window.parent.postMessage({ type: "DROMO_MESSAGE", payload: { accepted: true } }, "*");
+window.parent.postMessage({ type: "DROMO_NEXT" }, "*");
+```
+
+Dromo appends `?stepId=…&stepLabel=…` to your iframe URL so you can display context:
+
+```javascript
+const params = new URLSearchParams(location.search);
+const label = params.get("stepLabel") || params.get("stepId");
+if (label) document.getElementById("title").textContent = label;
+```
+
+---
+
+## Modifying the schema from a custom step
+
+Use the `onMessage` callback to mutate the import schema in response to what the user does in your iframe. It receives the same uploader instance as step hooks, giving you access to `addField`, `removeField`, `addRows`, and more.
+
+```typescript
+dromo.registerCustomStep({
+  id: "add-fields",
+  insertAfter: "SELECT_MATCH",
+  label: "Add Fields",
+  url: "https://your-app.com/add-fields.html",
+  onMessage: async (uploader, payload) => {
+    const { fields } = payload as { fields: Array<{ label: string; key: string; type: string }> };
+    for (const field of fields) {
+      await uploader.addField(field as any);
+    }
+  },
+});
+```
+
+The iframe sends the payload:
+
+```javascript
+window.parent.postMessage(
+  { type: "DROMO_MESSAGE", payload: { fields: [{ label: "Department", key: "department", type: "string" }] } },
+  "*"
+);
+window.parent.postMessage({ type: "DROMO_NEXT" }, "*");
+```
+
+---
+
+## Multiple custom steps
+
+Register multiple steps at the same `insertAfter` position — they are presented in registration order:
+
+```typescript
+dromo.registerCustomStep({ id: "consent",   insertAfter: "COLUMN_MATCH", url: "/consent.html" });
+dromo.registerCustomStep({ id: "data-type", insertAfter: "COLUMN_MATCH", url: "/data-type.html" });
+// Flow: … → COLUMN_MATCH → consent → data-type → SELECT_MATCH → REVIEW
+```
+
+---
+
+## Full example: dynamic field builder
+
+The example below is a self-contained iframe page that lets the user define extra fields before Review, then sends them back via `onMessage`.
+
+### Step registration
+
+```typescript
+dromo.registerCustomStep({
+  id: "add-fields",
+  insertAfter: "SELECT_MATCH",
+  label: "Add Fields",
+  url: "https://your-app.com/add-fields.html",
+  onMessage: async (uploader, payload) => {
+    const { fields } = payload as {
+      fields: Array<{
+        label: string;
+        key: string;
+        type: string;
+        selectOptions?: { label: string; value: string }[];
+      }>;
+    };
+    for (const field of fields) {
+      await uploader.addField(field as any);
+    }
+  },
+});
+```
+
+### Iframe page (`add-fields.html`)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Fields</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 32px 24px; background: #f9fafb; }
+    h2   { margin: 0 0 4px; font-size: 18px; }
+    .subtitle { margin: 0 0 24px; color: #6b7280; font-size: 14px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .row  { display: flex; gap: 8px; }
+    .col  { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    label { font-size: 12px; color: #6b7280; font-weight: 500; }
+    input, select { padding: 7px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; width: 100%; }
+    .btn { padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; }
+    .btn:disabled { opacity: 0.4; cursor: default; }
+    .btn-primary   { background: #4f46e5; color: #fff; }
+    .btn-secondary { background: #fff; border: 1px solid #d1d5db; color: #374151; }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+    #fields-list { list-style: none; margin: 0 0 8px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    #fields-list li { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 13px; }
+    #fields-list li button { background: none; border: none; cursor: pointer; color: #9ca3af; }
+    #fields-empty { font-size: 13px; color: #9ca3af; font-style: italic; }
+    .nav { display: flex; gap: 12px; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <h2 id="title">Add Custom Fields</h2>
+  <p class="subtitle">Define extra fields to add to the import schema, then click Continue.</p>
+
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <label for="field-label">Label</label>
+        <input id="field-label" type="text" placeholder="e.g. Department" />
+      </div>
+      <div class="col" style="max-width:140px">
+        <label for="field-type">Type</label>
+        <select id="field-type">
+          <option value="string">String</option>
+          <option value="select">Select</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <button id="add-field-btn" class="btn btn-primary btn-sm" onclick="addField()" disabled>
+        Add field
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <p id="fields-empty">No fields added yet.</p>
+    <ul id="fields-list"></ul>
+  </div>
+
+  <div class="nav">
+    <button class="btn btn-secondary"
+      onclick="window.parent.postMessage({ type: 'DROMO_BACK' }, '*')">
+      Back
+    </button>
+    <button class="btn btn-primary" onclick="onContinue()">Continue</button>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const label = params.get("stepLabel") || params.get("stepId");
+    if (label) document.getElementById("title").textContent = label;
+
+    const pendingFields = [];
+
+    function refreshAddBtn() {
+      document.getElementById("add-field-btn").disabled =
+        !document.getElementById("field-label").value.trim();
+    }
+
+    function addField() {
+      const lbl = document.getElementById("field-label").value.trim();
+      if (!lbl) return;
+      pendingFields.push({
+        label: lbl,
+        key: lbl.toLowerCase().replace(/\s+/g, "_"),
+        type: document.getElementById("field-type").value,
+      });
+      document.getElementById("field-label").value = "";
+      renderFields();
+      refreshAddBtn();
+    }
+
+    function removeField(i) {
+      pendingFields.splice(i, 1);
+      renderFields();
+    }
+
+    function renderFields() {
+      const list  = document.getElementById("fields-list");
+      const empty = document.getElementById("fields-empty");
+      list.innerHTML = "";
+      empty.style.display = pendingFields.length ? "none" : "block";
+      pendingFields.forEach((f, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span><strong>${f.label}</strong> — ${f.type}</span>
+          <button onclick="removeField(${i})">✕</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    function onContinue() {
+      window.parent.postMessage(
+        { type: "DROMO_MESSAGE", payload: { fields: pendingFields } },
+        "*"
+      );
+      window.parent.postMessage({ type: "DROMO_NEXT" }, "*");
+    }
+
+    document.getElementById("field-label").addEventListener("input", refreshAddBtn);
+    document.getElementById("field-label").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") addField();
+    });
+  </script>
+</body>
+</html>
+```
+
+**What happens when the user clicks Continue:**
+
+<Steps>
+  <Step title="Send data">
+    The iframe posts `DROMO_MESSAGE` with `{ fields: [...] }` to `window.parent`.
+  </Step>
+  <Step title="onMessage callback runs">
+    Dromo calls `onMessage(uploader, payload)`. The callback iterates the fields and calls `uploader.addField()` for each one.
+  </Step>
+  <Step title="Advance">
+    The iframe posts `DROMO_NEXT`. Dromo moves to the next step (Review).
+  </Step>
+</Steps>
+
+<Info>
+  For a complete configuration reference, see the [Custom Steps reference](/reference/custom-steps).
+</Info>
