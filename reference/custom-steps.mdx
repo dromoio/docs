@@ -26,7 +26,7 @@ Custom steps allow you to insert your own UI between any two built-in steps in t
 </ResponseField>
 
 <ResponseField name="url" type="string">
-  URL of the page to render inside an `<iframe>` within Dromo's modal. Dromo appends `?stepId=…&stepLabel=…` as query parameters.
+  URL of the page to render inside an `<iframe>` within Dromo's modal.
 </ResponseField>
 
 <ResponseField name="onMessage" type="(uploader, payload: unknown) => void | Promise<void>">
@@ -35,9 +35,6 @@ Custom steps allow you to insert your own UI between any two built-in steps in t
   All uploader methods return `Promise<void>` — await them when order matters.
 </ResponseField>
 
-<ResponseField name="allowedOrigin" type="string">
-  Restricts which origin can send `postMessage` events to Dromo. Defaults to the origin derived from `url`. Set explicitly when the iframe is served from a different origin than `url`.
-</ResponseField>
 
 ---
 
@@ -111,15 +108,6 @@ Your iframe page communicates with Dromo by posting messages to `window.parent`.
 <ResponseField name='{ type: "DROMO_MESSAGE", payload: any }'>
   Trigger the `onMessage` callback with the uploader instance and `payload`. Does not automatically navigate — post `DROMO_NEXT` separately when ready.
 </ResponseField>
-
-### Query parameters
-
-Dromo appends the following query parameters to your iframe `url`:
-
-| Parameter | Value |
-|---|---|
-| `stepId` | The `id` from the step config |
-| `stepLabel` | The `label` from the step config (or `id` if `label` was omitted) |
 
 ---
 

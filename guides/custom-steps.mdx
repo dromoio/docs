@@ -108,14 +108,6 @@ window.parent.postMessage({ type: "DROMO_MESSAGE", payload: { accepted: true } }
 window.parent.postMessage({ type: "DROMO_NEXT" }, "*");
 ```
 
-Dromo appends `?stepId=…&stepLabel=…` to your iframe URL so you can display context:
-
-```javascript
-const params = new URLSearchParams(location.search);
-const label = params.get("stepLabel") || params.get("stepId");
-if (label) document.getElementById("title").textContent = label;
-```
-
 ---
 
 ## Modifying the schema from a custom step
@@ -258,10 +250,6 @@ dromo.registerCustomStep({
   </div>
 
   <script>
-    const params = new URLSearchParams(location.search);
-    const label = params.get("stepLabel") || params.get("stepId");
-    if (label) document.getElementById("title").textContent = label;
-
     const pendingFields = [];
 
     function refreshAddBtn() {
