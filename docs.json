@@ -81,6 +81,7 @@
                   "guides/saving-progress"
                 ]
               },
+              "guides/custom-steps",
               "guides/custom-styling",
               "guides/bring-your-own-storage",
               "guides/zapier-integration",
@@ -112,6 +113,7 @@
                 ]
               },
               "reference/hooks",
+              "reference/custom-steps",
               "reference/users",
               "reference/results",
               "reference/custom-file-parsers",
