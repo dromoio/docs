@@ -2,6 +2,20 @@
 title: "Changelog"
 ---
 
+<Update label="May 2026" description="v3.11.0" tags={["Analytics", "Observability"]}>
+
+## onUserEvent Callback
+
+### New Features
+
+- **`onUserEvent()`**: Register a callback on any `DromoUploader` instance to receive real-time notifications when the user interacts with tracked UI controls. Fires on every button click across all import steps — upload, header selection, column matching, value matching, and review.
+- **`BUTTON_CLICK` event**: The initial event type emitted, with a payload containing `buttonName` (the specific control clicked) and `step` (the active import step). Over 30 named button values are covered, from `UPLOAD_DATA` and `DOWNLOAD_TEMPLATE` to `FIND_AND_REPLACE_CONFIRM`, `TRANSFORM_DATA_CONFIRM`, and exit/alert modal actions.
+- **Safe by default**: Errors thrown inside the callback are caught and logged as a warning — they never crash the importer or interrupt the user's flow.
+
+See the [onUserEvent Reference](/reference/on-user-event) for the full event type definitions, payload shapes, and button name reference.
+
+</Update>
+
 <Update label="April 2026" description="v3.10.0" tags={["Customization", "Custom Steps"]}>
 
 ## Custom Steps
