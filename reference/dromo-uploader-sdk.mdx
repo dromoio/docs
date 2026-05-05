@@ -71,6 +71,10 @@ Once you have an instance, you can register callbacks and configure its behavior
   Called when the user exits the Dromo Uploader without completing the import.
 </ResponseField>
 
+<ResponseField name="onUserEvent(callback: (event: IUserEvent) => void) => void">
+  Registers a callback that fires whenever the user interacts with a tracked UI control inside the importer (e.g. button clicks). Useful for analytics, audit logging, and conditional UI reactions. Only one callback can be registered per instance — calling this a second time replaces the first. Not invoked in headless mode. See the [onUserEvent reference](/reference/on-user-event) for event types, payload shapes, and the full button name reference.
+</ResponseField>
+
 **Example of registering callbacks:**
 ```javascript
 dromo.registerColumnHook('zipCode', (colData) => {  
