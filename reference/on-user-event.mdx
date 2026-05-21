@@ -1,0 +1,176 @@
+---
+title: "onUserEvent"
+description: "Receive real-time notifications when a user interacts with specific UI controls inside the Dromo importer."
+---
+
+## Overview
+
+`onUserEvent` is a callback you can register on a `DromoUploader` instance to receive real-time notifications when a user interacts with specific UI controls inside the importer. It gives your host application observability into what the user is doing — useful for analytics, audit logging, conditional UI reactions, or debugging.
+
+## Registration
+
+```javascript
+const importer = new DromoUploader(licenseKey, fields, settings, user);
+
+importer.onUserEvent((event) => {
+  console.log(event.eventType, event.payload);
+});
+```
+
+The method accepts a single callback function. It can be registered at any point before the user triggers the relevant interaction.
+
+<Note>
+  Only one callback can be registered per instance. Calling `onUserEvent` a second time replaces the first.
+</Note>
+
+## Callback Signature
+
+```typescript
+onUserEvent(callback: (event: IUserEvent) => void): void
+```
+
+The callback receives one argument, an `IUserEvent` object:
+
+```typescript
+interface IUserEvent<T extends EUserEventType = EUserEventType> {
+  eventType: T;
+  payload: IUserEventPayloadMap[T];
+}
+```
+
+## Event Types
+
+Currently one event type is emitted:
+
+| `eventType` | Description |
+|---|---|
+| `"BUTTON_CLICK"` | Fired whenever the user clicks a tracked button in the importer |
+
+### BUTTON_CLICK Payload
+
+When `eventType` is `"BUTTON_CLICK"`, the payload is:
+
+```typescript
+interface IButtonClickPayload {
+  buttonName: string; // see button name reference below
+  step: string;       // the active step when the click occurred
+}
+```
+
+**`step` values**
+
+| Value | Step |
+|---|---|
+| `"UPLOAD"` | File upload / manual data entry screen |
+| `"HEADER_SELECT"` | Header row selection screen |
+| `"COLUMN_MATCH"` | Column mapping screen |
+| `"SELECT_MATCH"` | Value / select matching screen |
+| `"REVIEW"` | Data review and validation screen |
+
+## Button Name Reference
+
+The full set of `buttonName` values, grouped by step:
+
+### Navigation (cross-step)
+
+| Value | Description |
+|---|---|
+| `CONTINUE` | Primary continue action |
+| `NEXT` | Next step |
+| `GO_BACK` | Back navigation |
+| `FINISH` | Final submit / finish |
+
+### Upload step
+
+| Value | Description |
+|---|---|
+| `UPLOAD_DATA` | Upload a file |
+| `ENTER_DATA` | Open manual data entry |
+| `DOWNLOAD_TEMPLATE` | Download the CSV template |
+| `CONFIRM_SHEET` | Confirm sheet selection (multi-sheet files) |
+
+### Header select step
+
+| Value | Description |
+|---|---|
+| `HEADER_SELECT_CONTINUE` | Continue with selected header row |
+| `NO_HEADER_ROW` | Mark file as having no header row |
+
+### Column match step
+
+| Value | Description |
+|---|---|
+| `COLUMN_MATCH_IGNORE` | Ignore an unmatched column |
+| `COLUMN_MATCH_REMOVE` | Remove an unmatched column |
+
+### Select / value match step
+
+| Value | Description |
+|---|---|
+| `DATE_FIX_ACCEPT` | Accept suggested date format fix |
+| `DATE_FIX_UNDO` | Undo date format fix |
+| `SELECT_MATCH_CLEAR` | Clear a single-select match |
+| `MULTI_SELECT_MATCH_CLEAR` | Clear a multi-select match |
+
+### Review step
+
+| Value | Description |
+|---|---|
+| `FIND_AND_REPLACE_OPEN` | Open find & replace panel |
+| `FIND_AND_REPLACE_CONFIRM` | Confirm a find & replace operation |
+| `FIND_AND_REPLACE_CANCEL` | Cancel find & replace |
+| `SHOW_ROWS_WITH_ERRORS` | Filter to rows with errors |
+| `CLEAR_ROWS_WITH_ERRORS_FILTER` | Clear the error filter |
+| `TRANSFORM_DATA_OPEN` | Open AI transform panel |
+| `TRANSFORM_DATA_PREVIEW` | Preview AI transform results |
+| `TRANSFORM_DATA_REGENERATE` | Regenerate AI transform |
+| `TRANSFORM_DATA_CONFIRM` | Confirm AI transform |
+| `TRANSFORM_DATA_CANCEL` | Cancel AI transform |
+| `EXPORT_ALL` | Export all rows |
+| `EXPORT_ERRORS_ONLY` | Export only rows with errors |
+| `DOWNLOAD_XLSX` | Download data as XLSX |
+| `TOGGLE_SEARCH` | Toggle search bar |
+
+### Exit confirmation modal
+
+| Value | Description |
+|---|---|
+| `EXIT_CONFIRM` | Confirm exit / cancel import |
+| `EXIT_CANCEL` | Stay in the importer |
+
+### Generic alert / modal actions
+
+| Value | Description |
+|---|---|
+| `ALERT_PRIMARY` | Primary action on a generic alert |
+| `ALERT_SECONDARY` | Secondary action on a generic alert |
+
+## Error Handling
+
+Errors thrown inside your `onUserEvent` callback are caught by Dromo and logged as a warning — they will not crash the importer or interrupt the user's flow:
+
+```
+[Dromo-External-Error] There was an error in your onUserEvent callback.
+```
+
+## Example
+
+```javascript
+importer.onUserEvent((event) => {
+  if (event.eventType === "BUTTON_CLICK") {
+    const { buttonName, step } = event.payload;
+
+    analytics.track("dromo_button_click", {
+      button: buttonName,
+      step: step,
+      userId: currentUser.id,
+    });
+  }
+});
+```
+
+## Notes
+
+- The callback is fire-and-forget from Dromo's perspective — the return value is ignored and the importer does not await it.
+- The callback is registered on the importer instance, so each importer instance can have its own independent `onUserEvent` handler.
+- The callback is not invoked in headless mode (server-side Lambda execution), only during interactive browser sessions.
