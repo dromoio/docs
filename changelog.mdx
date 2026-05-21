@@ -2,11 +2,22 @@
 title: "Changelog"
 ---
 
-<Update label="May 2026" description="v3.11.0" tags={["Analytics", "Observability"]}>
+<Update label="May 2026" description="v3.12.0" tags={["Review Step", "Validation", "Analytics", "Observability"]}>
 
-## onUserEvent Callback
+## Error Navigator & onUserEvent Callback
 
-### New Features
+### Error Navigator
+
+- **`reviewStep.enableNavigatingErrors`**: A new boolean setting (default `false`) adds an error navigation panel to the Review Step. When enabled, row headers with validation errors display a red circular info icon — clicking it opens the panel anchored to that row's first error.
+- **Navigator panel**: Slides in from the right of the table and lists all validation errors as cards (row number, column name, error message). A column dropdown filters the list; Prev/Next buttons and `Alt+↑` / `Alt+↓` keyboard shortcuts step through errors in order, scrolling the table to each cell. Clicking any card jumps directly to that cell.
+- **Inline fix actions**: The active error card exposes two actions:
+  - **Clear** — removes the invalid value; for multi-select fields, removes only invalid tokens.
+  - **Replace** — sets a new value; shows a valid-options dropdown for select/multi-select fields, free text for all others; for multi-select, appends the chosen value to existing valid ones.
+- **Stateful panel**: Closing the panel (X) resets state and the column filter.
+
+See [`reviewStep.enableNavigatingErrors`](/reference/settings/settings#enablenavigatingerrors) in the Settings reference for full details.
+
+### onUserEvent Callback
 
 - **`onUserEvent()`**: Register a callback on any `DromoUploader` instance to receive real-time notifications when the user interacts with tracked UI controls. Fires on every button click across all import steps — upload, header selection, column matching, value matching, and review.
 - **`BUTTON_CLICK` event**: The initial event type emitted, with a payload containing `buttonName` (the specific control clicked) and `step` (the active import step). Over 30 named button values are covered, from `UPLOAD_DATA` and `DOWNLOAD_TEMPLATE` to `FIND_AND_REPLACE_CONFIRM`, `TRANSFORM_DATA_CONFIRM`, and exit/alert modal actions.
@@ -15,7 +26,6 @@ title: "Changelog"
 See the [onUserEvent Reference](/reference/on-user-event) for the full event type definitions, payload shapes, and button name reference.
 
 </Update>
-
 <Update label="April 2026" description="v3.10.0" tags={["Customization", "Custom Steps"]}>
 
 ## Custom Steps
