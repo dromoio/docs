@@ -377,6 +377,32 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
   ```
 </ResponseField>
 
+<ResponseField name="enableNavigatingErrors" type="boolean" default="false">
+  When enabled, adds an error navigation panel to the Review Step that lets users move through validation errors one at a time and fix them inline.
+
+  **Row headers**: Any row with a validation error displays a red circular info icon next to its row number. Clicking the icon opens the navigator panel anchored to that row's first error.
+
+  **Navigator panel**: Slides in from the right of the table and lists all validation errors as cards — each showing the row number, column name, and error message.
+
+  - **Column filter**: A dropdown filters the list to a single column.
+  - **Prev/Next navigation**: Buttons and the `Alt+↑` / `Alt+↓` keyboard shortcuts step through errors in order, scrolling the table to each cell.
+  - **Jump to cell**: Clicking any error card scrolls directly to that cell.
+  - **Inline actions** (shown on the active error card):
+    - **Clear** — removes the invalid cell value. For multi-select fields, only the invalid tokens are removed.
+    - **Replace** — replaces the cell value with a new one. For select fields a valid-options dropdown is shown; for multi-select fields the chosen value is appended to the existing valid tokens; for all other fields a free-text input is shown.
+  - **Closing the panel** (X button) resets the panel state and column filter.
+
+  ![Error navigator panel showing validation errors with inline Clear and Replace actions](/images/assets/images/navigator.png)
+
+  ```javascript
+  settings: {
+    reviewStep: {
+      enableNavigatingErrors: true
+    }
+  }
+  ```
+</ResponseField>
+
 <ResponseField name="sessionId" type="string" default="null">
   Requires [backendSyncMode](#backendsyncmode) = "FULL_DATA"
 
