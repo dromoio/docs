@@ -2,7 +2,15 @@
 title: "Changelog"
 ---
 
-<Update label="May 2026" description="v3.12.0" tags={["Review Step", "Validation", "Analytics", "Observability"]}>
+<Update label="May 2026" description="v3.12.0" tags={["Review Step", "Validation", "Analytics", "Observability", "Headless API"]}>
+
+## Inline Schema Imports for Headless API
+
+The [create headless import endpoint](/api-reference/headless/create-a-new-headless-import) now supports defining schemas inline at import time, without requiring a saved schema in the dashboard.
+
+- **`fields`**: Pass field definitions directly in the request body instead of a `schema_id` — useful for dynamically generated schemas
+- **`settings` and `hooks` overrides**: Provide `settings` or `hooks` alongside a `schema_id` to merge one-off overrides for a specific import without modifying the saved schema
+- **Documentation**: [Headless Quickstart — Inline Schema Imports](/getting-started/headless#inline-schema-imports)
 
 ## Error Navigator & onUserEvent Callback
 
