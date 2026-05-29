@@ -18,7 +18,7 @@ These limits help ensure service stability. For high-volume use cases, we recomm
 
 A headless import can be run either on a file or a JSON object. The steps below walk through the procedure for either type of import.
 
-You will need a saved schema to guide the import. For more information about saved schemas, check out the [Schema Studio Guide](/guides/schema-builder) or the [Saved Schema API](/guides/saved-schema-api).
+You will need a schema to guide the import — either a saved schema referenced by `schema_id`, or an inline schema defined with `fields` in the request body. For more information about saved schemas, check out the [Schema Studio Guide](/guides/schema-builder) or the [Saved Schema API](/guides/saved-schema-api).
 
 ### Importing a File
 
@@ -89,6 +89,63 @@ You will need a saved schema to guide the import. For more information about sav
     Dromo will automatically begin the import process once the upload is complete.
   </Step>
 </Steps>
+
+## Inline Schema Imports
+
+Instead of referencing a saved schema via `schema_id`, you can define the schema inline at import time by passing `fields` directly in the request body. This is useful when you want to generate the schema dynamically or avoid managing saved schemas in the dashboard.
+
+`schema_id` and `fields` are mutually exclusive — you must provide one or the other.
+
+### Importing with an Inline Schema
+
+Pass `fields` (required), `settings` (optional), and `hooks` (optional) in place of `schema_id`. Use `original_filename` when importing a file, or `initial_data` when importing JSON directly:
+
+```sh
+curl \
+  -H "Content-Type: application/json" \
+  -H "X-Dromo-License-Key: your-backend-key" \
+  -X POST \
+  'https://app.dromo.io/api/v1/headless/imports/' \
+  -d '{
+    "fields": [
+      { "key": "first_name", "type": "string", "label": "First Name", "validators": [] },
+      { "key": "last_name", "type": "string", "label": "Last Name", "validators": [] }
+    ],
+    "initial_data": [
+      { "first_name": "Zeph", "last_name": "paul.zeph@gmail.com" }
+    ],
+    "hooks": {
+      "rowHooks": [
+        "(record, mode) => { return { row: { first_name: { value: \"Updated from row hook\" } } }; }"
+      ]
+    }
+  }'
+```
+
+The `fields` array accepts the same field definitions as a saved schema. See the [Field Object Reference](/reference/fields/fields) for the full list of options.
+
+### Overriding Settings or Hooks on a Saved Schema
+
+If you provide a `schema_id` alongside `settings` or `hooks`, Dromo will merge them on top of the saved schema for that specific import — without modifying the schema itself. This is useful for one-off overrides like changing validation behavior or injecting runtime hooks.
+
+```sh
+curl \
+  -H "Content-Type: application/json" \
+  -H "X-Dromo-License-Key: your-backend-key" \
+  -X POST \
+  'https://app.dromo.io/api/v1/headless/imports/' \
+  -d '{
+    "schema_id": "4eefe3fe-7181-4562-aa28-8cfe1c5bdf1b",
+    "settings": {
+      "allowInvalidSubmit": true
+    },
+    "original_filename": "data.csv"
+  }'
+```
+
+<Note>
+  When overriding, `settings` and `hooks` are merged on top of the saved schema's values. Any keys you provide will overwrite the corresponding keys on the saved schema; keys you omit are left unchanged.
+</Note>
 
 ## Handling Import Results[​](#handling-import-results "Direct link to Handling Import Results")
 

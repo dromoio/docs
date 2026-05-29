@@ -549,7 +549,17 @@
                 "properties": {
                   "schema_id": {
                     "type": "string",
+                    "description": "ID of a saved schema. Mutually exclusive with `fields` — provide `schema_id` or `fields`, not both. When provided alongside `settings` or `hooks`, those values are merged on top of the saved schema for this import only.",
                     "example": "94187d21-9820-420f-b08c-a80cbbf52604"
+                  },
+                  "fields": {
+                    "$ref": "#/components/schemas/SchemaFields"
+                  },
+                  "settings": {
+                    "$ref": "#/components/schemas/SchemaSettings"
+                  },
+                  "hooks": {
+                    "$ref": "#/components/schemas/SchemaHooks"
                   },
                   "original_filename": {
                     "oneOf": [
@@ -570,12 +580,8 @@
                         "description": "Complete JSON data to be imported, max size 15MB (exclude if using a file)",
                         "example": [
                           {
-                            "name": "Jeff",
-                            "email": "jeff@dromo.io"
-                          },
-                          {
-                            "name": "Sarah",
-                            "email": "sarah@dromo.io"
+                            "first_name": "Zeph",
+                            "last_name": "paul.zeph@gmail.com"
                           }
                         ]
                       },
@@ -586,6 +592,33 @@
                   },
                   "import_metadata": {
                     "$ref": "#/components/schemas/ImportMetaData"
+                  }
+                },
+                "example": {
+                  "fields": [
+                    {
+                      "key": "first_name",
+                      "type": "string",
+                      "label": "First Name",
+                      "validators": []
+                    },
+                    {
+                      "key": "last_name",
+                      "type": "string",
+                      "label": "Last Name",
+                      "validators": []
+                    }
+                  ],
+                  "initial_data": [
+                    {
+                      "first_name": "Zeph",
+                      "last_name": "paul.zeph@gmail.com"
+                    }
+                  ],
+                  "hooks": {
+                    "rowHooks": [
+                      "(record, mode) => { return { row: { first_name: { value: \"Updated from row hook\" } } }; }"
+                    ]
                   }
                 }
               }
@@ -1206,6 +1239,223 @@
           "start": 0,
           "end": 0,
           "total_num_rows": 1
+        }
+      },
+      "SchemaFields": {
+        "type": "array",
+        "description": "Inline schema field definitions. Required when `schema_id` is omitted; mutually exclusive with `schema_id`. Accepts the same field definitions as a saved schema.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "type": {
+              "oneOf": [
+                {"type": "string"},
+                {"type": "array"}
+              ]
+            },
+            "label": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "alternateMatches": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "validators": {
+              "type": "array",
+              "items": {"type": "object"}
+            },
+            "invalidValueMessage": {
+              "type": "string"
+            },
+            "readOnly": {
+              "type": "boolean"
+            },
+            "hidden": {
+              "type": "boolean"
+            },
+            "requireMapping": {
+              "type": "boolean"
+            },
+            "manyToOne": {
+              "type": "boolean"
+            }
+          },
+          "required": ["key", "type", "label"],
+          "additionalProperties": false
+        },
+        "example": [
+          {
+            "key": "first_name",
+            "type": "string",
+            "label": "First Name",
+            "validators": []
+          },
+          {
+            "key": "last_name",
+            "type": "string",
+            "label": "Last Name",
+            "validators": []
+          }
+        ]
+      },
+      "SchemaSettings": {
+        "type": "object",
+        "description": "Import settings. When used with `schema_id`, merged on top of the saved schema (provided keys overwrite; omitted keys are unchanged). When used without `schema_id`, defines settings for the inline schema.",
+        "properties": {
+          "importIdentifier": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "allowInvalidSubmit": {
+            "type": "boolean"
+          },
+          "invalidDataBehavior": {
+            "type": "string",
+            "enum": [
+              "BLOCK_SUBMIT",
+              "INCLUDE_INVALID_ROWS",
+              "REMOVE_INVALID_ROWS",
+              "INCLUDE_INVALID_ROWS_AND_VALUES"
+            ]
+          },
+          "backendSync": {
+            "type": "boolean"
+          },
+          "backendSyncMode": {
+            "type": "string",
+            "enum": [
+              "DISABLED",
+              "FULL_DATA",
+              "MAPPINGS_ONLY"
+            ]
+          },
+          "manualInputDisabled": {
+            "type": "boolean"
+          },
+          "manualInputOnly": {
+            "type": "boolean"
+          },
+          "allowCustomFields": {
+            "type": "boolean"
+          },
+          "passThroughUnmappedColumns": {
+            "type": "boolean"
+          },
+          "maxRecords": {
+            "oneOf": [
+              {"type": "integer"},
+              {"type": "null"}
+            ]
+          },
+          "developmentMode": {
+            "type": "boolean"
+          },
+          "displayEncoding": {
+            "type": "boolean"
+          },
+          "styleOverrides": {
+            "type": "object"
+          },
+          "maxFileSize": {
+            "type": "integer"
+          },
+          "webhookUrl": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "null"}
+            ]
+          },
+          "needsReviewWebhookUrl": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "null"}
+            ]
+          },
+          "initialData": {
+            "oneOf": [
+              {"type": "array"},
+              {"type": "null"}
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "example": {
+          "importIdentifier": "contacts-import",
+          "invalidDataBehavior": "BLOCK_SUBMIT"
+        }
+      },
+      "SchemaHooks": {
+        "type": "object",
+        "description": "Import hooks. When used with `schema_id`, merged on top of the saved schema. When used without `schema_id`, defines hooks for the inline schema.",
+        "properties": {
+          "rowHooks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bulkRowHooks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rowDeleteHooks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "beforeFinishCallback": {
+            "type": "string"
+          },
+          "columnHooks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fieldName": {
+                  "type": "string"
+                },
+                "callback": {
+                  "type": "string"
+                }
+              },
+              "required": ["fieldName", "callback"],
+              "additionalProperties": false
+            }
+          },
+          "stepHooks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["UPLOAD_STEP", "REVIEW_STEP", "REVIEW_STEP_POST_HOOKS"]
+                },
+                "callback": {
+                  "type": "string"
+                }
+              },
+              "required": ["type", "callback"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false,
+        "example": {
+          "rowHooks": [
+            "(record, mode) => { return { row: { first_name: { value: \"Updated from row hook\" } } }; }"
+          ]
         }
       },
       "ImportSchema": {
