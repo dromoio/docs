@@ -2,6 +2,45 @@
 title: "Changelog"
 ---
 
+<Update label="June 2026" description="v3.13.0" tags={["Security", "Sessions"]}>
+
+## Session Hydration Security
+
+The widget session system now uses a short-lived signed **hydrationId** token for all session access operations, replacing the raw `sessionId` UUID that was previously passed in API URLs. This change significantly limits the blast radius of a leaked credential and ensures session access cannot be extended indefinitely without re-authentication.
+
+### What changed
+
+Previously, the same `sessionId` UUID was used as both the identifier and the access credential — if intercepted, it granted permanent access to session state with no expiry.
+
+Now, `sessionId` is a long-lived private identifier used only to issue a short-lived `hydrationId` token. All session reads and writes go through this token. The raw UUID is never sent in an API URL after the initial session creation.
+
+### New response fields on session create
+
+`POST /api/widget/session/` now returns two new fields alongside `sessionId`:
+
+- **`hydrationId`**: A cryptographically signed token used to authenticate all subsequent session operations. Store this in memory and use it immediately — no separate authentication call is needed on first use.
+- **`expiresIn`**: Seconds until the `hydrationId` expires (18000 = 5 hours). Use this to schedule a proactive token refresh before expiry.
+
+### Token lifecycle
+
+- **5-hour rolling TTL**: Each `hydrationId` expires 5 hours after it was issued or last refreshed. Call `/api/widget/session/rehydrate/refresh/` proactively (recommended: when less than 10 minutes remain) to renew the token silently.
+- **24-hour hard cap**: The original issue time is embedded in the token and cannot be changed across refreshes. After 24 hours from the original session creation, the token cannot be refreshed — the widget must re-authenticate by calling `/api/widget/session/<sessionId>/authenticate/` with the stored `sessionId`.
+
+### New and updated endpoints
+
+| Endpoint | Change |
+|---|---|
+| `POST /api/widget/session/` | Now returns `hydrationId` and `expiresIn` in addition to `sessionId` |
+| `POST /api/widget/session/<id>/authenticate/` | New — re-issues a `hydrationId` using the stored `sessionId` |
+| `PATCH /api/widget/session/update/` | New — replaces `PATCH /api/widget/session/<id>/` for state updates; uses `hydrationId` in body |
+| `POST /api/widget/session/delete/` | New — replaces `DELETE /api/widget/session/<id>/`; uses `hydrationId` in body |
+| `POST /api/widget/session/rehydrate/` | New — replaces `GET /api/widget/session/<id>/`; uses `hydrationId` in body |
+| `POST /api/widget/session/rehydrate/refresh/` | New — renews a valid `hydrationId` without requiring re-authentication |
+
+**Documentation**: [Session Saving & Restoration Guide](/guides/saving-progress)
+
+</Update>
+
 <Update label="May 2026" description="v3.12.0" tags={["Review Step", "Validation", "Analytics", "Observability", "Headless API"]}>
 
 ## Inline Schema Imports for Headless API
