@@ -389,5 +389,43 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         </ResponseField>
       </div>
     </ResponseField>
+
+    <ResponseField name="errorNavigator" type="object" default="{}">
+      Style overrides for the Error Navigator panel shown during the Review Step when [`enableNavigatingErrors`](/reference/settings/settings#enablenavigatingerrors) is `true`. All color values accept any valid CSS color string (hex, rgb, hsl, CSS variables, etc.).
+
+      <div className="ml-8">
+        <ResponseField name="errorColor" type="string" default="#CD0013">
+          Color applied to error-level indicator icons, error message text, and the error issue count badge.
+        </ResponseField>
+
+        <ResponseField name="warningColor" type="string" default="#CA8A04">
+          Color applied to warning-level indicator icons and warning message text.
+        </ResponseField>
+
+        <ResponseField name="accentColor" type="string" default="Dromo blue">
+          Color applied to the primary action buttons ("Replace", "Apply") and the active column filter chip border and text.
+        </ResponseField>
+
+        <ResponseField name="errorIconUrl" type="string | null" default="null">
+          URL of a custom image to display in place of the default exclamation circle icon for error rows. The image renders at 12×12 px with `object-contain`. Set to `null` to use the default icon.
+        </ResponseField>
+
+        <ResponseField name="warningIconUrl" type="string | null" default="null">
+          URL of a custom image to display in place of the default exclamation circle icon for warning rows. The image renders at 12×12 px with `object-contain`. Set to `null` to use the default icon.
+        </ResponseField>
+      </div>
+
+      ```javascript
+      styleOverrides: {
+        errorNavigator: {
+          errorColor: "#B91C1C",
+          warningColor: "#D97706",
+          accentColor: "#6366F1",
+          errorIconUrl: "https://cdn.example.com/error-icon.svg",
+          warningIconUrl: null,
+        }
+      }
+      ```
+    </ResponseField>
   </div>
 </ResponseField>
