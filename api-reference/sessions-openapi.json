@@ -1,0 +1,203 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Dromo Sessions API",
+    "description": "APIs for managing partial-import save/restore sessions.",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://app.dromo.io/api/widget/session/v2"
+    }
+  ],
+  "security": [
+    { "backend_license_key": [] }
+  ],
+  "tags": [
+    {
+      "name": "sessions",
+      "description": "Managing partial-import save/restore sessions"
+    }
+  ],
+  "paths": {
+    "/auth/": {
+      "post": {
+        "tags": ["sessions"],
+        "summary": "Create a session",
+        "operationId": "createSession",
+        "description": "Creates a new partial-import session and mints the initial hydration token to pass to the widget. Requires your **backend** license key — never call this client-side.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SessionCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SessionCreated" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{sessionId}/auth/": {
+      "post": {
+        "tags": ["sessions"],
+        "summary": "Resume a session (re-issue hydrationId)",
+        "operationId": "resumeSession",
+        "description": "Issues a fresh `hydrationId` for an existing session. Call this server-side when the user returns after their previous token has expired. The new token must belong to the same org as the session.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "UUID of the session to resume. Returned as `sessionId` when the session was created. Returns 404 if the session doesn't exist or hasn't been saved within 7 days.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "1b6acf28-8748-4120-8d7a-4b7846d5e487"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "expires_in": {
+                    "type": "integer",
+                    "example": 3600,
+                    "description": "New token TTL in seconds. Defaults to 21600 (6 hours)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fresh hydrationId issued",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TokenResponse" }
+              }
+            }
+          },
+          "404": { "description": "Session not found or expired (>7 days since last save)" }
+        }
+      }
+    },
+    "/{sessionId}/": {
+      "delete": {
+        "tags": ["sessions"],
+        "summary": "Delete a session",
+        "operationId": "deleteSession",
+        "description": "Permanently deletes the session and its saved state. All hydration tokens for this session are immediately invalidated — subsequent widget calls with the old `hydrationId` return 403. Idempotent: returns `{\"success\": true}` even if the session was already deleted.",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "UUID of the session to delete.",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "1b6acf28-8748-4120-8d7a-4b7846d5e487"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session deleted (or was already deleted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SessionCreate": {
+        "type": "object",
+        "properties": {
+          "import_identifier": {
+            "type": "string",
+            "example": "user_import_v1",
+            "description": "A label for your own bookkeeping (e.g. schema name, import type). Not used for lookups. Defaults to \"\"."
+          },
+          "expires_in": {
+            "type": "integer",
+            "example": 3600,
+            "description": "Hydration token TTL in seconds. Defaults to 21600 (6 hours)."
+          }
+        }
+      },
+      "SessionCreated": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "1b6acf28-8748-4120-8d7a-4b7846d5e487",
+            "description": "Backend session identifier. Persist this durably — needed to resume the session or delete it later."
+          },
+          "hydrationId": {
+            "type": "string",
+            "example": "<signed-token>",
+            "description": "Short-lived access token. Pass this to the widget to start or resume the session."
+          },
+          "expiresIn": {
+            "type": "integer",
+            "example": 21600,
+            "description": "Seconds until the hydrationId expires."
+          },
+          "savedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-06-19T18:00:00.000Z"
+          }
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "hydrationId": {
+            "type": "string",
+            "example": "<new-signed-token>",
+            "description": "The new access token. Pass this to the widget to resume the session."
+          },
+          "expiresIn": {
+            "type": "integer",
+            "example": 21600,
+            "description": "Seconds until the new hydrationId expires."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "backend_license_key": {
+        "type": "apiKey",
+        "name": "X-DROMO-LICENSE-KEY",
+        "in": "header",
+        "description": "Your **backend** license key (`is_for_backend_api=True`) from the [Dromo Dashboard](https://dashboard.dromo.io/). Never expose this client-side."
+      }
+    }
+  }
+}
