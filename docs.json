@@ -142,6 +142,13 @@
               "source": "api-reference/openapi.json",
               "directory": "api-reference"
             }
+          },
+          {
+            "group": "Sessions",
+            "openapi": {
+              "source": "api-reference/sessions-openapi.json",
+              "directory": "api-reference"
+            }
           }
         ]
       }

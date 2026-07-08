@@ -31,26 +31,44 @@ Sessions use a two-token model to prevent a leaked credential from granting perm
 
 | Token | Lifespan | Purpose |
 |---|---|---|
-| `sessionId` | Long-lived (7-day session TTL) | Backend session identifier — persist this durably; passed to `/authenticate/` to obtain a new `hydrationId` after the 24h hard cap |
-| `hydrationId` | Short-lived (5-hour rolling TTL, 24h absolute cap) | Access token — sent with every session API call |
+| `sessionId` | Long-lived (7-day session TTL) | Backend session identifier — persist this durably; used to resume or delete a session |
+| `hydrationId` | Short-lived (configurable TTL, default 6 hours) | Access token — passed to the widget to start or resume a session |
 
-When a session is created, both tokens are returned. The `hydrationId` is what you use to read, update, and delete the session. The `sessionId` is a backend identifier kept in reserve — pass it to the `/authenticate/` endpoint when the `hydrationId` hard cap is reached and can no longer be refreshed.
+When a session is created, both tokens are returned. Pass the `hydrationId` to the widget. Store the `sessionId` server-side so you can mint a fresh `hydrationId` whenever the user returns.
+
+<Warning>
+  All session endpoints require your **backend** license key (`is_for_backend_api=True`). Never call these from client-side code.
+</Warning>
 
 ---
 
 ## Starting a session
 
-Call `POST /api/widget/session/` with your license key. The response includes a ready-to-use `hydrationId` — no separate authentication step is required on first use.
+Call `POST /api/widget/session/v2/auth/` from your backend. The response includes a `sessionId` to store and a `hydrationId` to pass to the widget.
 
 ```bash
-curl -X POST https://app.dromo.io/api/widget/session/ \
-  -H "X-Dromo-License-Key: YOUR_LICENSE_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "import_identifier": "contacts-import-v1",
-    "rehydrate_state": { "stage": "COLUMN_MATCHING", ... }
+curl --request POST \
+  --url https://app.dromo.io/api/widget/session/v2/auth/ \
+  --header 'X-DROMO-LICENSE-KEY: YOUR_BACKEND_LICENSE_KEY'
+```
+
+Optionally provide an `import_identifier` and a custom token TTL:
+
+```bash
+curl --request POST \
+  --url https://app.dromo.io/api/widget/session/v2/auth/ \
+  --header 'X-DROMO-LICENSE-KEY: YOUR_BACKEND_LICENSE_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "import_identifier": "user_import_v1",
+    "expires_in": 3600
   }'
 ```
+
+| Field | Required | Description |
+|---|---|---|
+| `import_identifier` | No | A label for your own bookkeeping (e.g. schema name, import type). Not used for lookups. Defaults to `""`. |
+| `expires_in` | No | Hydration token TTL in seconds. Defaults to `21600` (6 hours). |
 
 **Response:**
 
@@ -58,143 +76,82 @@ curl -X POST https://app.dromo.io/api/widget/session/ \
 {
   "sessionId":   "1b6acf28-8748-4120-8d7a-4b7846d5e487",
   "hydrationId": "<signed-token>",
-  "expiresIn":   18000,
+  "expiresIn":   21600,
   "savedAt":     "2026-06-19T18:00:00.000Z"
 }
 ```
 
 Store both values:
 
-- **`sessionId`** — persist this (e.g. `localStorage`). It is only needed when the `hydrationId` hard cap is reached.
-- **`hydrationId`** — keep this in memory. Pass it to every subsequent session call.
-- **`expiresIn`** — use this to schedule a proactive token refresh (see [Refreshing the token](#refreshing-the-token) below).
-
----
-
-## Updating session state
-
-Send the current widget state on every auto-save tick:
-
-```bash
-curl -X PATCH https://app.dromo.io/api/widget/session/update/ \
-  -H "X-Dromo-License-Key: YOUR_LICENSE_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "hydrationId": "<signed-token>",
-    "import_identifier": "contacts-import-v1",
-    "rehydrate_state": {
-      "stage": "DATA_REVIEW",
-      "uploadId": "550e8400-e29b-41d4-a716-446655440000",
-      "selectedSheetId": "sheet_0",
-      "rawDataHeaderRow": 0,
-      "hasInitialData": false,
-      "fields": {
-        "email": { "matchedColumnIndex": 2 },
-        "name":  { "matchedColumnIndex": 0 }
-      }
-    }
-  }'
-```
-
-**Response:**
-
-```json
-{ "savedAt": "2026-06-19T18:04:30.000Z" }
-```
-
-Both `rehydrate_state` and `import_identifier` are optional — omit either if only one needs updating.
+- **`sessionId`** — persist this server-side. It is needed to resume or delete the session later.
+- **`hydrationId`** — pass this to the widget to begin the session.
 
 ---
 
 ## Restoring a session
 
-When the user returns to resume an import, first re-issue a `hydrationId` for the stored `sessionId`, then fetch the saved state.
+When the user returns to resume an import, mint a fresh `hydrationId` from your backend using the stored `sessionId`, then pass it to the widget.
 
-### Step 1 — Authenticate
+### Step 1 — Re-issue a hydrationId
 
 ```bash
-curl -X POST https://app.dromo.io/api/widget/session/SESSION_ID/authenticate/ \
-  -H "X-Dromo-License-Key: YOUR_LICENSE_KEY"
+curl --request POST \
+  --url https://app.dromo.io/api/widget/session/v2/SESSION_ID/auth/ \
+  --header 'X-DROMO-LICENSE-KEY: YOUR_BACKEND_LICENSE_KEY'
 ```
+
+Optionally set a custom TTL:
+
+```bash
+curl --request POST \
+  --url https://app.dromo.io/api/widget/session/v2/SESSION_ID/auth/ \
+  --header 'X-DROMO-LICENSE-KEY: YOUR_BACKEND_LICENSE_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{ "expires_in": 3600 }'
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `SESSION_ID` (URL) | Yes | UUID of the session to resume. Returns 404 if the session doesn't exist or hasn't been saved within 7 days. |
+| `expires_in` | No | New token TTL in seconds. Defaults to `21600` (6 hours). |
 
 **Response:**
 
 ```json
 {
   "hydrationId": "<signed-token>",
-  "expiresIn":   18000
+  "expiresIn":   21600
 }
 ```
 
-### Step 2 — Fetch state
-
-```bash
-curl -X POST https://app.dromo.io/api/widget/session/rehydrate/ \
-  -H "X-Dromo-License-Key: YOUR_LICENSE_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{ "hydrationId": "<signed-token>" }'
-```
-
-**Response:**
-
-```json
-{
-  "sessionId":       "1b6acf28-8748-4120-8d7a-4b7846d5e487",
-  "rehydrateState":  { "stage": "DATA_REVIEW", "uploadId": "...", ... },
-  "importIdentifier": "contacts-import-v1",
-  "savedAt":         "2026-06-19T18:04:30.000Z"
-}
-```
-
-Pass `rehydrateState` to the `sessionId` setting when initialising the importer:
+### Step 2 — Pass to the widget
 
 ```javascript
 const importer = new DromoUploader("YOUR_LICENSE_KEY", fields, {
   backendSyncMode: "FULL_DATA",
   savePartialSession: true,
   importIdentifier: "contacts-import-v1",
-  sessionId: savedSessionId,    // triggers rehydration
+  hydrationId: freshHydrationId,
 });
 ```
 
----
-
-## Refreshing the token
-
-The `hydrationId` expires after 5 hours. Refresh it proactively while it is still valid — do not wait until it has already expired.
-
-**Recommended:** refresh when `expiresIn` drops below 600 seconds (10 minutes).
-
-```bash
-curl -X POST https://app.dromo.io/api/widget/session/rehydrate/refresh/ \
-  -H "X-Dromo-License-Key: YOUR_LICENSE_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{ "hydrationId": "<current-signed-token>" }'
-```
-
-**Response:**
-
-```json
-{
-  "hydrationId": "<new-signed-token>",
-  "expiresIn":   18000
-}
-```
-
-Replace the stored `hydrationId` with the new value. The 24-hour hard cap is preserved across refreshes — once it is exceeded, all refresh attempts return a 401 and you must re-authenticate via `/authenticate/` using the stored `sessionId`.
+The widget uses the `hydrationId` to fetch the saved state and resume from where the user left off.
 
 ---
 
 ## Deleting a session
 
-Sessions are automatically cleared when an import completes. To delete manually:
+Sessions are automatically cleared when an import completes. To delete manually, send a `DELETE` request with the session's UUID and your **backend** license key:
 
 ```bash
-curl -X POST https://app.dromo.io/api/widget/session/delete/ \
-  -H "X-Dromo-License-Key: YOUR_LICENSE_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{ "hydrationId": "<signed-token>" }'
+curl --request DELETE \
+  --url https://app.dromo.io/api/widget/session/v2/SESSION_ID/ \
+  --header 'X-DROMO-LICENSE-KEY: YOUR_BACKEND_LICENSE_KEY'
 ```
+
+| Field | Required | Description |
+|---|---|---|
+| `SESSION_ID` (URL) | Yes | UUID of the session to delete. |
 
 **Response:**
 
@@ -202,30 +159,25 @@ curl -X POST https://app.dromo.io/api/widget/session/delete/ \
 { "success": true }
 ```
 
-This call is idempotent — it returns success even if the session no longer exists.
+All hydration tokens for the session are immediately invalidated — any subsequent widget calls with the old `hydrationId` return 403. This call is idempotent and returns `success: true` even if the session was already deleted.
 
 ---
 
 ## Error reference
 
-| Error message | Meaning | Action |
+| Error | Meaning | Action |
 |---|---|---|
-| `Hydration token has expired.` | Rolling 5h TTL exceeded | Call `/rehydrate/refresh/` or `/authenticate/` |
-| `Session has exceeded the maximum duration.` | Hard 24h cap exceeded | Call `/authenticate/` with stored `sessionId` |
-| `Invalid hydration token.` | Token tampered with or malformed | Call `/authenticate/` with stored `sessionId` |
-| `Session not found or expired.` | Session deleted or older than 7 days | Start a new session |
+| `404` on resume or delete | Session not found or not saved within 7 days | Start a new session |
+| `403` on widget call | `hydrationId` invalidated (session deleted or token expired) | Re-issue a `hydrationId` via the resume endpoint, or start a new session |
 
 ---
 
 ## Full endpoint reference
 
-All endpoints require `X-Dromo-License-Key`.
+All endpoints require `X-DROMO-LICENSE-KEY` (backend license key).
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/api/widget/session/` | License key | Create a new session. Returns `sessionId`, `hydrationId`, `expiresIn`, `savedAt`. |
-| `POST` | `/api/widget/session/<sessionId>/authenticate/` | License key | Re-issue a `hydrationId` for a stored `sessionId`. Use after the 24h hard cap. |
-| `PATCH` | `/api/widget/session/update/` | License key + `hydrationId` | Save updated session state. |
-| `POST` | `/api/widget/session/rehydrate/` | License key + `hydrationId` | Fetch saved state for restoration. |
-| `POST` | `/api/widget/session/rehydrate/refresh/` | License key + `hydrationId` | Renew a valid `hydrationId` before it expires. |
-| `POST` | `/api/widget/session/delete/` | License key + `hydrationId` | Delete a session. Idempotent. |
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/widget/session/v2/auth/` | Create a new session. Returns `sessionId`, `hydrationId`, `expiresIn`, `savedAt`. |
+| `POST` | `/api/widget/session/v2/{sessionId}/auth/` | Re-issue a `hydrationId` for an existing session. |
+| `DELETE` | `/api/widget/session/v2/{sessionId}/` | Delete a session and invalidate all its tokens. Idempotent. |
