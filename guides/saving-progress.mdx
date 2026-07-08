@@ -31,10 +31,10 @@ Sessions use a two-token model to prevent a leaked credential from granting perm
 
 | Token | Lifespan | Purpose |
 |---|---|---|
-| `sessionId` | Long-lived (7-day session TTL) | Private identifier — stored locally, used only to re-authenticate after the 24h hard cap |
+| `sessionId` | Long-lived (7-day session TTL) | Backend session identifier — persist this durably; passed to `/authenticate/` to obtain a new `hydrationId` after the 24h hard cap |
 | `hydrationId` | Short-lived (5-hour rolling TTL, 24h absolute cap) | Access token — sent with every session API call |
 
-When a session is created, both tokens are returned. The `hydrationId` is what you use to read, update, and delete the session. The `sessionId` is kept in reserve for when the `hydrationId` can no longer be refreshed.
+When a session is created, both tokens are returned. The `hydrationId` is what you use to read, update, and delete the session. The `sessionId` is a backend identifier kept in reserve — pass it to the `/authenticate/` endpoint when the `hydrationId` hard cap is reached and can no longer be refreshed.
 
 ---
 
