@@ -291,6 +291,25 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
   </Check>
 </ResponseField>
 
+<ResponseField name="transformDataPrompts" type="string[] | null" default="null">
+  An array of custom prompt strings displayed as clickable suggestions in the AI "Transform Data" modal. When set to a non-empty array, these strings replace the built-in localized prompts shown to the user. `null` or an empty array falls back to the default prompts.
+
+  Requires [`enableUserTransformations`](#enableusertransformations) to be `true`.
+
+  ```javascript
+  settings: {
+    reviewStep: {
+      enableUserTransformations: true,
+      transformDataPrompts: [
+        "Remove all rows where the email domain is not @company.com",
+        "Normalize all phone numbers to E.164 format",
+        "Fill blank 'country' cells with 'United States'",
+      ],
+    }
+  }
+  ```
+</ResponseField>
+
 <ResponseField name="highlightAutoFixes" type="boolean" default="false">
   If true, Dromo will highlight any cell that had substantive changes made by automatic transformations, such as:
 
