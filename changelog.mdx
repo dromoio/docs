@@ -2,6 +2,20 @@
 title: "Changelog"
 ---
 
+<Update label="July 2026" description="v3.13.0" tags={["Customization", "Styling", "AI", "Review Step", "Prompts"]}>
+
+## Session Hydration Security
+
+Sessions now support a short-lived signed **`hydrationId`** token as a more secure alternative to passing the raw `sessionId` UUID in API URLs. The `sessionId`-based approach remains supported — `hydrationId` is an opt-in improvement that limits the impact of a leaked credential by scoping access to a short-lived token.
+
+- **`hydrationId`**: A signed token returned on session create; pass it to the widget instead of the raw `sessionId`
+- **`expiresIn`**: Token TTL in seconds, configurable per-request
+- **`sessionId`**: Unchanged long-lived identifier — store it server-side to re-issue a fresh `hydrationId` whenever needed
+
+See the [Session Saving & Restoration Guide](/guides/saving-progress) for the full security model and endpoint reference.
+
+</Update>
+
 <Update label="June 2026" description="v3.13.0" tags={["Customization", "Styling", "AI", "Review Step", "Prompts"]}>
 
 ## Error Navigator Style Overrides & Custom AI Transform Prompts
