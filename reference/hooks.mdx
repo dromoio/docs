@@ -6,7 +6,7 @@ description: "Dromo's Hooks help you reformat, validate, and correct data automa
 Hooks are a powerful feature that allow you to programmatically validate, transform, and enhance data during the import process. They integrate seamlessly with [field validation](/reference/fields/field-validators) and [results handling](/reference/results) to give you complete control over your data pipeline.
 
 <Tip>
-  Looking for simpler validation options? Check out [field validators](/reference/fields/field-validators) for built-in validation rules, or see the [validation guide](/guides/validation) for best practices.
+  Looking for simpler validation options? Check out [field validators](/reference/fields/field-validators) for built-in validation rules, or see [validating with external data](/guides/validate-external-data) for a row hook example.
 </Tip>
 
 The diagram below shows the general flow for Dromo. Column hooks run first and only once after the "column matching" stage. After these run, row hooks will run for each record. Row hooks will also run on a record after it is updated by the user. If you only want to run a row hook on init or on change, you can configure it accordingly.
