@@ -24,9 +24,8 @@ dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {
 });
 
 dromo.registerRowHook(function (data, mode) {
-  let out: IRowHookOutput = { row: {} };
+  let out: IRowHookOutput = { row: { ...data.row } };
   if (data.row.firstName && data.row.lastName && mode === "init") {
-    out.row = {};
     out.row.fullName = {
       value: data.row.firstName.value + " " + data.row.lastName.value,
       info: [
@@ -65,9 +64,8 @@ dromo.registerRowHook(function (data, mode) {
   ]}
   rowHooks={[
     (data: IRowHookInput, mode: string) => {
-      let out: IRowHookOutput = { row: {} };
+      let out: IRowHookOutput = { row: { ...data.row } };
       if (data.row.firstName && data.row.lastName && mode === 'init') {
-        out.row = {};
         out.row.fullName = {
           value: data.row.firstName.value + " " + data.row.lastName.value,
           info: [
