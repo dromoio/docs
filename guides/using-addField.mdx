@@ -1,5 +1,6 @@
 ---
 title: "Concatenating and Splitting Fields via addField"
+description: "Create computed or dynamic fields during the review stage with step hooks and populate them with a correctly shaped row-hook output."
 ---
 
 This guide demonstrates how to use step hooks to add or remove fields midway through an import.
@@ -23,9 +24,8 @@ dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {
 });
 
 dromo.registerRowHook(function (data, mode) {
-  let out: IRowHookOutput = { row: {} };
+  let out: IRowHookOutput = { row: { ...data.row } };
   if (data.row.firstName && data.row.lastName && mode === "init") {
-    out.row = {};
     out.row.fullName = {
       value: data.row.firstName.value + " " + data.row.lastName.value,
       info: [
@@ -64,9 +64,8 @@ dromo.registerRowHook(function (data, mode) {
   ]}
   rowHooks={[
     (data: IRowHookInput, mode: string) => {
-      let out: IRowHookOutput = { row: {} };
+      let out: IRowHookOutput = { row: { ...data.row } };
       if (data.row.firstName && data.row.lastName && mode === 'init') {
-        out.row = {};
         out.row.fullName = {
           value: data.row.firstName.value + " " + data.row.lastName.value,
           info: [
