@@ -3,6 +3,20 @@ title: "Changelog"
 description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
+<Update label="August 2026" description="v3.13.0" tags={["Performance", "Data Processing"]}>
+
+## Batch Row Hooks for Large Imports
+
+Large imports can now be transformed in bounded chunks during initialization, avoiding the need to pass the entire dataset to one bulk callback.
+
+- **`registerBatchRowHook()`**: Register a JavaScript SDK callback that receives one slice of rows and its one-based batch number
+- **`batchRowHooks`**: Supply the same initialization-only callbacks through the React prop or Angular input
+- **`batchRowHookBatchSize`**: Set the maximum rows per callback invocation with a positive integer; defaults to `2000`
+
+See the [Batch row hooks reference](/reference/hooks#batch-row-hooks) for callback signatures and examples.
+
+</Update>
+
 <Update label="July 2026" description="v3.13.0" tags={["Customization", "Styling", "AI", "Beta", "Review Step", "Prompts"]}>
 
 ## Dr.Dromo Enters Limited Beta

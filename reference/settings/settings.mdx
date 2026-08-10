@@ -100,6 +100,12 @@ Dromo uses industry-standard best practices to secure your data on our servers.
   If the number of rows in the file exceed this number, the user will be warned and the excess rows will be dropped.
 </ResponseField>
 
+<ResponseField name="batchRowHookBatchSize" type="number" default="2000">
+  Sets the maximum number of rows passed to each [batch row hook](/reference/hooks#batch-row-hooks) invocation. The value must be a positive integer.
+
+  This setting has no effect unless a batch row hook is registered. Batch row hooks run only once during import initialization and receive a one-based batch number as their second argument.
+</ResponseField>
+
 <ResponseField name="maxFileSize" type="number" default="1073741824">
   Specifies the maximum file size, in bytes, that can be imported. If the user selects a larger file, they will be shown an error message.
 

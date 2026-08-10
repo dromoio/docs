@@ -44,7 +44,11 @@ Once you have an instance, you can register callbacks and configure its behavior
 </ResponseField>
 
 <ResponseField name="registerBulkRowHook(callback: BulkRowHookFn) => void">
-  Used to register a bulk [row hook](/reference/hooks#standard-row-hooks) callback.
+  Used to register a [bulk row hook](/reference/hooks#bulk-row-hooks) callback.
+</ResponseField>
+
+<ResponseField name="registerBatchRowHook(callback: BatchRowHookFn) => void">
+  Registers an initialization-only [batch row hook](/reference/hooks#batch-row-hooks). The callback receives one bounded slice of rows and its one-based batch number. Configure the maximum slice size with [`batchRowHookBatchSize`](/reference/settings/settings#param-batch-row-hook-batch-size).
 </ResponseField>
 
 <ResponseField name="registerStepHook(stepHookType: &quot;UPLOAD_STEP&quot; | &quot;REVIEW_STEP&quot; | &quot;REVIEW_STEP_POST_HOOKS&quot;, callback: StepHookFn) => void">
@@ -97,4 +101,4 @@ With Dromo fully configured, call `open()` on the uploader instance to start the
 
 ```javascript
 dromo.open();
-``` 
+```
