@@ -2,6 +2,19 @@
 title: "Changelog"
 ---
 
+<Update label="August 2026" description="v3.13.0" tags={["File Parsing", "Upload Step"]}>
+
+## Combined Multi-File Uploads
+
+Users can now select multiple CSV or Excel files and import their combined rows through one mapping and review flow.
+
+- **`allowMultiUploads`**: Enables multiple file selection in the Upload Step. The header row selected for the first file is applied to every file, headers are unioned by name, and missing columns are filled with empty values before the normal import steps continue.
+- **Combined limits**: `maxRecords` applies to the total number of combined data rows, while `maxFileSize` continues to apply to each selected file.
+
+See [`allowMultiUploads`](/reference/settings/settings#param-allow-multi-uploads) in the Settings reference for behavior and Excel sheet requirements.
+
+</Update>
+
 <Update label="July 2026" description="v3.13.0" tags={["Customization", "Styling", "AI", "Review Step", "Prompts"]}>
 
 ## Session Hydration Security

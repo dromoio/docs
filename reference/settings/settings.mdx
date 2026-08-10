@@ -40,6 +40,21 @@ description: "Settings are supplied as an object to the Dromo instance on initia
   Show or hide the file dropzone that appears when the importer is started. If this is set to `true`, then there will only be a manual input table on the page and the dropzone will be hidden. The `manualInputDisabled` and `manualInputOnly` settings cannot both be set to `true`.
 </ResponseField>
 
+<ResponseField name="allowMultiUploads" type="boolean" default="false">
+  Allows a user to select multiple CSV or Excel files in the Upload Step and combine them into one import.
+
+  Dromo previews the first file in the Header Selection Step. When the user selects a header row, Dromo applies that same row number to every selected file, creates the union of all headers, and aligns each file's rows by header name. Columns missing from a file are filled with empty values. Column matching, validation, review, hooks, and result delivery then run once against the combined dataset.
+
+  ```javascript
+  const settings = {
+    importIdentifier: "contacts",
+    allowMultiUploads: true,
+  };
+  ```
+
+  Named headers must be unique within each file. If an Excel workbook contains multiple sheets, its selected sheet must have the same name as the sheet selected in the first workbook, or you must configure [`uploadStep.sheetOverride`](#param-sheet-override).
+</ResponseField>
+
 <ResponseField name="backendSyncMode" type='"FULL_DATA" | "MAPPINGS_ONLY" | "DISABLED"' default='"DISABLED"'>
   The `backendSyncMode` setting controls whether the upload data is sent to the Dromo server for storage, if only the column mapping is sent, or if all processing is completed in the browser.
 
@@ -95,7 +110,7 @@ Dromo uses industry-standard best practices to secure your data on our servers.
 </ResponseField>
 
 <ResponseField name="maxRecords" type="number" default="null">
-  Specify the maximum number of records that a single file can import. This value does not include the headers of the file.
+  Specify the maximum number of records an import can contain. This value does not include file headers. When [`allowMultiUploads`](#param-allow-multi-uploads) is enabled, the limit applies to the combined rows from all selected files.
 
   If the number of rows in the file exceed this number, the user will be warned and the excess rows will be dropped.
 </ResponseField>
