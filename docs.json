@@ -2,6 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
   "name": "Dromo Docs",
+  "description": "Developer documentation for integrating Dromo's spreadsheet importer, configuring schemas and validations, transforming data, managing import sessions, and using Dromo APIs and SDKs.",
   "colors": {
     "primary": "#2563EB",
     "light": "#60A5FA",
@@ -84,6 +85,7 @@
               "guides/custom-steps",
               "guides/custom-styling",
               "guides/bring-your-own-storage",
+              "guides/handling-results",
               "guides/zapier-integration",
               "guides/using-manyToOne",
               "guides/using-transform-data",

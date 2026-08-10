@@ -47,6 +47,7 @@
       "get": {
         "operationId": "listImportSchemas",
         "summary": "Get all import schemas",
+        "description": "Returns all saved import schemas available to the authenticated Dromo organization.",
         "tags": [
           "import-schemas"
         ],
@@ -69,6 +70,7 @@
       "post": {
         "operationId": "createImportSchema",
         "summary": "Create a new import schema",
+        "description": "Creates a saved import schema with fields, settings, and optional hooks for reuse in Dromo imports.",
         "tags": [
           "import-schemas"
         ],
@@ -99,6 +101,7 @@
       "get": {
         "operationId": "getImportSchema",
         "summary": "Get an import schema",
+        "description": "Returns one saved import schema by ID, including its fields, settings, and hooks.",
         "tags": [
           "import-schemas"
         ],
@@ -134,6 +137,7 @@
       "put": {
         "operationId": "updateImportSchema",
         "summary": "Update an import schema",
+        "description": "Replaces the fields, settings, and hooks of an existing saved import schema identified by ID.",
         "tags": [
           "import-schemas"
         ],
@@ -178,6 +182,7 @@
       "delete": {
         "operationId": "deleteImportSchema",
         "summary": "Delete an import schema",
+        "description": "Permanently deletes a saved import schema identified by ID.",
         "tags": [
           "import-schemas"
         ],
@@ -205,6 +210,7 @@
       "get": {
         "operationId": "listUploads",
         "summary": "Get all uploads",
+        "description": "Lists completed Dromo uploads for the authenticated organization, optionally filtered by a start and end date.",
         "tags": [
           "uploads"
         ],
@@ -263,6 +269,7 @@
       "get": {
         "operationId": "getUploadMetadata",
         "summary": "Get upload metadata",
+        "description": "Returns metadata for a completed Dromo upload, including information about its schema, user, and results.",
         "tags": [
           "uploads"
         ],
@@ -295,6 +302,7 @@
       "post": {
         "operationId": "deleteUpload",
         "summary": "Delete an upload permanently",
+        "description": "Permanently deletes a completed upload and its stored data from Dromo.",
         "tags": [
           "uploads"
         ],
@@ -320,6 +328,7 @@
       "get": {
         "operationId": "getUploadUrl",
         "summary": "Get presigned download URL for upload data",
+        "description": "Creates a temporary presigned URL for securely downloading the data from a completed upload.",
         "tags": [
           "uploads"
         ],
@@ -362,6 +371,7 @@
           "headless"
         ],
         "summary": "Retrieve headless import",
+        "description": "Returns the current status and available result or review information for a headless import by ID.",
         "operationId": "retrieveHeadlessImport",
         "parameters": [
           {
@@ -397,6 +407,7 @@
           "headless"
         ],
         "summary": "Delete headless import",
+        "description": "Permanently deletes a headless import identified by ID.",
         "operationId": "deleteHeadlessImport",
         "parameters": [
           {
@@ -425,6 +436,7 @@
       "get": {
         "operationId": "getHeadlessImportUrl",
         "summary": "Get presigned download URL for headless import data",
+        "description": "Creates a temporary presigned URL for downloading the processed data from a successful headless import.",
         "tags": [
           "headless"
         ],
@@ -467,6 +479,7 @@
           "headless"
         ],
         "summary": "List headless imports",
+        "description": "Returns a paginated list of headless imports for the authenticated Dromo organization.",
         "operationId": "listHeadlessImports",
         "parameters": [
           {
@@ -540,6 +553,7 @@
           "headless"
         ],
         "summary": "Create a new headless import",
+        "description": "Starts a headless import from an uploaded file or data payload using a saved or inline schema.",
         "operationId": "createHeadlessImport",
         "requestBody": {
           "content": {
@@ -651,6 +665,7 @@
       "get": {
         "tags": ["sftp-credentials"],
         "summary": "List SFTP credentials",
+        "description": "Returns the SFTP credential configurations available to the authenticated Dromo organization.",
         "operationId": "listSftpCredentials",
         "responses": {
           "200": {
@@ -690,6 +705,7 @@
       "post": {
         "tags": ["sftp-credentials"],
         "summary": "Create SFTP credentials",
+        "description": "Creates an SFTP credential configuration for connecting Dromo to an SFTP server.",
         "operationId": "createSftpCredentials",
         "requestBody": {
           "required": true,
@@ -735,6 +751,7 @@
       "get": {
         "tags": ["sftp-credentials"],
         "summary": "Retrieve SFTP credentials",
+        "description": "Returns one SFTP credential configuration by ID without exposing secret credential values.",
         "operationId": "retrieveSftpCredentials",
         "parameters": [
           {
@@ -768,6 +785,7 @@
       "put": {
         "tags": ["sftp-credentials"],
         "summary": "Update SFTP credentials",
+        "description": "Updates an existing SFTP credential configuration identified by ID.",
         "operationId": "updateSftpCredentials",
         "parameters": [
           {
@@ -811,6 +829,7 @@
       "delete": {
         "tags": ["sftp-credentials"],
         "summary": "Delete SFTP credentials",
+        "description": "Deletes an SFTP credential configuration identified by ID.",
         "operationId": "deleteSftpCredentials",
         "parameters": [
           {
@@ -839,6 +858,7 @@
       "post": {
         "tags": ["sftp-credentials"],
         "summary": "Test SFTP connection",
+        "description": "Tests whether Dromo can connect to the SFTP server using the selected credential configuration.",
         "operationId": "testSftpConnection",
         "parameters": [
           {
@@ -881,6 +901,7 @@
       "get": {
         "tags": ["sftp-connectors"],
         "summary": "List SFTP connectors",
+        "description": "Returns the automated SFTP import connectors configured for the authenticated Dromo organization.",
         "operationId": "listSftpConnectors",
         "responses": {
           "200": {
@@ -920,6 +941,7 @@
       "post": {
         "tags": ["sftp-connectors"],
         "summary": "Create SFTP connector",
+        "description": "Creates an automated SFTP connector that imports files using configured credentials and schema settings.",
         "operationId": "createSftpConnector",
         "requestBody": {
           "required": true,
@@ -968,6 +990,7 @@
       "get": {
         "tags": ["sftp-connectors"],
         "summary": "Retrieve SFTP connector",
+        "description": "Returns one automated SFTP connector and its import configuration by ID.",
         "operationId": "retrieveSftpConnector",
         "parameters": [
           {
@@ -1001,6 +1024,7 @@
       "put": {
         "tags": ["sftp-connectors"],
         "summary": "Update SFTP connector",
+        "description": "Updates an existing automated SFTP connector identified by ID.",
         "operationId": "updateSftpConnector",
         "parameters": [
           {
@@ -1044,6 +1068,7 @@
       "delete": {
         "tags": ["sftp-connectors"],
         "summary": "Delete SFTP connector",
+        "description": "Deletes an automated SFTP connector identified by ID.",
         "operationId": "deleteSftpConnector",
         "parameters": [
           {
@@ -2195,4 +2220,4 @@
       }
     }
   }
-} 
+}
