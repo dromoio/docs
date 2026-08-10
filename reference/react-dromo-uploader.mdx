@@ -33,6 +33,10 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
   An array of [bulk row hook](/reference/hooks#bulk-row-hooks) functions.
 </ResponseField>
 
+<ResponseField name="batchRowHooks" type="BatchRowHook[]" href="/reference/hooks#batch-row-hooks">
+  An array of initialization-only [batch row hook](/reference/hooks#batch-row-hooks) functions. Each function receives a bounded slice of rows and its one-based batch number.
+</ResponseField>
+
 <ResponseField name="columnHooks" type="object[]" href="/reference/hooks#column-hooks">
   An array of [column hook](/reference/hooks#column-hooks) objects. Each object has two entries:
 
@@ -82,4 +86,4 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
 
 <ResponseField name="importIdentifier" type="string">
   Overrides the `importIdentifier` setting if a `schemaId` is also provided.
-</ResponseField> 
+</ResponseField>
