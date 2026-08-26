@@ -1,9 +1,9 @@
 ---
 title: "Using the Saved Schema API"
-description: "Create, update, and delete saved schemas with correctly shaped names, fields, settings, validators, and serialized row, bulk row, column, and step hook callbacks."
+description: "Create, update, and delete saved schemas with correctly shaped names, fields, settings, validators, and serialized hook callbacks."
 ---
 
-Working with the API allows you to access the complete array of settings and options that Dromo provides.
+Working with the API lets you create and manage reusable import schemas. Saved schemas support the serializable fields, settings, and hooks defined by the Saved Schema API.
 
 ## The API
 
@@ -26,9 +26,11 @@ Schemas have the following fields:
 </ResponseField>
 
 <ResponseField name="settings" type="Settings" required>
-  Saved schemas accept the same settings that can be provided to the browser SDK.
+  Saved schemas accept the serializable settings defined by the API schema. This includes the `uploadStep`, `matchingStep`, `matchValuesStep`, and `reviewStep` objects and `autoMapHeaders`.
 
-  See [Settings](/reference/settings/settings) for more details.
+  Some browser-runtime settings are not accepted by the saved-schema serializer. These currently include `initialFile`, `savePartialSession`, `textOverrides`, `allowEmptySubmit`, and `batchRowHookBatchSize`.
+
+  See [Settings](/reference/settings/settings) for the full browser SDK settings reference.
 </ResponseField>
 
 <ResponseField name="fields" type="Field[]" required>
@@ -38,7 +40,7 @@ Schemas have the following fields:
 </ResponseField>
 
 <ResponseField name="hooks" type="object">
-  You can define any or all of the [hooks](/reference/hooks) that Dromo provides using the Saved Schema API.
+  You can define the serializable [hooks](/reference/hooks) listed below using the Saved Schema API. Batch row hooks are currently available only through embedded SDK integrations and cannot be stored in a saved schema or used by a headless import.
 
   The hook function JavaScript source is passed as a string, which must evaluate to a valid JavaScript function. See the [defining hooks section](#defining-hooks) for examples.
 
@@ -75,11 +77,11 @@ Schemas have the following fields:
     <ResponseField name="stepHooks" type="object[]">
       An array of objects defining [step hooks](/reference/hooks#step-hooks).
 
-      Each step hook has a `type` (one of `"UPLOAD_STEP"`, `"REVIEW_STEP"`, or `"REVIEW_STEP_POST_HOOKS"`) and a `callback` defining a valid JavaScript column hook function.
+      Each step hook has a supported `type` and a `callback` defining a valid JavaScript step hook function.
 
       <Expandable title="Step Hook Object">
         <ResponseField name="type" type="string" required>
-          One of: `"UPLOAD_STEP"`, `"REVIEW_STEP"`, or `"REVIEW_STEP_POST_HOOKS"`
+          One of: `"UPLOAD_STEP"`, `"REVIEW_STEP"`, `"REVIEW_STEP_POST_HOOKS"`, or `"REVIEW_STEP_PRE_SUBMIT"`.
         </ResponseField>
         <ResponseField name="callback" type="string" required>
           Valid JavaScript step hook function.
@@ -89,6 +91,10 @@ Schemas have the following fields:
 
     <ResponseField name="beforeFinishCallback" type="string">
       A string defining a valid JavaScript [before finish callback](/reference/results#the-beforefinish-callback).
+    </ResponseField>
+
+    <ResponseField name="fileParsers" type="object[]">
+      An array of [custom file parser](/reference/custom-file-parsers) objects. Each object contains an `extensions` string array and a serialized `parseFile` callback.
     </ResponseField>
   </Expandable>
 </ResponseField>

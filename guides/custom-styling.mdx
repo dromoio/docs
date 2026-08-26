@@ -422,6 +422,7 @@ Dropdown menus (select components) are used for field mapping, choosing data typ
 - **`backgroundColor`** - Background color of the closed dropdown
 - **`borderColor`** - Border color around the dropdown
 - **`textColor`** - Text color for the selected value
+- **`errorBorderColor`** - Border color when the control is in an error state
 - **`menuBackgroundColor`** - Background color of the opened dropdown menu
 - **`optionHoverBackgroundColor`** - Background color when hovering over an option
 - **`optionSelectedBackgroundColor`** - Background color for the currently selected option
@@ -438,6 +439,7 @@ const settings = {
       backgroundColor: "#ffffff",
       borderColor: "#d1d5db",
       textColor: "#374151",
+      errorBorderColor: "#dc2626",
       menuBackgroundColor: "#ffffff",
       optionHoverBackgroundColor: "#f3f4f6",
       optionSelectedBackgroundColor: "#eff6ff"
@@ -461,6 +463,9 @@ The dropzone is the drag-and-drop area on the upload screen where users can drop
 - **`backgroundColor`** - Background color
 - **`color`** - Text color for the dropzone message
 - **`outline`** - CSS outline property (e.g., "none", "2px solid blue")
+- **`activeBorderColor`** - Border color while a file is being dragged over the dropzone
+- **`acceptBorderColor`** - Border color when the dragged file is accepted
+- **`rejectBorderColor`** - Border color when the dragged file is rejected
 
 <Tip>
   A dashed border is commonly used for dropzones to visually distinguish them as interactive upload areas. Consider using your brand's accent color for the border when a file is being dragged over the dropzone.
@@ -476,7 +481,10 @@ const settings = {
       borderStyle: "dashed",
       backgroundColor: "#f9fafb",
       color: "#374151",
-      outline: "none"
+      outline: "none",
+      activeBorderColor: "#3b82f6",
+      acceptBorderColor: "#10b981",
+      rejectBorderColor: "#ef4444"
     }
   }
 }
@@ -564,6 +572,30 @@ const settings = {
     modalOverlay: {
       backgroundColor: "#000000",
       opacity: "50"                    // 50% opacity
+    }
+  }
+}
+```
+
+### Error Navigator
+
+The Error Navigator is available when [`reviewStep.enableNavigatingErrors`](/reference/settings/settings#enablenavigatingerrors) is enabled. Its colors and icons can be customized independently from the data table.
+
+- **`errorColor`** - Color of error indicators, messages, and the error count
+- **`warningColor`** - Color of warning indicators and messages
+- **`accentColor`** - Color of primary actions and the active column filter
+- **`errorIconUrl`** - URL of a custom error icon, or `null` for the default
+- **`warningIconUrl`** - URL of a custom warning icon, or `null` for the default
+
+```js
+const settings = {
+  styleOverrides: {
+    errorNavigator: {
+      errorColor: "#b91c1c",
+      warningColor: "#d97706",
+      accentColor: "#6366f1",
+      errorIconUrl: "https://cdn.example.com/error-icon.svg",
+      warningIconUrl: null
     }
   }
 }

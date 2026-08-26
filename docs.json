@@ -56,6 +56,7 @@
             "group": "Getting Started",
             "pages": [
               "welcome",
+              "getting-started/embedded",
               "getting-started/javascript",
               "getting-started/react",
               "getting-started/angular",

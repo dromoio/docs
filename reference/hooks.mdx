@@ -11,7 +11,7 @@ Hooks are a powerful feature that allow you to programmatically validate, transf
 
 The diagram below shows the general flow for Dromo. Column hooks run first and only once after the "column matching" stage. Batch row hooks run next during initialization, followed by standard and bulk row hooks. Standard and bulk row hooks also run after the user updates data; batch row hooks do not.
 
-![](\images\assets\images\hooks_flow_chart.png)
+![Hook execution order throughout the Dromo import flow](/images/assets/images/hooks_flow_chart.png)
 
 ## Column hooks[​](#column-hooks "Direct link to Column hooks")
 
@@ -357,7 +357,7 @@ Batch row hooks process large imports in bounded slices instead of passing the f
 The callback receives two arguments:
 
 <ResponseField name="records" type="object[]">
-  A slice of row hook record objects. The maximum number of records is controlled by [`batchRowHookBatchSize`](/reference/settings/settings#param-batch-row-hook-batch-size), which defaults to `2000`.
+  A slice of row hook record objects. The maximum number of records is controlled by [`batchRowHookBatchSize`](/reference/settings/settings#batchrowhookbatchsize), which defaults to `2000`.
 </ResponseField>
 
 <ResponseField name="batchNumber" type="number">
@@ -736,12 +736,13 @@ The function is called with two arguments.
   <CodeGroup>
   ```javascript JavaScript
   dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {
-    instance.addInfoMessages([
+    instance.updateInfoMessages([
       {
         rowIndex: 5,
         fieldKey: "month",
-        level: "info",
-        message: "Sales exceed previous month",
+        messages: [
+          { level: "info", message: "Sales exceed previous month" },
+        ],
       },
     ]);
     console.log(data.headerMapping, data.fields);
@@ -756,12 +757,13 @@ The function is called with two arguments.
       {
         type: "REVIEW_STEP_POST_HOOKS",
         callback: (instance, data) => {
-          instance.addInfoMessages([
+          instance.updateInfoMessages([
             {
               rowIndex: 5,
               fieldKey: "month",
-              level: "info",
-              message: "Sales exceed previous month",
+              messages: [
+                { level: "info", message: "Sales exceed previous month" },
+              ],
             },
           ]);
           console.log(data.headerMapping, data.fields);

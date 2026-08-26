@@ -48,11 +48,15 @@ Once you have an instance, you can register callbacks and configure its behavior
 </ResponseField>
 
 <ResponseField name="registerBatchRowHook(callback: BatchRowHookFn) => void">
-  Registers an initialization-only [batch row hook](/reference/hooks#batch-row-hooks). The callback receives one bounded slice of rows and its one-based batch number. Configure the maximum slice size with [`batchRowHookBatchSize`](/reference/settings/settings#param-batch-row-hook-batch-size).
+  Registers an initialization-only [batch row hook](/reference/hooks#batch-row-hooks). The callback receives one bounded slice of rows and its one-based batch number. Configure the maximum slice size with [`batchRowHookBatchSize`](/reference/settings/settings#batchrowhookbatchsize).
 </ResponseField>
 
-<ResponseField name="registerStepHook(stepHookType: &quot;UPLOAD_STEP&quot; | &quot;REVIEW_STEP&quot; | &quot;REVIEW_STEP_POST_HOOKS&quot;, callback: StepHookFn) => void">
+<ResponseField name="registerStepHook(stepHookType: &quot;UPLOAD_STEP&quot; | &quot;REVIEW_STEP&quot; | &quot;REVIEW_STEP_POST_HOOKS&quot; | &quot;REVIEW_STEP_PRE_SUBMIT&quot;, callback: StepHookFn) => void">
   Used to register a [step hook](/reference/hooks#column-hooks) callback of the given type.
+</ResponseField>
+
+<ResponseField name="registerFileParser(parser: { extensions: string[], parseFile: ParseFileFn }) => void">
+  Registers a [custom file parser](/reference/custom-file-parsers) for one or more file extensions.
 </ResponseField>
 
 <ResponseField name="registerRowDeleteHook(callback: RowDeleteHookFn) => void">

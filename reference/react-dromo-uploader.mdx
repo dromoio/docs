@@ -37,11 +37,15 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
   An array of initialization-only [batch row hook](/reference/hooks#batch-row-hooks) functions. Each function receives a bounded slice of rows and its one-based batch number.
 </ResponseField>
 
+<ResponseField name="rowDeleteHooks" type="RowDeleteHook[]" href="/reference/hooks#row-delete-hooks">
+  An array of [row delete hook](/reference/hooks#row-delete-hooks) functions called when users remove rows.
+</ResponseField>
+
 <ResponseField name="columnHooks" type="object[]" href="/reference/hooks#column-hooks">
   An array of [column hook](/reference/hooks#column-hooks) objects. Each object has two entries:
 
   <div className="ml-8">
-    <ResponseField name="fieldKey" type="string" required>
+    <ResponseField name="fieldName" type="string" required>
       The [field key](/reference/fields/fields) of the field this column hook should run on.
     </ResponseField>
     <ResponseField name="callback" type="ColumnHookFn" href="/reference/hooks#column-hooks" required>
@@ -54,13 +58,21 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
   An array of [step hook](/reference/hooks#step-hooks) objects. Each object has two entries:
 
   <div className="ml-8">
-    <ResponseField name="type" type="'UPLOAD_STEP' | 'REVIEW_STEP' | 'REVIEW_STEP_POST_HOOKS'" required>
+    <ResponseField name="type" type="'UPLOAD_STEP' | 'REVIEW_STEP' | 'REVIEW_STEP_POST_HOOKS' | 'REVIEW_STEP_PRE_SUBMIT'" required>
       The type of step hook.
     </ResponseField>
     <ResponseField name="callback" type="StepHookFn" href="/reference/hooks#step-hooks" required>
       A function matching the signature for the specified step hook type.
     </ResponseField>
   </div>
+</ResponseField>
+
+<ResponseField name="customSteps" type="CustomStepConfig[]" href="/reference/custom-steps">
+  An array of [custom step](/reference/custom-steps) configurations inserted into the import flow.
+</ResponseField>
+
+<ResponseField name="fileParsers" type="{ extensions: string[], parseFile: ParseFileFn }[]" href="/reference/custom-file-parsers">
+  An array of [custom file parser](/reference/custom-file-parsers) configurations.
 </ResponseField>
 
 <ResponseField name="beforeFinish" type="BeforeFinishCallbackFn" href="/reference/results#the-beforefinish-callback">
@@ -73,6 +85,10 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
 
 <ResponseField name="onCancel" type="() => void">
   Called if the user leaves the Dromo Uploader before completing the import.
+</ResponseField>
+
+<ResponseField name="onUserEvent" type="(event: IUserEvent) => void" href="/reference/on-user-event">
+  Called when the user interacts with a tracked control in the importer. See the [onUserEvent reference](/reference/on-user-event) for event payloads.
 </ResponseField>
 
 <ResponseField name="open" type="boolean">
