@@ -6,7 +6,7 @@ description: "Configure manyToOne fields to map a variable number of uploaded sp
 This guide demonstrates how to use field setting to map multiple columns to a single field.
 
 <Info>
-  For more detail about the `manyToOne` setting, see the [reference](/fields#manyToOne) page.
+  For more detail about the `manyToOne` setting, see the [field object reference](/reference/fields/fields#field-object-reference).
 </Info>
 
 Suppose we're collecting tax information: `email`, `primary_earnings`, and optional `additional_earnings`. Users upload spreadsheets with these columns, though the number of `additional_earnings` columns may vary. We'll map them all to a single `additional_earnings` field and validate all earnings as USD currency.
@@ -251,7 +251,7 @@ dromo.registerColumnHook("additional_earnings", (values) => {
 
 ### Step Hooks
 
-[Step hooks](/reference/hooks#step-hooks) `REVIEW_STEP` and `REVIEW_STEP_POST_HOOKS` can be used to inspect column mapping at run time to see which columns were mapped to `oneToMany` fields.
+[Step hooks](/reference/hooks#step-hooks) `REVIEW_STEP` and `REVIEW_STEP_POST_HOOKS` can be used to inspect column mapping at run time to see which columns were mapped to `manyToOne` fields.
 
 The full data object supplied as an argument to the step hook will resemble this:
 

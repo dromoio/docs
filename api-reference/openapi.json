@@ -1112,6 +1112,7 @@
             "type": "string",
             "enum": [
               "AWAITING_UPLOAD",
+              "PENDING",
               "RUNNING",
               "SUCCESSFUL",
               "FAILED",
@@ -1309,6 +1310,23 @@
             },
             "manyToOne": {
               "type": "boolean"
+            },
+            "selectOptions": {
+              "type": "array",
+              "description": "Allowed values for select and multi-select fields. Required for those field types.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {"type": "string"},
+                  "value": {"type": "string"},
+                  "alternateMatches": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                  }
+                },
+                "required": ["label", "value"],
+                "additionalProperties": false
+              }
             }
           },
           "required": ["key", "type", "label"],
@@ -1409,6 +1427,74 @@
               {"type": "array"},
               {"type": "null"}
             ]
+          },
+          "uploadStep": {
+            "type": "object",
+            "properties": {
+              "helpText": {"type": ["string", "null"]},
+              "sheetOverride": {"type": ["string", "null"]}
+            },
+            "additionalProperties": false
+          },
+          "matchingStep": {
+            "type": "object",
+            "properties": {
+              "helpText": {"type": ["string", "null"]},
+              "headerRowOverride": {"type": ["integer", "null"]},
+              "fuzzyMatchHeaders": {"type": "boolean"},
+              "matchToSchema": {"type": "boolean"}
+            },
+            "additionalProperties": false
+          },
+          "matchValuesStep": {
+            "type": "object",
+            "properties": {
+              "helpText": {"type": ["string", "null"]},
+              "maxMappableSelectValues": {"type": "integer", "minimum": 1, "maximum": 1000}
+            },
+            "additionalProperties": false
+          },
+          "reviewStep": {
+            "type": "object",
+            "properties": {
+              "helpText": {"type": ["string", "null"]},
+              "processingText": {"type": ["string", "null"]},
+              "enableUserTransformations": {"type": "boolean"},
+              "allowAddingRows": {"type": "boolean"},
+              "allowRemovingRows": {"type": "boolean"}
+            },
+            "additionalProperties": false
+          },
+          "autoMapHeaders": {
+            "type": "boolean"
+          },
+          "delimiter": {
+            "type": "string"
+          },
+          "backendOverride": {
+            "type": "object",
+            "properties": {
+              "url": {"type": "string"},
+              "type": {"type": "string", "enum": ["AWS", "AZURE"]}
+            },
+            "required": ["url", "type"],
+            "additionalProperties": false
+          },
+          "locale": {
+            "type": "string",
+            "description": "Supported locale shorthand, such as en, es, fr, or zh_CN."
+          },
+          "templateDownloadFilename": {
+            "type": ["string", "null"]
+          },
+          "browserExcelParsing": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "string"
+          },
+          "alternateDomain": {
+            "type": ["string", "null"]
           }
         },
         "additionalProperties": false,
@@ -1465,13 +1551,33 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "enum": ["UPLOAD_STEP", "REVIEW_STEP", "REVIEW_STEP_POST_HOOKS"]
+                  "enum": [
+                    "UPLOAD_STEP",
+                    "REVIEW_STEP",
+                    "REVIEW_STEP_POST_HOOKS",
+                    "REVIEW_STEP_PRE_SUBMIT"
+                  ]
                 },
                 "callback": {
                   "type": "string"
                 }
               },
               "required": ["type", "callback"],
+              "additionalProperties": false
+            }
+          },
+          "fileParsers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "extensions": {
+                  "type": "array",
+                  "items": {"type": "string"}
+                },
+                "parseFile": {"type": "string"}
+              },
+              "required": ["extensions", "parseFile"],
               "additionalProperties": false
             }
           }

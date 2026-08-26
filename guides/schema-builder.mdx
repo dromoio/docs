@@ -64,7 +64,7 @@ Once you've [logged into](https://dashboard.dromo.io/auth/login) your Dromo acco
 
     ![The options to customize a field](/images/guides/customize_field1.png)
 
-    Additionally, you can use [**validators**](/reference/fields#validators) to enforce rules for the data a user is allowed to import. You can choose to make a field required, unique, follow a particular [Regex](https://en.wikipedia.org/wiki/Regular_expression) pattern, or any combination of the above:
+    Additionally, you can use [**validators**](/reference/fields/field-validators) to enforce rules for the data a user is allowed to import. You can choose to make a field required, unique, follow a particular [Regex](https://en.wikipedia.org/wiki/Regular_expression) pattern, or any combination of the above:
 
     ![The validators you can add to a field](/images/guides/customize_field2.png)
 
@@ -135,8 +135,8 @@ const user = {
   id: '1',
   name: 'Jane Doe',
   email: 'jane@dromo.io',
-  companyId: 'Dromo',
-  companyName: '12345'
+  companyId: '12345',
+  companyName: 'Dromo'
 };
 
 // Associate the above user to this import

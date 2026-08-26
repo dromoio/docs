@@ -10,7 +10,7 @@ description: "Settings are supplied as an object to the Dromo instance on initia
 <ResponseField name="title" type="string" default='Add ${importIdentifier}'>
   Replaces the title of the importer modal. For instance, if we set `title` to "Enjoy Dromo!" you would see the title appear in the importer like this:
 
-  ![](/images/assets/images/title.png)
+  ![Importer title customized with the title setting](/images/assets/images/title.png)
 
   <Note>
     The default for this will display "Add `importIdentifier`". For instance, if the `importIdentifier` is `Products`, it will say "Add Products".
@@ -22,7 +22,7 @@ description: "Settings are supplied as an object to the Dromo instance on initia
 
   |                                    `REMOVE_INVALID_ROWS`                                   |                                    `INCLUDE_INVALID_ROWS`                                   |                                   `BLOCK_SUBMIT`                                  |
   | :----------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
-  | ![](/images/assets/images/invalidData_remove_invalid.png) | ![](/images/assets/images/invalidData_include_invalid.png) | ![](/images/assets/images/invalidData_block.png) |
+  | ![Remove invalid rows confirmation](/images/assets/images/invalidData_remove_invalid.png) | ![Include invalid rows confirmation](/images/assets/images/invalidData_include_invalid.png) | ![Blocked submit when invalid data exists](/images/assets/images/invalidData_block.png) |
 
 </ResponseField>
 
@@ -116,6 +116,35 @@ Dromo uses industry-standard best practices to secure your data on our servers.
   Set this value to `true` when testing or in development environments. The importer will show a "development mode" banner and the imports will be flagged as development imports. These imports will not be charged against your account.
 </ResponseField>
 
+<ResponseField name="styleOverrides" type="object" default="{}">
+  Customizes the importer's colors, typography, controls, and other visual elements. See the complete [style overrides reference](/reference/settings/style-overrides).
+</ResponseField>
+
+<ResponseField name="textOverrides" type="object" default="{}">
+  Overrides supported error and interface text.
+
+  <div className="ml-8">
+    <ResponseField name="errors" type="Record<string, string>" default="{}">
+      Maps supported error keys to replacement messages.
+    </ResponseField>
+
+    <ResponseField name="ui" type="Record<'COLUMN_MATCH_SUBTITLE' | 'BULK_FIX_SUBTITLE', string>" default="{}">
+      Overrides the subtitle shown on the Column Matching or Bulk Fix step.
+    </ResponseField>
+  </div>
+
+  ```javascript
+  settings: {
+    textOverrides: {
+      ui: {
+        COLUMN_MATCH_SUBTITLE: "Match each spreadsheet column to a destination field",
+        BULK_FIX_SUBTITLE: "Review and standardize unmatched values",
+      },
+    },
+  }
+  ```
+</ResponseField>
+
 <ResponseField name="autoMapHeaders" type="boolean" default="false">
   Requires [backendSyncMode](#backendsyncmode) = "MAPPINGS_ONLY" or "FULL_DATA"
 
@@ -124,6 +153,39 @@ Dromo uses industry-standard best practices to secure your data on our servers.
 
 <ResponseField name="delimiter" type="string" default="null">
   Allows you to explicitly define a field delimiter for your file (i.e. `|`). By default, Dromo will attempt auto-detect the delimiter.
+</ResponseField>
+
+<ResponseField name="xmlParsingOptions" type="object">
+  Configures client-side parsing for XML uploads.
+
+  <div className="ml-8">
+    <ResponseField name="forceArrayTags" type="string[]">
+      XML tag names that should always be treated as arrays, including when only one matching element exists.
+    </ResponseField>
+
+    <ResponseField name="headerAlias" type="Record<string, string>">
+      Maps XML tag names to the column headers Dromo should display.
+    </ResponseField>
+
+    <ResponseField name="enableAutoArrayHeuristics" type="boolean" default="true">
+      Automatically recognizes plural parent and singular child tags, such as `<sales><sale>`, as arrays.
+    </ResponseField>
+
+    <ResponseField name="assumeSingleRootChildIsArray" type="boolean" default="true">
+      Treats a single object nested beneath a single root tag as a one-row dataset.
+    </ResponseField>
+  </div>
+
+  ```javascript
+  settings: {
+    xmlParsingOptions: {
+      forceArrayTags: ["contact"],
+      headerAlias: { email_address: "Email" },
+      enableAutoArrayHeuristics: true,
+      assumeSingleRootChildIsArray: true,
+    },
+  }
+  ```
 </ResponseField>
 
 <ResponseField name="templateDownloadFilename" type="string" default="null">
@@ -183,9 +245,11 @@ Dromo uses industry-standard best practices to secure your data on our servers.
   </Note>
 </ResponseField>
 
-<ResponseField name="uploadStep" type="object" default="{}">
-  Settings for the Upload Step experience
-</ResponseField>
+## Step settings
+
+### `uploadStep`[​](#uploadstep "Direct link to uploadstep")
+
+The `settings.uploadStep` object contains settings for the Upload Step experience. It defaults to `{}`.
 
 <ResponseField name="helpText" type="string" default="null">
   If set, the given string will be shown to the user on the Upload Step. This can be used to give the user additional context on what file they should upload.
@@ -263,7 +327,7 @@ Settings for the Bulk Fix step experience (formerly known as the Match Values st
   The maximum number of unique values that can be mapped using the Match Values screen per field. If more than `maxMappableSelectValues` are found in a column of data, Dromo will indicate to the user that there are too many unique values to map on the Match Values screen. The maximum value that can be set for `maxMappableSelectValues` is 1000.
 </ResponseField>
 
-### reviewStep[​](#reviewstep "Direct link to reviewstep")
+### `reviewStep`[​](#reviewstep "Direct link to reviewstep")
 
 The `settings.reviewStep` object contains settings for the Review Step experience. It defaults to `{}`. The following settings are available:
 
@@ -327,13 +391,41 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
 * Adjusted phone numbers
 
   <Expandable title="an example">
-    ![](/images/assets/images/highlightAutoFixes.png)
+    ![Automatically fixed cells highlighted in the review table](/images/assets/images/highlightAutoFixes.png)
   </Expandable>
 
   <Check>
     This feature can help users quickly identify and verify automatic transformations made to their data during the import process.
   </Check>
 </ResponseField>
+
+<ResponseField name="enableNavigatingErrors" type="boolean" default="false">
+  When enabled, adds an error navigation panel to the Review Step that lets users move through validation errors one at a time and fix them inline.
+
+  **Row headers**: Any row with a validation error displays a red circular info icon next to its row number. Clicking the icon opens the navigator panel anchored to that row's first error.
+
+  **Navigator panel**: Slides in from the right of the table and lists all validation errors as cards — each showing the row number, column name, and error message.
+
+  - **Column filter**: A dropdown filters the list to a single column.
+  - **Prev/Next navigation**: Buttons and the `Alt+↑` / `Alt+↓` keyboard shortcuts step through errors in order, scrolling the table to each cell.
+  - **Jump to cell**: Clicking any error card scrolls directly to that cell.
+  - **Inline actions** (shown on the active error card):
+    - **Clear** — removes the invalid cell value. For multi-select fields, only the invalid tokens are removed.
+    - **Replace** — replaces the cell value with a new one. For select fields a valid-options dropdown is shown; for multi-select fields the chosen value is appended to the existing valid tokens; for all other fields a free-text input is shown.
+  - **Closing the panel** (X button) resets the panel state and column filter.
+
+  ![Error navigator panel showing validation errors with inline Clear and Replace actions](/images/assets/images/navigator.png)
+
+  ```javascript
+  settings: {
+    reviewStep: {
+      enableNavigatingErrors: true
+    }
+  }
+  ```
+</ResponseField>
+
+## Localization and sessions
 
 <ResponseField name="locale" type="string" default="en">
   The language to display within the Dromo importer. Dromo supports the following internationalization (i18n) options:
@@ -392,7 +484,7 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
   - Preventing data loss from accidental browser closures
   - Multi-session workflows where users return to complete imports later
 
-  **Note:** Completed imports automatically clear their saved session data. Use with [`sessionId`](#sessionid) to restore a saved session. See the [Session Saving & Restoration Guide](/guides/saving-progress) for the full security model and API reference.
+  **Note:** Completed imports automatically clear their saved session data. Use [`hydrationId`](#hydrationid) for new integrations, or [`sessionId`](#sessionid) for the legacy flow, to restore a saved session. See the [Session Saving & Restoration Guide](/guides/saving-progress) for the full security model and API reference.
 
   ```javascript
   settings: {
@@ -402,39 +494,13 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
   ```
 </ResponseField>
 
-<ResponseField name="enableNavigatingErrors" type="boolean" default="false">
-  When enabled, adds an error navigation panel to the Review Step that lets users move through validation errors one at a time and fix them inline.
-
-  **Row headers**: Any row with a validation error displays a red circular info icon next to its row number. Clicking the icon opens the navigator panel anchored to that row's first error.
-
-  **Navigator panel**: Slides in from the right of the table and lists all validation errors as cards — each showing the row number, column name, and error message.
-
-  - **Column filter**: A dropdown filters the list to a single column.
-  - **Prev/Next navigation**: Buttons and the `Alt+↑` / `Alt+↓` keyboard shortcuts step through errors in order, scrolling the table to each cell.
-  - **Jump to cell**: Clicking any error card scrolls directly to that cell.
-  - **Inline actions** (shown on the active error card):
-    - **Clear** — removes the invalid cell value. For multi-select fields, only the invalid tokens are removed.
-    - **Replace** — replaces the cell value with a new one. For select fields a valid-options dropdown is shown; for multi-select fields the chosen value is appended to the existing valid tokens; for all other fields a free-text input is shown.
-  - **Closing the panel** (X button) resets the panel state and column filter.
-
-  ![Error navigator panel showing validation errors with inline Clear and Replace actions](/images/assets/images/navigator.png)
-
-  ```javascript
-  settings: {
-    reviewStep: {
-      enableNavigatingErrors: true
-    }
-  }
-  ```
-</ResponseField>
-
 <ResponseField name="sessionId" type="string" default="null">
   Requires [backendSyncMode](#backendsyncmode) = "FULL_DATA"
 
-  When provided, Dromo will restore a previously saved import session, allowing users to resume exactly where they left off.
+  Restores a previously saved import using the legacy session identifier. Sessions remain available for seven days after the most recent save.
 
   **Restoration Behavior:**
-  - Fetches saved state from the backend using a `hydrationId` token derived from the session ID
+  - Fetches saved state from the backend using the raw session identifier and the widget's frontend license key
   - Validates that the session matches the current `importIdentifier`
   - Downloads and restores the uploaded file data
   - Rehydrates the UI to the exact stage where the user left off:
@@ -444,7 +510,7 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
     - **Data Review** → Restores full data grid and jumps to review step
   - Preserves all user work including mappings, transformations, and data edits
 
-  **Security model:** Session state is accessed via a short-lived signed `hydrationId` token (5-hour rolling TTL, 24-hour absolute cap) rather than the raw session UUID. When `sessionId` is set, the widget exchanges it for a fresh `hydrationId` via `POST /api/widget/session/<id>/authenticate/` before fetching state. Store the raw `sessionId` in your backend or durable client storage; keep the `hydrationId` in memory only.
+  For new integrations, prefer [`hydrationId`](#hydrationid), which avoids exposing the long-lived session identifier to the browser. Store `sessionId` on your backend so it can create a fresh hydration token when the user returns.
 
   **Use Cases:**
   - Resume workflows where users receive a session link to continue an import
@@ -459,4 +525,28 @@ The `settings.reviewStep` object contains settings for the Review Step experienc
     sessionId: "1b6acf28-8748-4120-8d7a-4b7846d5e487"
   }
   ```
+</ResponseField>
+
+<ResponseField name="hydrationId" type="string" default="null">
+  Requires [backendSyncMode](#backendsyncmode) = "FULL_DATA"
+
+  A short-lived signed access token used by the widget to create, read, update, and delete saved session state. The token identifies one session, so the widget does not need the raw `sessionId` when `hydrationId` is provided.
+
+  Create a session from your backend with `POST /api/widget/session/v2/auth/`. When a user returns, mint a fresh token with `POST /api/widget/session/v2/{sessionId}/auth/`. Delete a session with `DELETE /api/widget/session/v2/{sessionId}/`.
+
+  Hydration tokens default to a six-hour lifetime. Set `expires_in` in the create or resume API request to choose a different lifetime; this is an API parameter, not a widget setting. The underlying session expires seven days after its most recent save.
+
+  <Warning>
+    Call the session create, resume, and delete endpoints only from your backend with a backend license key. Pass the returned `hydrationId` to the widget, but never expose the backend key.
+  </Warning>
+
+  ```javascript
+  settings: {
+    backendSyncMode: "FULL_DATA",
+    savePartialSession: true,
+    hydrationId: "<signed-token>"
+  }
+  ```
+
+  See the [Session Saving & Restoration Guide](/guides/saving-progress) for the complete token lifecycle and API examples.
 </ResponseField>

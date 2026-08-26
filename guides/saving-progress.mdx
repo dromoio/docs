@@ -77,8 +77,7 @@ curl --request POST \
 {
   "sessionId":   "1b6acf28-8748-4120-8d7a-4b7846d5e487",
   "hydrationId": "<signed-token>",
-  "expiresIn":   21600,
-  "savedAt":     "2026-06-19T18:00:00.000Z"
+  "expiresAt":   "2026-08-26T18:00:00Z"
 }
 ```
 
@@ -120,8 +119,9 @@ curl --request POST \
 
 ```json
 {
+  "sessionId":   "1b6acf28-8748-4120-8d7a-4b7846d5e487",
   "hydrationId": "<signed-token>",
-  "expiresIn":   21600
+  "expiresAt":   "2026-08-26T18:00:00Z"
 }
 ```
 
@@ -179,6 +179,6 @@ All endpoints require `X-DROMO-LICENSE-KEY` (backend license key).
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/widget/session/v2/auth/` | Create a new session. Returns `sessionId`, `hydrationId`, `expiresIn`, `savedAt`. |
+| `POST` | `/api/widget/session/v2/auth/` | Create a new session. Returns `sessionId`, `hydrationId`, and `expiresAt`. |
 | `POST` | `/api/widget/session/v2/{sessionId}/auth/` | Re-issue a `hydrationId` for an existing session. |
 | `DELETE` | `/api/widget/session/v2/{sessionId}/` | Delete a session and invalidate all its tokens. Idempotent. |

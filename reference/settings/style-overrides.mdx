@@ -244,8 +244,24 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
           The background color of the dropzone
         </ResponseField>
 
+        <ResponseField name="color" type="string">
+          The text color of the dropzone message
+        </ResponseField>
+
         <ResponseField name="outline" type="string">
           The outline property of the dropzone
+        </ResponseField>
+
+        <ResponseField name="activeBorderColor" type="string">
+          The border color while a file is being dragged over the dropzone
+        </ResponseField>
+
+        <ResponseField name="acceptBorderColor" type="string">
+          The border color when the dragged file can be accepted
+        </ResponseField>
+
+        <ResponseField name="rejectBorderColor" type="string">
+          The border color when the dragged file cannot be accepted
         </ResponseField>
       </div>
     </ResponseField>
@@ -373,6 +389,74 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="headerHighlightedTextColor" type="string">
           The text color of highlighted column headers
         </ResponseField>
+
+        <ResponseField name="cellBackgroundColor" type="string">
+          The background color of body cells
+        </ResponseField>
+
+        <ResponseField name="cellTextColor" type="string">
+          The text color of body cells
+        </ResponseField>
+
+        <ResponseField name="cellHoverBackgroundColor" type="string">
+          The background color of a hovered cell
+        </ResponseField>
+
+        <ResponseField name="cellHoverTextColor" type="string">
+          The text color of a hovered cell
+        </ResponseField>
+
+        <ResponseField name="oddRowBackgroundColor" type="string">
+          The background color of alternating odd rows
+        </ResponseField>
+
+        <ResponseField name="rowSelectedBackgroundColor" type="string">
+          The background color of a selected row
+        </ResponseField>
+
+        <ResponseField name="rowSelectedBorderColor" type="string">
+          The border color of a selected row
+        </ResponseField>
+
+        <ResponseField name="borderColor" type="string">
+          The outer border color of the table
+        </ResponseField>
+
+        <ResponseField name="dividerColor" type="string">
+          The color of grid lines between rows and columns
+        </ResponseField>
+
+        <ResponseField name="errorCellBackgroundColor" type="string">
+          The background color of cells with error messages
+        </ResponseField>
+
+        <ResponseField name="errorCellHoverBackgroundColor" type="string">
+          The hover background color of cells with error messages
+        </ResponseField>
+
+        <ResponseField name="warningCellBackgroundColor" type="string">
+          The background color of cells with warning messages
+        </ResponseField>
+
+        <ResponseField name="warningCellHoverBackgroundColor" type="string">
+          The hover background color of cells with warning messages
+        </ResponseField>
+
+        <ResponseField name="infoCellBackgroundColor" type="string">
+          The background color of cells with informational messages
+        </ResponseField>
+
+        <ResponseField name="infoCellHoverBackgroundColor" type="string">
+          The hover background color of cells with informational messages
+        </ResponseField>
+
+        <ResponseField name="readOnlyCellBackgroundColor" type="string">
+          The background color of read-only cells
+        </ResponseField>
+
+        <ResponseField name="readOnlyCellTextColor" type="string">
+          The text color of read-only cells
+        </ResponseField>
       </div>
     </ResponseField>
 
@@ -387,6 +471,35 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="opacity" type="string" default="50">
           The opacity of the modal overlay (0-100)
         </ResponseField>
+      </div>
+    </ResponseField>
+
+    <ResponseField name="card" type="object" default="{}">
+      Style overrides for cards used in column matching and other importer screens.
+
+      <div className="ml-8">
+        <ResponseField name="backgroundColor" type="string">The card background color</ResponseField>
+        <ResponseField name="containerBackgroundColor" type="string">The background color of the area containing cards</ResponseField>
+        <ResponseField name="borderColor" type="string">The card border color</ResponseField>
+        <ResponseField name="borderWidth" type="string">The card border width</ResponseField>
+        <ResponseField name="borderRadius" type="string">The card border radius</ResponseField>
+        <ResponseField name="textColor" type="string">The card text color</ResponseField>
+        <ResponseField name="expandedBackgroundColor" type="string">The background color of expanded cards</ResponseField>
+        <ResponseField name="iconColor" type="string">The color of icons in cards</ResponseField>
+      </div>
+    </ResponseField>
+
+    <ResponseField name="dropdown" type="object" default="{}">
+      Style overrides for select controls and dropdown menus.
+
+      <div className="ml-8">
+        <ResponseField name="backgroundColor" type="string">The background color of the closed control</ResponseField>
+        <ResponseField name="borderColor" type="string">The control border color</ResponseField>
+        <ResponseField name="textColor" type="string">The selected value text color</ResponseField>
+        <ResponseField name="errorBorderColor" type="string">The control border color in an error state</ResponseField>
+        <ResponseField name="menuBackgroundColor" type="string">The background color of the open menu</ResponseField>
+        <ResponseField name="optionHoverBackgroundColor" type="string">The background color of a hovered option</ResponseField>
+        <ResponseField name="optionSelectedBackgroundColor" type="string">The background color of the selected option</ResponseField>
       </div>
     </ResponseField>
 
