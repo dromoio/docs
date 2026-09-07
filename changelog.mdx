@@ -1,7 +1,9 @@
 ---
 title: "Changelog"
+description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
+<<<<<<< development
 <Update label="September 2026" description="Upcoming" tags={["Customization", "Bulk Fix"]}>
 
 ## Optional Bulk Fix Step
@@ -13,13 +15,47 @@ See [`skipBulkFixStep`](/reference/settings/settings#skipbulkfixstep) in the Set
 </Update>
 
 <Update label="July 2026" description="v3.13.0" tags={["Customization", "Styling", "AI", "Review Step", "Prompts"]}>
+=======
+<Update label="August 2026" description="v3.13.0" tags={["Performance", "Data Processing"]}>
+
+## Batch Row Hooks for Large Imports
+
+Large imports can now be transformed in bounded chunks during initialization, avoiding the need to pass the entire dataset to one bulk callback.
+
+- **`registerBatchRowHook()`**: Register a JavaScript SDK callback that receives one slice of rows and its one-based batch number
+- **`batchRowHooks`**: Supply the same initialization-only callbacks through the React prop or Angular input
+- **`batchRowHookBatchSize`**: Set the maximum rows per callback invocation with a positive integer; defaults to `2000`
+
+See the [Batch row hooks reference](/reference/hooks#batch-row-hooks) for callback signatures and examples.
+
+</Update>
+
+<Update label="July 2026" description="v3.13.0" tags={["Customization", "Styling", "AI", "Beta", "Review Step", "Prompts"]}>
+
+## Dr.Dromo Enters Limited Beta
+
+Meet **Dr.Dromo**, Dromo's AI assistant for designing and refining import workflows. Describe the outcome you need in plain language, and Dr.Dromo can help turn it into a reviewable Dromo schema.
+
+During the beta, Dr.Dromo can:
+
+- Generate import schemas from natural-language prompts, sample files, or existing configurations
+- Update fields, validation rules, settings, and hooks directly in Schema Studio
+- Provide product and implementation guidance grounded in Dromo's developer documentation
+- Present every proposed change for review before it is applied
+
+Dr.Dromo is currently available to a limited group of customers while we gather feedback and expand its capabilities. To request early access, contact [Dromo Support](mailto:support@dromo.io) or start a conversation using the support chat in the dashboard.
+>>>>>>> master
 
 ## Session Hydration Security
 
 Sessions now support a short-lived signed **`hydrationId`** token as a more secure alternative to passing the raw `sessionId` UUID in API URLs. The `sessionId`-based approach remains supported — `hydrationId` is an opt-in improvement that limits the impact of a leaked credential by scoping access to a short-lived token.
 
 - **`hydrationId`**: A signed token returned on session create; pass it to the widget instead of the raw `sessionId`
+<<<<<<< development
 - **`expiresIn`**: Token TTL in seconds, configurable per-request
+=======
+- **`expiresAt`**: Token expiration timestamp returned by the Sessions API; configure the lifetime with the `expires_in` request field
+>>>>>>> master
 - **`sessionId`**: Unchanged long-lived identifier — store it server-side to re-issue a fresh `hydrationId` whenever needed
 
 See the [Session Saving & Restoration Guide](/guides/saving-progress) for the full security model and endpoint reference.
@@ -164,7 +200,7 @@ New public APIs for programmatic SFTP integration.
 
 - **SFTP Credentials API** (`/api/v1/headless/sftp/credentials/`): Full CRUD for SFTP credentials with key-based and password authentication, connection testing, and encrypted storage
 - **SFTP Connectors API** (`/api/v1/headless/sftp/connectors/`): Full CRUD for SFTP connectors with scheduled imports, configurable directory paths, and file regex patterns
-- **Flexible Authentication**: Supports OAuth2, JWT, and Backend License Key authentication
+- **Authentication**: Authenticate SFTP API requests with a backend license key in the `X-Dromo-License-Key` header
 - **Documentation**: [SFTP API Reference](https://developer.dromo.io/api-reference/sftp-credentials/list-sftp-credentials)
 
 </Update>
@@ -177,9 +213,8 @@ New style override configuration options for comprehensive color customization o
 
 - **Complete Color Control**: Configure text, backgrounds, interactive elements, status colors, borders, and dividers
 - **Full Appearance Customization**: Enhanced color settings to fully customize the Dromo uploader
-- **Theme Presets**: Pre-configured light and dark theme color palettes
 - **Custom Color Schemes**: Define your own brand colors for any theme
-- **Dark Mode Support**: Dark mode now available as a result of the new color configuration options
+- **Light and Dark Examples**: Build a light or dark appearance from individual style override keys using the documented examples
 - **Seamless Experience**: Consistent styling across all import steps and components
 - **Documentation**: [Style Overrides Reference](https://developer.dromo.io/guides/custom-styling)
 

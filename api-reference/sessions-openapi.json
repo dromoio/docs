@@ -83,7 +83,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Fresh hydrationId issued",
             "content": {
               "application/json": {
@@ -163,30 +163,32 @@
             "example": "<signed-token>",
             "description": "Short-lived access token. Pass this to the widget to start or resume the session."
           },
-          "expiresIn": {
-            "type": "integer",
-            "example": 21600,
-            "description": "Seconds until the hydrationId expires."
-          },
-          "savedAt": {
+          "expiresAt": {
             "type": "string",
             "format": "date-time",
-            "example": "2026-06-19T18:00:00.000Z"
+            "example": "2026-08-26T18:00:00Z",
+            "description": "Timestamp when the hydrationId expires."
           }
         }
       },
       "TokenResponse": {
         "type": "object",
         "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Backend session identifier for the resumed session."
+          },
           "hydrationId": {
             "type": "string",
             "example": "<new-signed-token>",
             "description": "The new access token. Pass this to the widget to resume the session."
           },
-          "expiresIn": {
-            "type": "integer",
-            "example": 21600,
-            "description": "Seconds until the new hydrationId expires."
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-08-26T18:00:00Z",
+            "description": "Timestamp when the new hydrationId expires."
           }
         }
       }

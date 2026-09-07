@@ -110,11 +110,11 @@ And, when submitted, Dromo would provide you with a result data array like this:
 </ResponseField>
 
 <ResponseField name="validators" type="Validator[]">
-  An array of validator objects to validate this field. See [validators](#validators).
+  An array of validator objects to validate this field. See [field validators](/reference/fields/field-validators).
 </ResponseField>
 
 <ResponseField name="selectOptions" type="{ label: string, value: string, alternateMatches?: string[] }[]">
-  For select fields only, an array of possible picklist values. See the [select field type](#select).
+  For select fields only, an array of possible picklist values. See the [select field type](/reference/fields/field-types#select).
 </ResponseField>
 
 <ResponseField name="readOnly" type="boolean" default="false">
@@ -134,7 +134,7 @@ And, when submitted, Dromo would provide you with a result data array like this:
 <ResponseField name="requireMapping" type="boolean" default="false">
   If `true`, the field must be mapped when matching columns. The user will not be able to progress to the data review screen unless this field has been matched to a column in the input file.
 
-  Note: cells in this column aren't required to have any values, that can be validated using [the validator `required`](/fields#required).
+  Note: cells in this column aren't required to have any values; that can be validated using [the `required` validator](/reference/fields/field-validators#required).
 </ResponseField>
 
 <ResponseField name="manyToOne" type="boolean" default="false">

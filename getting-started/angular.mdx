@@ -1,5 +1,6 @@
 ---
 title: "Angular Quickstart"
+description: "Install the Dromo Angular SDK, define fields and settings, launch the spreadsheet importer, and handle completed import results."
 icon: "angular"
 ---
 
@@ -61,6 +62,7 @@ import {
   IRowHook,
   IStepHook,
   IUploadStepData,
+  IBatchRowHook,
   IBulkRowHook,
   IBeforeFinishCallback
 } from 'dromo-uploader-angular';
@@ -83,6 +85,7 @@ import {
       [onCancel]="onCancel"
       [onResults]="onResults"
       [beforeFinish]="beforeFinish"
+      [batchRowHooks]="batchRowHooks"
       [bulkRowHooks]="bulkRowHooks"
     >
       Import with Dromo!
@@ -138,6 +141,12 @@ export class MyUploader implements DromoMethods {
     (data, _mode) => {
       console.log('in the bulk row hook!');
       return data;
+    }
+  ];
+  batchRowHooks: IBatchRowHook[] = [
+    (batch, batchNumber) => {
+      console.log(`Processing batch ${batchNumber}`);
+      return batch;
     }
   ];
   beforeFinish: IBeforeFinishCallback = (data, metaData, _instance) => {

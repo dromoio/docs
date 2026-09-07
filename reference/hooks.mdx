@@ -1,17 +1,17 @@
 ---
 title: "Hooks"
-description: "Dromo's Hooks help you reformat, validate, and correct data automatically via custom functions per column and/or row. For example, using these hooks you can automatically reformat area codes or country codes, remove special characters, validate emails against external data, or anything else you can think of."
+description: "Reference for column, row, bulk row, and step hooks, including callback inputs and outputs, row-cell transformations, dynamic fields with addField, validation messages, and lifecycle timing."
 ---
 
 Hooks are a powerful feature that allow you to programmatically validate, transform, and enhance data during the import process. They integrate seamlessly with [field validation](/reference/fields/field-validators) and [results handling](/reference/results) to give you complete control over your data pipeline.
 
 <Tip>
-  Looking for simpler validation options? Check out [field validators](/reference/fields/field-validators) for built-in validation rules, or see the [validation guide](/guides/validation) for best practices.
+  Looking for simpler validation options? Check out [field validators](/reference/fields/field-validators) for built-in validation rules, or see [validating with external data](/guides/validate-external-data) for a row hook example.
 </Tip>
 
-The diagram below shows the general flow for Dromo. Column hooks run first and only once after the "column matching" stage. After these run, row hooks will run for each record. Row hooks will also run on a record after it is updated by the user. If you only want to run a row hook on init or on change, you can configure it accordingly.
+The diagram below shows the general flow for Dromo. Column hooks run first and only once after the "column matching" stage. Batch row hooks run next during initialization, followed by standard and bulk row hooks. Standard and bulk row hooks also run after the user updates data; batch row hooks do not.
 
-![](\images\assets\images\hooks_flow_chart.png)
+![Hook execution order throughout the Dromo import flow](/images/assets/images/hooks_flow_chart.png)
 
 ## Column hooks[​](#column-hooks "Direct link to Column hooks")
 
@@ -185,13 +185,13 @@ Column hooks may return the value async, wrapped in a promise.
 
 ## Row hooks[​](#row-hooks "Direct link to Row hooks")
 
-Row hooks run validation on each record (row) of data and return the record with new data and/or user messages. Row hooks come in two variants: standard and bulk.
+Row hooks run validation on imported records and return updated data and/or user messages. They come in three variants: standard, batch, and bulk.
 
 <Note>
-  To register row hooks, use `registerRowHook()` or `registerBulkRowHook()` in the [JavaScript SDK](/reference/dromo-uploader-sdk), or the `rowHooks`/`bulkRowHooks` props in the [React component](/reference/react-dromo-uploader).
+  To register row hooks, use `registerRowHook()`, `registerBatchRowHook()`, or `registerBulkRowHook()` in the [JavaScript SDK](/reference/dromo-uploader-sdk). React and Angular integrations provide the corresponding `rowHooks`, `batchRowHooks`, and `bulkRowHooks` props or inputs.
 </Note>
 
-Row hooks are run once in `"init"` mode after the column matching step and before the user begins the review step, and are run with the full dataset.
+Standard and bulk row hooks run once in `"init"` mode after the column matching step and before the user begins the review step. They run again in `"update"` mode after the user changes data. Batch row hooks run only during initialization and receive bounded slices of the dataset.
 
 Row hooks are run again in `"update"` mode after each time the user changes any data, with only the changed rows.
 
@@ -346,6 +346,89 @@ Row hooks may return the value async, wrapped in a promise.
     ]}>
     Import Contacts
   </DromoUploader>
+  ```
+  </CodeGroup>
+</Accordion>
+
+### Batch row hooks[​](#batch-row-hooks "Direct link to Batch row hooks")
+
+Batch row hooks process large imports in bounded slices instead of passing the full dataset to one callback. They run only once during initialization, after column hooks and before standard and bulk row hooks.
+
+The callback receives two arguments:
+
+<ResponseField name="records" type="object[]">
+  A slice of row hook record objects. The maximum number of records is controlled by [`batchRowHookBatchSize`](/reference/settings/settings#batchrowhookbatchsize), which defaults to `2000`.
+</ResponseField>
+
+<ResponseField name="batchNumber" type="number">
+  The one-based number of the current batch. The first callback receives `1`, the second receives `2`, and so on.
+</ResponseField>
+
+Batch row hooks do not receive a mode argument because they never run in `"update"` mode. Return an array of row hook output objects with each record's original `index`. You may return only the fields that should change; omitted fields and rows remain unchanged. Async callbacks are supported.
+
+<Accordion title="Batch row hook example">
+  <CodeGroup>
+  ```javascript JavaScript
+  const settings = {
+    importIdentifier: "Large Contact Import",
+    batchRowHookBatchSize: 5000,
+  };
+
+  const dromo = new DromoUploader("FRONTEND_API_KEY", fields, settings, user);
+
+  dromo.registerBatchRowHook(async (records, batchNumber) => {
+    const enrichedEmails = await enrichEmailBatch(records, batchNumber);
+
+    return records.map((record) => ({
+      index: record.index,
+      row: {
+        email: { value: enrichedEmails[record.index] },
+      },
+    }));
+  });
+  ```
+
+  ```jsx React
+  <DromoUploader
+    licenseKey="FRONTEND_API_KEY"
+    user={user}
+    fields={fields}
+    settings={{
+      importIdentifier: "Large Contact Import",
+      batchRowHookBatchSize: 5000,
+    }}
+    batchRowHooks={[
+      async (records, batchNumber) => {
+        console.log(`Processing batch ${batchNumber}`);
+        return records;
+      },
+    ]}
+  >
+    Import Contacts
+  </DromoUploader>
+  ```
+
+  ```typescript Angular
+  import { IBatchRowHook } from "dromo-uploader-angular";
+
+  batchRowHooks: IBatchRowHook[] = [
+    async (records, batchNumber) => {
+      console.log(`Processing batch ${batchNumber}`);
+      return records;
+    },
+  ];
+  ```
+
+  ```html Angular template
+  <lib-dromo-uploader
+    [licenseKey]="licenseKey"
+    [user]="user"
+    [fields]="fields"
+    [settings]="settings"
+    [batchRowHooks]="batchRowHooks"
+  >
+    Import Contacts
+  </lib-dromo-uploader>
   ```
   </CodeGroup>
 </Accordion>
@@ -653,12 +736,13 @@ The function is called with two arguments.
   <CodeGroup>
   ```javascript JavaScript
   dromo.registerStepHook("REVIEW_STEP_POST_HOOKS", function (instance, data) {
-    instance.addInfoMessages([
+    instance.updateInfoMessages([
       {
         rowIndex: 5,
         fieldKey: "month",
-        level: "info",
-        message: "Sales exceed previous month",
+        messages: [
+          { level: "info", message: "Sales exceed previous month" },
+        ],
       },
     ]);
     console.log(data.headerMapping, data.fields);
@@ -673,12 +757,13 @@ The function is called with two arguments.
       {
         type: "REVIEW_STEP_POST_HOOKS",
         callback: (instance, data) => {
-          instance.addInfoMessages([
+          instance.updateInfoMessages([
             {
               rowIndex: 5,
               fieldKey: "month",
-              level: "info",
-              message: "Sales exceed previous month",
+              messages: [
+                { level: "info", message: "Sales exceed previous month" },
+              ],
             },
           ]);
           console.log(data.headerMapping, data.fields);
