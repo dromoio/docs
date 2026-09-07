@@ -151,6 +151,14 @@ Dromo uses industry-standard best practices to secure your data on our servers.
   With this setting on, Dromo will try to automatically map the CSV headers to fields based off of previous uploads with the same `importIdentifier`. The user can still click back and change the mapping if needed.
 </ResponseField>
 
+<ResponseField name="skipBulkFixStep" type="boolean" default="false">
+  If `true`, Dromo always skips the Bulk Fix step, even when select, multi-select, or date fields would otherwise require bulk fixing. This setting takes precedence over the automatic conditions that normally show the step.
+
+  ```javascript
+  skipBulkFixStep: true
+  ```
+</ResponseField>
+
 <ResponseField name="delimiter" type="string" default="null">
   Allows you to explicitly define a field delimiter for your file (i.e. `|`). By default, Dromo will attempt auto-detect the delimiter.
 </ResponseField>
