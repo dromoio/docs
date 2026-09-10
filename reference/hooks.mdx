@@ -1011,7 +1011,7 @@ Allows customization of the messaged displayed to the user after they click 'Fin
 
 ### `instance.abortImport`[​](#instanceabortimport "Direct link to instanceabortimport")
 
-Immediately stops the import with a structured error.
+Stops the import with a structured error. Await the returned promise so the hook does not continue before the abort is acknowledged.
 
 The widget shows the `code` and `message`. Closing the error dialog cancels the uploader.
 
@@ -1029,9 +1029,9 @@ In a [headless import](/getting-started/headless#import-failed), calling `abortI
 <Accordion title="abortImport example">
   <CodeGroup>
   ```javascript JavaScript
-  dromo.registerStepHook("UPLOAD_STEP", function (instance, data) {
+  dromo.registerStepHook("UPLOAD_STEP", async function (instance, data) {
     if (!data.filename?.endsWith(".csv")) {
-      instance.abortImport({
+      await instance.abortImport({
         code: "BAD_FORMAT",
         message: "The file does not match the expected format.",
       });
@@ -1046,9 +1046,9 @@ In a [headless import](/getting-started/headless#import-failed), calling `abortI
     stepHooks: [
       {
         type: "UPLOAD_STEP",
-        callback: (instance, data) => {
+        callback: async (instance, data) => {
           if (!data.filename?.endsWith(".csv")) {
-            instance.abortImport({
+            await instance.abortImport({
               code: "BAD_FORMAT",
               message: "The file does not match the expected format.",
             });

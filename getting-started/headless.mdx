@@ -246,7 +246,7 @@ Some examples of unrecoverable errors are:
 - The import file was corrupted and could not be parsed
 - The import file was completely empty
 - A custom hook threw an unhandled exception
-- A [step hook](/reference/hooks#instanceabortimport) called `instance.abortImport({ code, message })`
+- A [step hook](/reference/hooks#instanceabortimport) awaited `instance.abortImport({ code, message })`
 
 When a step hook aborts the import, `import_errors` on the [retrieve headless import](/api-reference/headless/retrieve-headless-import) response contains the same `{ code, message }` you passed in. Display those fields in your UI the same way the widget does.
 
