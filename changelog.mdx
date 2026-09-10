@@ -3,7 +3,15 @@ title: "Changelog"
 description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
-<Update label="September 2026" description="Upcoming" tags={["Customization", "Bulk Fix"]}>
+<Update label="September 2026" description="Upcoming" tags={["Customization", "Bulk Fix", "Hooks", "Headless API"]}>
+
+## Abort an import from a step hook
+
+Step hooks can now stop an import immediately with a structured error.
+
+- **`await instance.abortImport({ code, message })`**: Call from any async step hook (or `beforeFinish`) with a string `code` and `message`. The widget shows both. In headless, the import is marked `FAILED` and `import_errors` contains the same `{ code, message }`.
+
+See [`instance.abortImport`](/reference/hooks#instanceabortimport) in the Hooks reference.
 
 ## Optional Bulk Fix Step
 

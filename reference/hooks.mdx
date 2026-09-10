@@ -1008,3 +1008,55 @@ Allows customization of the messaged displayed to the user after they click 'Fin
 <ResponseField name="options" type="{ submitButtonText?: string, cancelButtonText?: string }">
   Optionally override text for submit and cancel buttons.
 </ResponseField>
+
+### `instance.abortImport`[​](#instanceabortimport "Direct link to instanceabortimport")
+
+Stops the import with a structured error. Await the returned promise so the hook does not continue before the abort is acknowledged.
+
+The widget shows the `code` and `message`. Closing the error dialog cancels the uploader.
+
+In a [headless import](/getting-started/headless#import-failed), calling `abortImport` marks the import as `FAILED`. The same `{ code, message }` object is returned in `import_errors`, so you can display the identical error in your own UI.
+
+<ResponseField name="error" type="{ code: string, message: string }" required>
+  <ResponseField name="code" type="string" required>
+    A short error code you define, for example `"BAD_FORMAT"`.
+  </ResponseField>
+  <ResponseField name="message" type="string" required>
+    Message shown to the user in the widget, and stored on the failed headless import.
+  </ResponseField>
+</ResponseField>
+
+<Accordion title="abortImport example">
+  <CodeGroup>
+  ```javascript JavaScript
+  dromo.registerStepHook("UPLOAD_STEP", async function (instance, data) {
+    if (!data.filename?.endsWith(".csv")) {
+      await instance.abortImport({
+        code: "BAD_FORMAT",
+        message: "The file does not match the expected format.",
+      });
+    }
+  });
+  ```
+
+  ```jsx React
+  <DromoUploader
+    licenseKey={"FRONTEND_API_KEY"}
+    ...
+    stepHooks: [
+      {
+        type: "UPLOAD_STEP",
+        callback: async (instance, data) => {
+          if (!data.filename?.endsWith(".csv")) {
+            await instance.abortImport({
+              code: "BAD_FORMAT",
+              message: "The file does not match the expected format.",
+            });
+          }
+        },
+      },
+    ],
+    .../>
+  ```
+  </CodeGroup>
+</Accordion>

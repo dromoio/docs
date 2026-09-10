@@ -1172,7 +1172,17 @@
                   {
                     "type": "array",
                     "items": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "example": "BAD_FORMAT"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "The file does not match the expected format."
+                        }
+                      }
                     }
                   },
                   {
