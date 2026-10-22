@@ -63,6 +63,27 @@ You will need a schema to guide the import — either a saved schema referenced 
   </Step>
 </Steps>
 
+### Importing Many Files
+
+To import a batch of files, create all the import records in one request with the [bulk create endpoint](/api-reference/headless/create-multiple-headless-imports), then upload each file to its own `upload` URL as above.
+
+Each item in `imports` takes the same body as a single create. You can send up to 100 items per request. Every item is validated before anything is created, so if one item is invalid, the request returns `400` with an error per item and no imports are created.
+
+```sh
+curl \
+  -H "Content-Type: application/json" \
+  -H "X-Dromo-License-Key: your-backend-key" \
+  -X POST 'https://app.dromo.io/api/v1/headless/imports/bulk/' \
+  -d '{
+    "imports": [
+      {"schema_id": "4eefe3fe-7181-4562-aa28-8cfe1c5bdf1b", "original_filename": "rent-roll-01.xlsx", "import_metadata": {"batch_id": "batch-7"}},
+      {"schema_id": "4eefe3fe-7181-4562-aa28-8cfe1c5bdf1b", "original_filename": "rent-roll-02.xlsx", "import_metadata": {"batch_id": "batch-7"}}
+    ]
+  }'
+```
+
+The response is `{"imports": [...]}`, in the same order as your request, each with its own `id` and `upload` URL. Each file is still its own import with its own status. To group a batch, set a shared value in `import_metadata`, and use webhooks rather than polling to track results.
+
 ### Importing a JSON Object
 
 <Steps>
@@ -246,12 +267,28 @@ Some examples of unrecoverable errors are:
 - The import file was corrupted and could not be parsed
 - The import file was completely empty
 - A custom hook threw an unhandled exception
+- A step hook called [`instance.abortImport`](/reference/hooks#instanceabortimport)
 
 Failed imports do not have results and also do not have a review URL.
+
+When a hook aborts the import, the [retrieve headless import endpoint](/api-reference/headless/retrieve-headless-import) returns the `code` and `message` you passed in `import_errors`:
+
+```json
+{
+  "status": "FAILED",
+  "import_errors": [
+    {
+      "type": "developer",
+      "code": "UNRECOGNIZED_FORMAT",
+      "message": "This file is not a Market Rent Schedule export."
+    }
+  ]
+}
+```
 
 ## Rate Limits[​](#rate-limits "Direct link to Rate Limits")
 
 The Headless API has the following rate limits:
 
-- **Creating headless imports**: 20 requests per minute
+- **Creating headless imports**: 20 requests per minute. A [bulk create](#importing-many-files) request counts as one request, whatever the number of imports in it.
 - **Polling import status**: 12 requests per minute per import

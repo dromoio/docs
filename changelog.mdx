@@ -3,6 +3,26 @@ title: "Changelog"
 description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
+<Update label="October 2026" description="Upcoming" tags={["Headless API", "Hooks"]}>
+
+## Abort an Import from a Hook
+
+Step hooks can now stop an import with your own reason, for example when an uploaded file isn't the format you expect.
+
+- **`instance.abortImport({ code, message })`**: In the importer, shows your `code` and `message` to the user. In headless imports, ends the import as `FAILED` with your `code` and `message` in `import_errors`.
+
+See [`instance.abortImport`](/reference/hooks#instanceabortimport) in the Hooks reference for details.
+
+## Bulk Headless Imports
+
+Create import records for a whole batch of files in one request.
+
+- **`POST /api/v1/headless/imports/bulk/`**: Creates up to 100 headless imports at once and returns an `upload` URL for each. If any item is invalid, none are created.
+
+See [Importing Many Files](/getting-started/headless#importing-many-files) for an example.
+
+</Update>
+
 <Update label="October 2026" description="SDK v2.18.1" tags={["Developer Tools"]}>
 
 ## Angular 22 Support

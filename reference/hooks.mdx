@@ -1008,3 +1008,34 @@ Allows customization of the messaged displayed to the user after they click 'Fin
 <ResponseField name="options" type="{ submitButtonText?: string, cancelButtonText?: string }">
   Optionally override text for submit and cancel buttons.
 </ResponseField>
+
+### `instance.abortImport`[​](#instanceabortimport "Direct link to instanceabortimport")
+
+Stops the import with a reason you define. Use it when a file should be rejected outright rather than fixed row by row, for example when it isn't the report format you expect.
+
+- **In the importer**, the user stays on the current step and sees an error with your `code` as the title and your `message` below it.
+- **In [headless imports](/getting-started/headless#import-failed)**, the import ends in the `FAILED` state, and `import_errors` contains `{ "code": ..., "message": ... }` so your backend can read the reason.
+
+Returns a promise. Return from the hook after awaiting it.
+
+<ResponseField name="error" type="{ code: string, message: string }" required>
+  <ResponseField name="code" type="string" required>
+    A machine-readable reason, such as `UNRECOGNIZED_FORMAT`. Defaults to `ABORTED` if empty.
+  </ResponseField>
+  <ResponseField name="message" type="string" required>
+    A human-readable explanation. Defaults to "The import was aborted." if empty.
+  </ResponseField>
+</ResponseField>
+
+```javascript
+dromo.registerStepHook("UPLOAD_STEP", async function (instance, data) {
+  // Rent schedules from this partner always have the report title in A1
+  if (data.dataPreview[0]?.[0] !== "Market Rent Schedule") {
+    await instance.abortImport({
+      code: "UNRECOGNIZED_FORMAT",
+      message: "This file is not a Market Rent Schedule export.",
+    });
+    return;
+  }
+});
+```
