@@ -661,6 +661,113 @@
         ]
       }
     },
+    "/headless/imports/bulk/": {
+      "post": {
+        "tags": [
+          "headless"
+        ],
+        "summary": "Create multiple headless imports",
+        "description": "Creates up to 100 headless imports in one request, for example one per file in a batch. Each item takes the same body as [create a new headless import](/api-reference/headless/create-a-new-headless-import). Every item is validated before any import is created, so if one item is invalid, none are created. Each import then runs and reports its status independently.",
+        "operationId": "bulkCreateHeadlessImports",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "imports"
+                ],
+                "properties": {
+                  "imports": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "description": "Imports to create. Each item accepts the same fields as the single create endpoint.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "schema_id": {
+                          "type": "string",
+                          "description": "ID of a saved schema. Mutually exclusive with `fields`.",
+                          "example": "94187d21-9820-420f-b08c-a80cbbf52604"
+                        },
+                        "fields": {
+                          "$ref": "#/components/schemas/SchemaFields"
+                        },
+                        "settings": {
+                          "$ref": "#/components/schemas/SchemaSettings"
+                        },
+                        "hooks": {
+                          "$ref": "#/components/schemas/SchemaHooks"
+                        },
+                        "original_filename": {
+                          "type": "string",
+                          "description": "Name of the file being imported (exclude if using initial_data)",
+                          "example": "rent-roll-01.xlsx"
+                        },
+                        "initial_data": {
+                          "type": "array",
+                          "description": "Complete JSON data to be imported, max size 15MB (exclude if using a file)"
+                        },
+                        "import_metadata": {
+                          "$ref": "#/components/schemas/ImportMetaData"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "imports": [
+                    {
+                      "schema_id": "94187d21-9820-420f-b08c-a80cbbf52604",
+                      "original_filename": "rent-roll-01.xlsx",
+                      "import_metadata": {
+                        "batch_id": "2026-10-batch-7"
+                      }
+                    },
+                    {
+                      "schema_id": "94187d21-9820-420f-b08c-a80cbbf52604",
+                      "original_filename": "rent-roll-02.xlsx",
+                      "import_metadata": {
+                        "batch_id": "2026-10-batch-7"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Imports created, in request order. Each includes its own `upload` URL.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "imports": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/HeadlessImportFull"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`imports` is missing, empty or has more than 100 items, or at least one item is invalid. For item errors, `imports` holds one error object per item in request order (`{}` for valid items). No imports are created."
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
     "/headless/sftp/credentials/": {
       "get": {
         "tags": ["sftp-credentials"],
