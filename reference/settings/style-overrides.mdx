@@ -263,21 +263,59 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="rejectBorderColor" type="string">
           The border color when the dragged file cannot be accepted
         </ResponseField>
+
+        <ResponseField name="showColumnPreview" type="boolean" default="true">
+          Whether to show the faded preview of your schema's columns inside the dropzone. Set to `false` for a plain dropzone.
+        </ResponseField>
       </div>
     </ResponseField>
 
     <ResponseField name="helpText" type="object" default="{}">
-      Style overrides for the help text boxes
+      Style overrides for the help text boxes shown by each step's `helpText` setting
 
       <div className="ml-8">
-        <ResponseField name="textColor" type="string">
+        <ResponseField name="textColor" type="string" default="#003B94">
           The text color of the help text
         </ResponseField>
 
-        <ResponseField name="backgroundColor" type="string">
+        <ResponseField name="backgroundColor" type="string" default="rgba(133, 182, 255, 0.3)">
           The background color of the help text box
         </ResponseField>
+
+        <ResponseField name="showIcon" type="boolean" default="true">
+          Whether to show the info icon at the start of the help text
+        </ResponseField>
+
+        <ResponseField name="border" type="string" default="none">
+          The border of the help text box, as a CSS `border` value (for example `1px solid #d1d5db`)
+        </ResponseField>
+
+        <ResponseField name="borderRadius" type="string" default="0.5rem">
+          The corner radius of the help text box
+        </ResponseField>
+
+        <ResponseField name="padding" type="string" default="0.5rem">
+          The padding inside the help text box
+        </ResponseField>
+
+        <ResponseField name="fontSize" type="string" default="0.875rem">
+          The font size of the help text
+        </ResponseField>
+
+        <ResponseField name="fontWeight" type="string" default="500">
+          The font weight of the help text
+        </ResponseField>
       </div>
+
+      To show help text as a plain subtitle instead of a box, hide the icon and remove the background and padding:
+
+      ```javascript
+      helpText: {
+        showIcon: false,
+        backgroundColor: "transparent",
+        padding: "0",
+      }
+      ```
     </ResponseField>
 
     <ResponseField name="stepperBar" type="object" default="{}">

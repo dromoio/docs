@@ -128,8 +128,27 @@ Dromo uses industry-standard best practices to secure your data on our servers.
       Maps supported error keys to replacement messages.
     </ResponseField>
 
-    <ResponseField name="ui" type="Record<'COLUMN_MATCH_SUBTITLE' | 'BULK_FIX_SUBTITLE', string>" default="{}">
-      Overrides the subtitle shown on the Column Matching or Bulk Fix step.
+    <ResponseField name="ui" type="Record<string, string>" default="{}">
+      Overrides interface text. Unknown keys are ignored. Keys you don't set keep their default text.
+
+      | Key | Replaces |
+      |---|---|
+      | `HEADER_TITLE` | Adds a title in the top-left of the header bar. There is no title by default. |
+      | `STEP_UPLOAD` | "Upload" in the step bar |
+      | `STEP_SET_HEADER` | "Set header" in the step bar |
+      | `STEP_MATCH_COLUMNS` | "Match columns" in the step bar |
+      | `STEP_BULK_FIX` | "Bulk fix" in the step bar |
+      | `STEP_REVIEW` | "Review and edit" in the step bar and as the Review step's title |
+      | `HEADER_SELECT_TITLE` | The header row step's title, "Select the header row" |
+      | `HEADER_SELECT_SUBTITLE` | The header row step's subtitle |
+      | `COLUMN_MATCH_TITLE` | The Column Matching step's title, "Match your columns" |
+      | `COLUMN_MATCH_SUBTITLE` | The Column Matching step's subtitle |
+      | `BULK_FIX_TITLE` | The Bulk Fix step's title, "Bulk fix data" |
+      | `BULK_FIX_SUBTITLE` | The Bulk Fix step's subtitle |
+
+      Subtitles keep line breaks: use `\n` to split a subtitle over several lines.
+
+      To change the Upload step's title, use [`title`](#title). For text under it, use [`uploadStep.helpText`](#helptext).
     </ResponseField>
   </div>
 
@@ -137,6 +156,11 @@ Dromo uses industry-standard best practices to secure your data on our servers.
   settings: {
     textOverrides: {
       ui: {
+        HEADER_TITLE: "Bulk import offices",
+        STEP_UPLOAD: "Choose file",
+        STEP_REVIEW: "Check and submit",
+        HEADER_SELECT_SUBTITLE:
+          "We picked the row that looks most like column names.\nClick a different row if that's not right.",
         COLUMN_MATCH_SUBTITLE: "Match each spreadsheet column to a destination field",
         BULK_FIX_SUBTITLE: "Review and standardize unmatched values",
       },
