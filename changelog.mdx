@@ -13,7 +13,7 @@ More of the importer's wording and layout can now be customized. Nothing changes
 - **Step names, titles and subtitles**: new [`textOverrides.ui`](/reference/settings/settings#textoverrides) keys rename the steps in the step bar (`STEP_UPLOAD`, `STEP_SET_HEADER`, `STEP_MATCH_COLUMNS`, `STEP_BULK_FIX`, `STEP_REVIEW`) and set the titles and subtitles of the header row, Column Matching and Bulk Fix steps. Subtitles can span several lines with `\n`.
 - **Help text**: [`styleOverrides.helpText`](/reference/settings/style-overrides) now accepts `showIcon`, `border`, `borderRadius`, `padding`, `fontSize` and `fontWeight`, so help text can be styled as a plain subtitle.
 - **Upload dropzone**: `styleOverrides.dropzone.showColumnPreview: false` hides the faded column preview inside the dropzone.
-- **Confirmation message**: HTML passed to [`setConfirmationMessage`](/reference/hooks#instance-setconfirmationmessage) now renders as formatted content, including titles, bold text and line breaks. Previously the tags were shown as plain text. Plain-text messages look the same as before.
+- **Confirmation message**: HTML passed to [`setConfirmationMessage`](/reference/hooks#instance-setconfirmationmessage) now renders as formatted content, including titles, bold text and line breaks. Previously the tags were shown as plain text. Plain-text messages, including text wrapped in a single `<div>`, look the same as before.
 
 </Update>
 
