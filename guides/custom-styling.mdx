@@ -466,6 +466,7 @@ The dropzone is the drag-and-drop area on the upload screen where users can drop
 - **`activeBorderColor`** - Border color while a file is being dragged over the dropzone
 - **`acceptBorderColor`** - Border color when the dragged file is accepted
 - **`rejectBorderColor`** - Border color when the dragged file is rejected
+- **`showColumnPreview`** - Show the faded preview of your schema's columns inside the dropzone (boolean, default `true`)
 
 <Tip>
   A dashed border is commonly used for dropzones to visually distinguish them as interactive upload areas. Consider using your brand's accent color for the border when a file is being dragged over the dropzone.
@@ -498,6 +499,12 @@ Help text appears throughout the interface to provide guidance, tips, and contex
 
 - **`textColor`** - Color of help text
 - **`backgroundColor`** - Background color for help text sections (if applicable)
+- **`showIcon`** - Show the info icon (boolean, default `true`)
+- **`border`** - CSS border for the help text box (default `none`)
+- **`borderRadius`** - Corner radius (default `0.5rem`)
+- **`padding`** - Inner padding (default `0.5rem`)
+- **`fontSize`** - Font size (default `0.875rem`)
+- **`fontWeight`** - Font weight (default `500`)
 
 **Use cases:**
 - Instructions on the upload screen
@@ -514,6 +521,26 @@ const settings = {
   }
 }
 ```
+
+To show help text as a plain subtitle under the step title rather than a box:
+
+```js
+const settings = {
+  styleOverrides: {
+    helpText: {
+      showIcon: false,
+      backgroundColor: "transparent",
+      padding: "0",
+      textColor: "#486581",
+      fontWeight: "400"
+    }
+  }
+}
+```
+
+<Tip>
+  To change the wording of step titles, subtitles and step names, use [`textOverrides.ui`](/reference/settings/settings#textoverrides).
+</Tip>
 
 ### Stepper Bar (Progress Indicator)
 

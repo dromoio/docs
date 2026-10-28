@@ -999,12 +999,24 @@ Removes rows rows the dataset.
 
 ### `instance.setConfirmationMessage`[​](#instancesetconfirmationmessage "Direct link to instancesetconfirmationmessage")
 
-Allows customization of the messaged displayed to the user after they click 'Finish'. Content can be plain text or HTML.
+Sets the message shown in the confirmation dialog after the user clicks **Finish**. Call it from a `REVIEW_STEP_PRE_SUBMIT` step hook, which runs when Finish is clicked and before the dialog opens, so the message can reflect the data being submitted.
 
 <ResponseField name="messageHTML" type="string" required>
-  Message for finish confirmation alert modal. Text or HTML for embedding links or media.
+  The dialog message, as plain text or HTML.
+
+  - **Plain text** is shown in the dialog's standard large, bold style.
+  - **HTML** is sanitized, then rendered as formatted content. Use it for a title (`<h1>`–`<h3>` are styled as the dialog title), bold text, line breaks, lists or links.
 </ResponseField>
 
 <ResponseField name="options" type="{ submitButtonText?: string, cancelButtonText?: string }">
   Optionally override text for submit and cancel buttons.
 </ResponseField>
+
+```javascript
+dromo.registerStepHook("REVIEW_STEP_PRE_SUBMIT", function (instance, data) {
+  instance.setConfirmationMessage(
+    "<h2>Ready to import?</h2><p><b>20 offices</b> will be created.<br>This can't be undone.</p>",
+    { submitButtonText: "Import", cancelButtonText: "Go back" }
+  );
+});
+```
