@@ -237,6 +237,10 @@ export class DromoImporterComponent implements DromoSavedSchemaMethods {
 
 </CodeGroup>
 
+<Note>
+  To tag each import with information from your app, such as an asset ID, bind the `importMetadata` input: `[importMetadata]="{ assetId: 'A-1042' }"`. See [`importMetadata`](/reference/settings/settings#importmetadata). Without a saved schema, pass `importMetadata` inside `settings` instead.
+</Note>
+
 </Step>
 
 </Steps>

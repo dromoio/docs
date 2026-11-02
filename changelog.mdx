@@ -3,6 +3,21 @@ title: "Changelog"
 description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
+<Update label="November 2026" description="SDK v2.21.0" tags={["Developer Tools", "Webhooks", "Dashboard"]}>
+
+## Import Metadata
+
+You can now attach your own key/value pairs to each import, such as the ID of the asset or account the data belongs to. Dromo stores them with the import and hands them back wherever you work with imports.
+
+- **`importMetadata`**: A new setting that takes an object of string, number, boolean or `null` values.
+- **`setImportMetadata`**: A new importer method to set or change the metadata before or during an import. Use it to attach metadata when you load a saved schema.
+- **Results and webhooks**: The metadata comes back as `importMetadata` in result metadata and as `import_metadata` in import webhooks and the Imports API.
+- **Dashboard**: Each import's page shows its metadata, and the imports list can be filtered by a metadata key and value.
+
+See [`importMetadata`](/reference/settings/settings#importmetadata) in the Settings reference for details.
+
+</Update>
+
 <Update label="October 2026" description="Importer update" tags={["Customization", "Styling"]}>
 
 ## More Text and Style Customization

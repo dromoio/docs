@@ -1978,6 +1978,20 @@
             "type": "string",
             "example": "new products"
           },
+          "import_metadata": {
+            "type": "object",
+            "nullable": true,
+            "description": "Key/value pairs set with the importMetadata setting, or null if none were set.",
+            "additionalProperties": {
+              "nullable": true,
+              "oneOf": [
+                { "type": "string" },
+                { "type": "number" },
+                { "type": "boolean" }
+              ]
+            },
+            "example": { "assetId": "A-1042" }
+          },
           "raw_upload": {
             "type": "object",
             "properties": {
