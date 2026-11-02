@@ -144,6 +144,16 @@ dromo.setUser(user);
 ```
 </CodeGroup>
 
+### Import metadata
+
+To tag each import with information from your app, such as the asset or account it belongs to, call [`setImportMetadata`](/reference/hooks#instancesetimportmetadata) before opening the importer. The metadata is stored with the import, returned in your results and webhooks, and shown in the dashboard.
+
+<CodeGroup>
+```javascript
+dromo.setImportMetadata({ assetId: "A-1042" });
+```
+</CodeGroup>
+
 
 ### Development Mode[​](#development-mode "Direct link to Development mode")
 

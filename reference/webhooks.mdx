@@ -43,7 +43,10 @@ The next time an import is completed for a matching schema, you will receive a P
     "status": "SUCCESSFUL",
     "num_data_rows": 433,
     "development_mode": false,
-    "has_data": true
+    "has_data": true,
+    "import_metadata": {
+      "assetId": "A-1042"
+    }
   }
 }
 ```
@@ -93,6 +96,10 @@ To get more details about the parameters, expand the following section:
     Whether the results of this import were saved using [backend sync](/reference/settings/settings#backendsyncmode).
 
     If `true`, you can fetch the import results using the [get import data endpoint](/api-reference/uploads/get-upload-metadata).
+  </ResponseField>
+
+  <ResponseField name="import_metadata" type="object | null">
+    The [`importMetadata`](/reference/settings/settings#importmetadata) attached to this import, or `null` if none was set
   </ResponseField>
 </ResponseField>
 </Expandable>
