@@ -79,6 +79,12 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="backdropBlur" type="boolean" default="true">
           Whether to apply a blur effect to the background when modals are open
         </ResponseField>
+
+        <ResponseField name="fullScreen" type="boolean" default="false">
+          Whether the importer fills the whole viewport instead of opening as a centered modal over your page. When `true`, the importer has no margin, rounded corners, shadow or backdrop, and `borderRadius` is ignored for the importer window.
+
+          The default (`false`) keeps the centered modal layout. Has no effect when the importer is embedded with `initInline`, since your page already controls that container.
+        </ResponseField>
       </div>
     </ResponseField>
 
