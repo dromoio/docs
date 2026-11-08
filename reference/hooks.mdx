@@ -1027,6 +1027,8 @@ Sets, replaces or clears the [`importMetadata`](/reference/settings/settings#imp
 
 <ResponseField name="importMetadata" type="Record<string, string | number | boolean | null> | null" required>
   The new metadata. Pass `null` to clear it. The same limits apply as for the `importMetadata` setting.
+
+  If the value is invalid, it is ignored: the previous metadata is kept, the importer stays open, and a warning is logged to the browser console. This is unlike an invalid `importMetadata` setting, which stops the importer from opening.
 </ResponseField>
 
 ```javascript
