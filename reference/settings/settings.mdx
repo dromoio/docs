@@ -17,6 +17,27 @@ description: "Settings are supplied as an object to the Dromo instance on initia
   </Note>
 </ResponseField>
 
+<ResponseField name="importMetadata" type="Record<string, string | number | boolean | null>">
+  Key/value pairs you attach to an import, such as the ID of the record or asset the data belongs to. Dromo stores them with the import and returns them:
+
+  - in the result metadata passed to [`onResults`](/reference/results) and `beforeFinish`, as `importMetadata`
+  - in [import webhooks](/reference/webhooks), as `import_metadata`
+  - on the import's page in the Dromo dashboard, where you can also filter imports by a key and value
+
+  ```javascript
+  const dromo = new DromoUploader(licenseKey, fields, {
+    importIdentifier: "Loan tape",
+    importMetadata: { assetId: "A-1042", assetName: "Harbor Point" },
+  }, user);
+  ```
+
+  Values must be strings, numbers, booleans or `null`. Nested objects and arrays are not allowed. An import can have up to 50 keys, keys can be up to 100 characters, string values up to 1,000 characters, and the whole object up to 8 KB. If you pass an invalid value, the importer shows a developer error.
+
+  <Note>
+    To set or change the metadata after creating the importer, including when you use a saved schema, call [`setImportMetadata`](/reference/hooks#instancesetimportmetadata). The value in place when the user clicks **Finish** is the one that is stored.
+  </Note>
+</ResponseField>
+
 <ResponseField name="invalidDataBehavior" type='"BLOCK_SUBMIT" | "REMOVE_INVALID_ROWS" | "INCLUDE_INVALID_ROWS"' default='REMOVE_INVALID_ROWS'>
   This option impacts the user's experience when invalid data is present. When this is set to `"BLOCK_SUBMIT"`, Dromo will disable the 'Finish' button preventing the user from submitting with errors. When this is set to `"REMOVE_INVALID_ROWS"`, Dromo will remove any rows with errors and the user will see a dialog indicating "Discard *X* rows with issues. Submit the rest." When this is set to `"INCLUDE_INVALID_ROWS"`, Dromo will submit the records with errors and the user will see "Submit your data anyway (errors may occur).".
 

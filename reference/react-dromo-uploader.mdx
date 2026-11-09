@@ -103,3 +103,7 @@ The `DromoUploader` component is the primary way to integrate Dromo into your Re
 <ResponseField name="importIdentifier" type="string">
   Overrides the `importIdentifier` setting if a `schemaId` is also provided.
 </ResponseField>
+
+<ResponseField name="importMetadata" type="Record<string, string | number | boolean | null>">
+  Sets the [`importMetadata`](/reference/settings/settings#importmetadata) for this import when a `schemaId` is provided. Without a saved schema, pass `importMetadata` inside `settings` instead.
+</ResponseField>

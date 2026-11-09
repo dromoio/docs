@@ -41,6 +41,10 @@ This callback is called when the user completes the import flow. `onResults` is 
     The [`importIdentifier`](/reference/settings/settings#importidentifier) of this import
   </ResponseField>
 
+  <ResponseField name="importMetadata" type="Record<string, string | number | boolean | null> | null">
+    The [`importMetadata`](/reference/settings/settings#importmetadata) attached to this import, or `null` if none was set
+  </ResponseField>
+
   <ResponseField name="user" type="User">
     The [user](/reference/users) associated with this import
   </ResponseField>
@@ -113,6 +117,10 @@ Otherwise, if nothing is returned from the `beforeFinish` callback (or any other
 
   <ResponseField name="importIdentifier" type="string">
     The [`importIdentifier`](/reference/settings/settings#importidentifier) of this import
+  </ResponseField>
+
+  <ResponseField name="importMetadata" type="Record<string, string | number | boolean | null> | null">
+    The [`importMetadata`](/reference/settings/settings#importmetadata) attached to this import, or `null` if none was set
   </ResponseField>
 
   <ResponseField name="user" type="User">

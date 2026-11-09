@@ -1020,3 +1020,20 @@ dromo.registerStepHook("REVIEW_STEP_PRE_SUBMIT", function (instance, data) {
   );
 });
 ```
+
+### `instance.setImportMetadata`[​](#instancesetimportmetadata "Direct link to instancesetimportmetadata")
+
+Sets, replaces or clears the [`importMetadata`](/reference/settings/settings#importmetadata) attached to this import. You can call it on your `DromoUploader` before opening the importer, which is how you attach metadata when using a saved schema, or from a step hook while the importer is open. The value in place when the user clicks **Finish** is stored with the import.
+
+<ResponseField name="importMetadata" type="Record<string, string | number | boolean | null> | null" required>
+  The new metadata. Pass `null` to clear it. The same limits apply as for the `importMetadata` setting.
+
+  If the value is invalid, it is ignored: the previous metadata is kept, the importer stays open, and a warning is logged to the browser console. This is unlike an invalid `importMetadata` setting, which stops the importer from opening.
+</ResponseField>
+
+```javascript
+const dromo = new DromoUploader("YOUR_LICENSE_KEY", "YOUR_SCHEMA_ID");
+dromo.setImportMetadata({ assetId: "A-1042" });
+dromo.open();
+```
+
