@@ -3,7 +3,7 @@ title: "Changelog"
 description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
-<Update label="November 2026" description="SDK v2.21.0" tags={["Developer Tools", "Webhooks", "Dashboard"]}>
+<Update label="November 2026" description="SDK v2.22.0" tags={["Developer Tools", "Webhooks", "Dashboard"]}>
 
 ## Import Metadata
 
@@ -15,6 +15,18 @@ You can now attach your own key/value pairs to each import, such as the ID of th
 - **Dashboard**: Each import's page shows its metadata, and the imports list can be filtered by a metadata key and value.
 
 See [`importMetadata`](/reference/settings/settings#importmetadata) in the Settings reference for details.
+
+</Update>
+
+<Update label="November 2026" description="Importer update" tags={["Customization", "Styling"]}>
+
+## Full-Screen Importer Layout
+
+The importer can now fill the whole screen instead of opening as a centered modal.
+
+- **`styleOverrides.global.fullScreen`**: Set to `true` to have the importer fill the viewport, with no margin, rounded corners, shadow or backdrop. It defaults to `false`, so the importer still opens as a centered modal unless you turn this on. It has no effect when the importer is embedded with `initInline`.
+
+See [`fullScreen`](/reference/settings/style-overrides#param-full-screen) in the Style Overrides reference.
 
 </Update>
 

@@ -128,6 +128,20 @@ const settings = {
 }
 ```
 
+### Full-Screen Layout
+
+- **`fullScreen`** - Boolean (default `false`). When `true`, the importer fills the whole viewport instead of opening as a centered modal: no margin, rounded corners, shadow or backdrop. Leave it unset to keep the default centered modal. It has no effect when the importer is embedded with `initInline`.
+
+```js
+const settings = {
+  styleOverrides: {
+    global: {
+      fullScreen: true
+    }
+  }
+}
+```
+
 ## Button Styling
 
 Dromo uses three button types throughout the interface: primary (main actions), secondary (alternative actions), and tertiary (subtle actions). Each button type can be fully customized with normal and hover states.
