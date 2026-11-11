@@ -35,6 +35,11 @@
       "display": "simple"
     }
   },
+  "integrations": {
+    "gtm": {
+      "tagId": "GTM-54KTHXZN"
+    }
+  },
   "navbar": {
     "links": [
       {
