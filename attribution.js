@@ -78,7 +78,7 @@
     });
 
     // Invite links carry utm_source=customer; they are not acquisition.
-    if (params.utm_source === "customer") return;
+    if ((params.utm_source || "").toLowerCase() === "customer") return;
 
     var refHost = "";
     try {
@@ -95,6 +95,8 @@
     var domain = isDromoHost(window.location.hostname) ? "; Domain=.dromo.io" : "";
     var attributes = domain + "; Path=/; Max-Age=15552000; Secure; SameSite=Lax";
 
+    // Only a visit with new params replaces either cookie: a JS-set cookie is capped at 7 days
+    // in Safari, so it must not overwrite the 180-day ones dromo.io sets server-side.
     if (hasParams) document.cookie = "dromo_lt=" + value + attributes;
     // Written once, never overwritten.
     if (!/(?:^|; )dromo_ft=/.test(document.cookie)) {
