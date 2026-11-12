@@ -7,33 +7,14 @@
  *    sets them in a Netlify edge function; Mintlify has no server hook, so this mirrors those rules
  *    (new-website: netlify/attribution-cookies.js). The dashboard reads them at signup.
  *
- * Nothing here runs when the visitor declined analytics in dromo.io's cookie banner (cc_cookie,
- * readable on this subdomain); no recorded choice is not a decline.
+ * This is first-party attribution and runs whatever dromo.io's cookie banner says. The banner
+ * choice only limits what is passed on to Google, which happens at signup (dashboard + backend).
  *
  * GA4 comes from the dromo.io GTM container, configured under `integrations.gtm` in docs.json.
  */
 (function () {
   if (window.__dromoAttributionLoaded) return;
   window.__dromoAttributionLoaded = true;
-
-  function analyticsDeclined() {
-    var match = document.cookie.match(/(?:^|; )cc_cookie=([^;]*)/);
-    if (!match) return false;
-    var candidates = [match[1]];
-    try {
-      candidates.push(decodeURIComponent(match[1]));
-    } catch (e) {}
-    for (var i = 0; i < candidates.length; i++) {
-      try {
-        var categories = JSON.parse(candidates[i]).categories;
-        if (Array.isArray(categories)) return categories.indexOf("analytics") === -1;
-      } catch (e) {}
-    }
-    // Unreadable choice: we can't show consent was given.
-    return true;
-  }
-
-  if (analyticsDeclined()) return;
 
   // --- HubSpot tracking code -------------------------------------------------------------------
   if (!document.getElementById("hs-script-loader")) {
