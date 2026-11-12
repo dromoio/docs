@@ -3,6 +3,21 @@ title: "Changelog"
 description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
+<Update label="November 2026" description="Dashboard update" tags={["AI", "Dashboard"]}>
+
+## Bring Your Own AI
+
+Your organization can now run Dromo's AI features on its own AI provider account instead of Dromo's, so import data sent to AI goes only to an account you control.
+
+- **Providers**: OpenAI (including Azure OpenAI and other OpenAI-compatible endpoints), Anthropic, Amazon Bedrock and Google Gemini.
+- **Covers every AI feature**: AI column matching, AI transformations, hook generation and Dr. Dromo use your provider and key. A failed request is never retried on Dromo's account.
+- **Set up in the dashboard**: Organization admins choose a provider, enter credentials and pick models under **My organization → AI provider**, then check it with **Test connection**. Keys are stored encrypted and can't be read back.
+- **AI column matching for Claude**: Anthropic and Bedrock have no embeddings, so column matching uses your lightweight model instead.
+
+Bring Your Own AI is enabled per organization; contact the Dromo team to turn it on. See the [Bring Your Own AI guide](/guides/bring-your-own-ai) for details.
+
+</Update>
+
 <Update label="November 2026" description="SDK v2.22.0" tags={["Developer Tools", "Webhooks", "Dashboard"]}>
 
 ## Import Metadata
