@@ -3,6 +3,18 @@ title: "Changelog"
 description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
+<Update label="November 2026" description="Importer update" tags={["Column Matching", "Customization"]}>
+
+## Leave Fields Out of Automatic Column Matching
+
+You can now stop Dromo from matching columns to a field automatically, so your users choose for themselves whether to map it. In an update import, for example, the ID column can match on its own while every other column waits for the user to opt in.
+
+- **`autoMatch`**: A new field option. Set it to `false` to leave the field out of exact, fuzzy and AI matching and out of remembered mappings. Users can still match it by hand, and the column matching step is never skipped while such a field is in the schema. Headless imports ignore it.
+
+See [leaving fields out of automatic matching](/reference/fields/fields#leaving-fields-out-of-automatic-matching) in the Fields reference.
+
+</Update>
+
 <Update label="November 2026" description="Dashboard update" tags={["AI", "Dashboard"]}>
 
 ## Bring Your Own AI
