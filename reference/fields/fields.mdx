@@ -109,6 +109,10 @@ And, when submitted, Dromo would provide you with a result data array like this:
   An array of alternate matches that this field to map to. See [column matching](#column-matching).
 </ResponseField>
 
+<ResponseField name="autoMatch" type="boolean" default="true">
+  If `false`, Dromo never matches a column to this field automatically. The user can still match it by hand on the column matching step. See [leaving fields out of automatic matching](#leaving-fields-out-of-automatic-matching).
+</ResponseField>
+
 <ResponseField name="validators" type="Validator[]">
   An array of validator objects to validate this field. See [field validators](/reference/fields/field-validators).
 </ResponseField>
@@ -164,3 +168,26 @@ Example:
 }
 ```
 </CodeGroup>
+
+### Leaving fields out of automatic matching[​](#leaving-fields-out-of-automatic-matching "Direct link to Leaving fields out of automatic matching")
+
+Set `autoMatch: false` on a field to keep Dromo from matching any column to it, even when a header is an exact match. The user decides whether to match it.
+
+This suits imports where the user should choose which columns to bring in. In an update import, for example, the ID column can match automatically while every other column waits for the user to choose it.
+
+<CodeGroup>
+```javascript
+const fields = [
+  { label: "Employee ID", key: "employeeId" },
+  { label: "Salary", key: "salary", autoMatch: false },
+  { label: "Job Title", key: "jobTitle", autoMatch: false },
+];
+```
+</CodeGroup>
+
+A field with `autoMatch: false`:
+
+- Is left out of exact, fuzzy and AI matching, and its `alternateMatches` are not used.
+- Is not restored from a previous import's mapping when [`autoMapHeaders`](/reference/settings/settings#param-auto-map-headers) is on.
+- Stops the column matching step from being skipped automatically, so the user always gets the chance to match it.
+- Is matched as usual in [headless imports](/getting-started/headless), where there is no user to match it.
