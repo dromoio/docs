@@ -1,0 +1,56 @@
+---
+title: "Bring Your Own AI"
+description: "Run Dromo's AI features on your own OpenAI, Anthropic, Amazon Bedrock or Google Gemini account with Bring Your Own AI."
+---
+
+Bring Your Own AI lets your organization run Dromo's AI features on your own AI provider account instead of Dromo's. AI column matching, AI transformations, hook generation and Dr. Dromo all send their requests with your key, so your import data goes only to the AI account you control.
+
+This includes Dr. Dromo, the assistant in the dashboard: schema generation, answers and every other step run on your provider and the models you choose.
+
+<Info>
+  Bring Your Own AI is enabled per organization. Contact the Dromo team to turn it on for your account.
+</Info>
+
+## Supported Providers
+
+| Provider | Credentials | Notes |
+|---|---|---|
+| **OpenAI** | API key | Also works with Azure OpenAI and other OpenAI-compatible endpoints through a **Base URL** |
+| **Anthropic** | API key | Claude models |
+| **Amazon Bedrock** | AWS access key pair or a Bedrock API key, plus the AWS region | Claude models on Bedrock |
+| **Google Gemini** | API key | Gemini models |
+
+You choose the models from a list for each provider: a main model, an optional lightweight model for small tasks, and, for OpenAI and Gemini, an optional embedding model for AI column matching. Anthropic and Bedrock have no embeddings, so AI column matching uses your lightweight model instead.
+
+## Setting It Up
+
+Only organization admins can change these settings.
+
+<Steps>
+  <Step title="Open the AI provider settings">
+    In the Dromo dashboard, go to **My organization** and find the **AI provider** card.
+  </Step>
+  <Step title="Choose a provider and enter your credentials">
+    Pick your provider. Only the fields that provider needs are shown. Choose your models from the lists.
+  </Step>
+  <Step title="Save and test">
+    Click **Save**, then **Test connection**. Dromo sends a short request to each model you chose and shows whether each one answered, with the provider's error if one didn't.
+  </Step>
+</Steps>
+
+To go back to Dromo's own AI, click **Remove**.
+
+## How Your Credentials Are Handled
+
+- Keys are stored encrypted and can't be read back, in the dashboard or through the API. A saved key shows only as saved; leave it blank to keep it.
+- Switching provider clears the saved key, so one provider's key is never sent to another.
+- If a request to your provider fails (for example an invalid key, missing model access or no credits), the AI feature fails. Dromo never retries it on its own AI account.
+
+## Amazon Bedrock
+
+Create an IAM user for Dromo with an access key, or use a Bedrock API key. The user needs:
+
+- `bedrock-mantle:CreateInference` for models with `anthropic.*` IDs, such as `anthropic.claude-sonnet-5-5`.
+- `bedrock:InvokeModel` and `bedrock:InvokeModelWithResponseStream` for global inference profiles, such as `global.anthropic.claude-sonnet-4-6`.
+
+Anthropic models called through inference profiles also need Anthropic's use case details submitted once for your AWS account, from an Anthropic model in the Bedrock **Model catalog**.

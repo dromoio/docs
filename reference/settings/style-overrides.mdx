@@ -79,6 +79,12 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="backdropBlur" type="boolean" default="true">
           Whether to apply a blur effect to the background when modals are open
         </ResponseField>
+
+        <ResponseField name="fullScreen" type="boolean" default="false">
+          Whether the importer fills the whole viewport instead of opening as a centered modal over your page. When `true`, the importer has no margin, rounded corners, shadow or backdrop, and `borderRadius` is ignored for the importer window.
+
+          The default (`false`) keeps the centered modal layout. Has no effect when the importer is embedded with `initInline`, since your page already controls that container.
+        </ResponseField>
       </div>
     </ResponseField>
 
@@ -244,24 +250,78 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
           The background color of the dropzone
         </ResponseField>
 
+        <ResponseField name="color" type="string">
+          The text color of the dropzone message
+        </ResponseField>
+
         <ResponseField name="outline" type="string">
           The outline property of the dropzone
+        </ResponseField>
+
+        <ResponseField name="activeBorderColor" type="string">
+          The border color while a file is being dragged over the dropzone
+        </ResponseField>
+
+        <ResponseField name="acceptBorderColor" type="string">
+          The border color when the dragged file can be accepted
+        </ResponseField>
+
+        <ResponseField name="rejectBorderColor" type="string">
+          The border color when the dragged file cannot be accepted
+        </ResponseField>
+
+        <ResponseField name="showColumnPreview" type="boolean" default="true">
+          Whether to show the faded preview of your schema's columns inside the dropzone. Set to `false` for a plain dropzone.
         </ResponseField>
       </div>
     </ResponseField>
 
     <ResponseField name="helpText" type="object" default="{}">
-      Style overrides for the help text boxes
+      Style overrides for the help text boxes shown by each step's `helpText` setting
 
       <div className="ml-8">
-        <ResponseField name="textColor" type="string">
+        <ResponseField name="textColor" type="string" default="#003B94">
           The text color of the help text
         </ResponseField>
 
-        <ResponseField name="backgroundColor" type="string">
+        <ResponseField name="backgroundColor" type="string" default="rgba(133, 182, 255, 0.3)">
           The background color of the help text box
         </ResponseField>
+
+        <ResponseField name="showIcon" type="boolean" default="true">
+          Whether to show the info icon at the start of the help text
+        </ResponseField>
+
+        <ResponseField name="border" type="string" default="none">
+          The border of the help text box, as a CSS `border` value (for example `1px solid #d1d5db`)
+        </ResponseField>
+
+        <ResponseField name="borderRadius" type="string" default="0.5rem">
+          The corner radius of the help text box
+        </ResponseField>
+
+        <ResponseField name="padding" type="string" default="0.5rem">
+          The padding inside the help text box
+        </ResponseField>
+
+        <ResponseField name="fontSize" type="string" default="0.875rem">
+          The font size of the help text
+        </ResponseField>
+
+        <ResponseField name="fontWeight" type="string" default="500">
+          The font weight of the help text
+        </ResponseField>
       </div>
+
+      To show help text as a plain subtitle instead of a box, hide the icon and remove the background and padding:
+
+      ```javascript
+      helpText: {
+        showIcon: false,
+        backgroundColor: "transparent",
+        padding: "0",
+      }
+      ```
     </ResponseField>
 
     <ResponseField name="stepperBar" type="object" default="{}">
@@ -373,6 +433,74 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="headerHighlightedTextColor" type="string">
           The text color of highlighted column headers
         </ResponseField>
+
+        <ResponseField name="cellBackgroundColor" type="string">
+          The background color of body cells
+        </ResponseField>
+
+        <ResponseField name="cellTextColor" type="string">
+          The text color of body cells
+        </ResponseField>
+
+        <ResponseField name="cellHoverBackgroundColor" type="string">
+          The background color of a hovered cell
+        </ResponseField>
+
+        <ResponseField name="cellHoverTextColor" type="string">
+          The text color of a hovered cell
+        </ResponseField>
+
+        <ResponseField name="oddRowBackgroundColor" type="string">
+          The background color of alternating odd rows
+        </ResponseField>
+
+        <ResponseField name="rowSelectedBackgroundColor" type="string">
+          The background color of a selected row
+        </ResponseField>
+
+        <ResponseField name="rowSelectedBorderColor" type="string">
+          The border color of a selected row
+        </ResponseField>
+
+        <ResponseField name="borderColor" type="string">
+          The outer border color of the table
+        </ResponseField>
+
+        <ResponseField name="dividerColor" type="string">
+          The color of grid lines between rows and columns
+        </ResponseField>
+
+        <ResponseField name="errorCellBackgroundColor" type="string">
+          The background color of cells with error messages
+        </ResponseField>
+
+        <ResponseField name="errorCellHoverBackgroundColor" type="string">
+          The hover background color of cells with error messages
+        </ResponseField>
+
+        <ResponseField name="warningCellBackgroundColor" type="string">
+          The background color of cells with warning messages
+        </ResponseField>
+
+        <ResponseField name="warningCellHoverBackgroundColor" type="string">
+          The hover background color of cells with warning messages
+        </ResponseField>
+
+        <ResponseField name="infoCellBackgroundColor" type="string">
+          The background color of cells with informational messages
+        </ResponseField>
+
+        <ResponseField name="infoCellHoverBackgroundColor" type="string">
+          The hover background color of cells with informational messages
+        </ResponseField>
+
+        <ResponseField name="readOnlyCellBackgroundColor" type="string">
+          The background color of read-only cells
+        </ResponseField>
+
+        <ResponseField name="readOnlyCellTextColor" type="string">
+          The text color of read-only cells
+        </ResponseField>
       </div>
     </ResponseField>
 
@@ -387,6 +515,35 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="opacity" type="string" default="50">
           The opacity of the modal overlay (0-100)
         </ResponseField>
+      </div>
+    </ResponseField>
+
+    <ResponseField name="card" type="object" default="{}">
+      Style overrides for cards used in column matching and other importer screens.
+
+      <div className="ml-8">
+        <ResponseField name="backgroundColor" type="string">The card background color</ResponseField>
+        <ResponseField name="containerBackgroundColor" type="string">The background color of the area containing cards</ResponseField>
+        <ResponseField name="borderColor" type="string">The card border color</ResponseField>
+        <ResponseField name="borderWidth" type="string">The card border width</ResponseField>
+        <ResponseField name="borderRadius" type="string">The card border radius</ResponseField>
+        <ResponseField name="textColor" type="string">The card text color</ResponseField>
+        <ResponseField name="expandedBackgroundColor" type="string">The background color of expanded cards</ResponseField>
+        <ResponseField name="iconColor" type="string">The color of icons in cards</ResponseField>
+      </div>
+    </ResponseField>
+
+    <ResponseField name="dropdown" type="object" default="{}">
+      Style overrides for select controls and dropdown menus.
+
+      <div className="ml-8">
+        <ResponseField name="backgroundColor" type="string">The background color of the closed control</ResponseField>
+        <ResponseField name="borderColor" type="string">The control border color</ResponseField>
+        <ResponseField name="textColor" type="string">The selected value text color</ResponseField>
+        <ResponseField name="errorBorderColor" type="string">The control border color in an error state</ResponseField>
+        <ResponseField name="menuBackgroundColor" type="string">The background color of the open menu</ResponseField>
+        <ResponseField name="optionHoverBackgroundColor" type="string">The background color of a hovered option</ResponseField>
+        <ResponseField name="optionSelectedBackgroundColor" type="string">The background color of the selected option</ResponseField>
       </div>
     </ResponseField>
 

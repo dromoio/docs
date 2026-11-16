@@ -1,6 +1,88 @@
 ---
 title: "Changelog"
+description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
+
+<Update label="November 2026" description="SDK v2.23.0" tags={["Column Matching", "Customization"]}>
+
+## Leave Fields Out of Automatic Column Matching
+
+You can now stop Dromo from matching columns to a field automatically, so your users choose for themselves whether to map it. In an update import, for example, the ID column can match on its own while every other column waits for the user to opt in.
+
+- **`autoMatch`**: A new field option. Set it to `false` to leave the field out of exact, fuzzy and AI matching and out of remembered mappings. Users can still match it by hand, and the column matching step is never skipped while such a field is in the schema. Headless imports ignore it. The TypeScript type ships in `dromo-uploader-js`, `dromo-uploader-react` and `dromo-uploader-angular` 2.23.0.
+
+See [leaving fields out of automatic matching](/reference/fields/fields#leaving-fields-out-of-automatic-matching) in the Fields reference.
+
+</Update>
+
+<Update label="November 2026" description="Dashboard update" tags={["AI", "Dashboard"]}>
+
+## Bring Your Own AI
+
+Your organization can now run Dromo's AI features on its own AI provider account instead of Dromo's, so import data sent to AI goes only to an account you control.
+
+- **Providers**: OpenAI (including Azure OpenAI and other OpenAI-compatible endpoints), Anthropic, Amazon Bedrock and Google Gemini.
+- **Covers every AI feature**: AI column matching, AI transformations, hook generation and Dr. Dromo use your provider and key. A failed request is never retried on Dromo's account.
+- **Dr. Dromo**: The dashboard assistant also runs on your provider and models, for schema generation, answers and every other step, so your schemas and sample files reach only your AI account.
+- **Set up in the dashboard**: Organization admins choose a provider, enter credentials and pick models under **My organization → AI provider**, then check it with **Test connection**. Keys are stored encrypted and can't be read back.
+- **AI column matching for Claude**: Anthropic and Bedrock have no embeddings, so column matching uses your lightweight model instead.
+
+Bring Your Own AI is enabled per organization; contact the Dromo team to turn it on. See the [Bring Your Own AI guide](/guides/bring-your-own-ai) for details.
+
+</Update>
+
+<Update label="November 2026" description="SDK v2.22.0" tags={["Developer Tools", "Webhooks", "Dashboard"]}>
+
+## Import Metadata
+
+You can now attach your own key/value pairs to each import, such as the ID of the asset or account the data belongs to. Dromo stores them with the import and hands them back wherever you work with imports.
+
+- **`importMetadata`**: A new setting that takes an object of string, number, boolean or `null` values.
+- **`setImportMetadata`**: A new importer method to set or change the metadata before or during an import. Use it to attach metadata when you load a saved schema.
+- **Results and webhooks**: The metadata comes back as `importMetadata` in result metadata and as `import_metadata` in import webhooks and the Imports API.
+- **Dashboard**: Each import's page shows its metadata, and the imports list can be filtered by a metadata key and value.
+
+See [`importMetadata`](/reference/settings/settings#importmetadata) in the Settings reference for details.
+
+</Update>
+
+<Update label="November 2026" description="Importer update" tags={["Customization", "Styling"]}>
+
+## Full-Screen Importer Layout
+
+The importer can now fill the whole screen instead of opening as a centered modal.
+
+- **`styleOverrides.global.fullScreen`**: Set to `true` to have the importer fill the viewport, with no margin, rounded corners, shadow or backdrop. It defaults to `false`, so the importer still opens as a centered modal unless you turn this on. It has no effect when the importer is embedded with `initInline`.
+
+See [`fullScreen`](/reference/settings/style-overrides#param-full-screen) in the Style Overrides reference.
+
+</Update>
+
+<Update label="October 2026" description="Importer update" tags={["Customization", "Styling"]}>
+
+## More Text and Style Customization
+
+More of the importer's wording and layout can now be customized. Nothing changes unless you set the new options.
+
+- **Header title**: `textOverrides.ui.HEADER_TITLE` adds a title in the top-left of the header bar.
+- **Step names, titles and subtitles**: new [`textOverrides.ui`](/reference/settings/settings#textoverrides) keys rename the steps in the step bar (`STEP_UPLOAD`, `STEP_SET_HEADER`, `STEP_MATCH_COLUMNS`, `STEP_BULK_FIX`, `STEP_REVIEW`) and set the titles and subtitles of the header row, Column Matching and Bulk Fix steps. Subtitles can span several lines with `\n`.
+- **Help text**: [`styleOverrides.helpText`](/reference/settings/style-overrides) now accepts `showIcon`, `border`, `borderRadius`, `padding`, `fontSize` and `fontWeight`, so help text can be styled as a plain subtitle.
+- **Upload dropzone**: `styleOverrides.dropzone.showColumnPreview: false` hides the faded column preview inside the dropzone.
+- **Confirmation message**: HTML passed to [`setConfirmationMessage`](/reference/hooks#instance-setconfirmationmessage) now renders as formatted content, including titles, bold text and line breaks. Previously the tags were shown as plain text. Plain-text messages, including text wrapped in a single `<div>`, look the same as before.
+
+</Update>
+
+<Update label="October 2026" description="SDK v2.18.1" tags={["Developer Tools"]}>
+
+## Angular 22 Support
+
+The Angular SDK now installs cleanly in Angular 22 projects.
+
+- **`dromo-uploader-angular`**: Angular 22 is now an accepted peer version, so `npm install` no longer needs `--legacy-peer-deps` or `--force`. Upgrade to version 2.18.1 or later to pick this up; no code changes are required.
+
+See the [Angular Quickstart](/getting-started/angular) for installation steps.
+
+</Update>
 
 <Update label="September 2026" description="Upcoming" tags={["Customization", "Bulk Fix"]}>
 
@@ -12,14 +94,41 @@ See [`skipBulkFixStep`](/reference/settings/settings#skipbulkfixstep) in the Set
 
 </Update>
 
-<Update label="July 2026" description="v3.13.0" tags={["Customization", "Styling", "AI", "Review Step", "Prompts"]}>
+<Update label="August 2026" description="v3.13.0" tags={["Performance", "Data Processing"]}>
+
+## Batch Row Hooks for Large Imports
+
+Large imports can now be transformed in bounded chunks during initialization, avoiding the need to pass the entire dataset to one bulk callback.
+
+- **`registerBatchRowHook()`**: Register a JavaScript SDK callback that receives one slice of rows and its one-based batch number
+- **`batchRowHooks`**: Supply the same initialization-only callbacks through the React prop or Angular input
+- **`batchRowHookBatchSize`**: Set the maximum rows per callback invocation with a positive integer; defaults to `2000`
+
+See the [Batch row hooks reference](/reference/hooks#batch-row-hooks) for callback signatures and examples.
+
+</Update>
+
+<Update label="July 2026" description="v3.13.0" tags={["Customization", "Styling", "AI", "Beta", "Review Step", "Prompts"]}>
+
+## Dr.Dromo Enters Limited Beta
+
+Meet **Dr.Dromo**, Dromo's AI assistant for designing and refining import workflows. Describe the outcome you need in plain language, and Dr.Dromo can help turn it into a reviewable Dromo schema.
+
+During the beta, Dr.Dromo can:
+
+- Generate import schemas from natural-language prompts, sample files, or existing configurations
+- Update fields, validation rules, settings, and hooks directly in Schema Studio
+- Provide product and implementation guidance grounded in Dromo's developer documentation
+- Present every proposed change for review before it is applied
+
+Dr.Dromo is currently available to a limited group of customers while we gather feedback and expand its capabilities. To request early access, contact [Dromo Support](mailto:support@dromo.io) or start a conversation using the support chat in the dashboard.
 
 ## Session Hydration Security
 
 Sessions now support a short-lived signed **`hydrationId`** token as a more secure alternative to passing the raw `sessionId` UUID in API URLs. The `sessionId`-based approach remains supported — `hydrationId` is an opt-in improvement that limits the impact of a leaked credential by scoping access to a short-lived token.
 
 - **`hydrationId`**: A signed token returned on session create; pass it to the widget instead of the raw `sessionId`
-- **`expiresIn`**: Token TTL in seconds, configurable per-request
+- **`expiresAt`**: Token expiration timestamp returned by the Sessions API; configure the lifetime with the `expires_in` request field
 - **`sessionId`**: Unchanged long-lived identifier — store it server-side to re-issue a fresh `hydrationId` whenever needed
 
 See the [Session Saving & Restoration Guide](/guides/saving-progress) for the full security model and endpoint reference.
@@ -164,7 +273,7 @@ New public APIs for programmatic SFTP integration.
 
 - **SFTP Credentials API** (`/api/v1/headless/sftp/credentials/`): Full CRUD for SFTP credentials with key-based and password authentication, connection testing, and encrypted storage
 - **SFTP Connectors API** (`/api/v1/headless/sftp/connectors/`): Full CRUD for SFTP connectors with scheduled imports, configurable directory paths, and file regex patterns
-- **Flexible Authentication**: Supports OAuth2, JWT, and Backend License Key authentication
+- **Authentication**: Authenticate SFTP API requests with a backend license key in the `X-Dromo-License-Key` header
 - **Documentation**: [SFTP API Reference](https://developer.dromo.io/api-reference/sftp-credentials/list-sftp-credentials)
 
 </Update>
@@ -177,9 +286,8 @@ New style override configuration options for comprehensive color customization o
 
 - **Complete Color Control**: Configure text, backgrounds, interactive elements, status colors, borders, and dividers
 - **Full Appearance Customization**: Enhanced color settings to fully customize the Dromo uploader
-- **Theme Presets**: Pre-configured light and dark theme color palettes
 - **Custom Color Schemes**: Define your own brand colors for any theme
-- **Dark Mode Support**: Dark mode now available as a result of the new color configuration options
+- **Light and Dark Examples**: Build a light or dark appearance from individual style override keys using the documented examples
 - **Seamless Experience**: Consistent styling across all import steps and components
 - **Documentation**: [Style Overrides Reference](https://developer.dromo.io/guides/custom-styling)
 

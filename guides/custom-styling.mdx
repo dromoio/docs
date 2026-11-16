@@ -1,5 +1,6 @@
 ---
 title: "Customizing Styles"
+description: "Customize the Dromo Uploader's colors, typography, buttons, steps, modals, and other visual elements with style overrides."
 ---
 
 <Info>
@@ -122,6 +123,20 @@ const settings = {
 
       // Visual effects
       backdropBlur: true               // Enable backdrop blur
+    }
+  }
+}
+```
+
+### Full-Screen Layout
+
+- **`fullScreen`** - Boolean (default `false`). When `true`, the importer fills the whole viewport instead of opening as a centered modal: no margin, rounded corners, shadow or backdrop. Leave it unset to keep the default centered modal. It has no effect when the importer is embedded with `initInline`.
+
+```js
+const settings = {
+  styleOverrides: {
+    global: {
+      fullScreen: true
     }
   }
 }
@@ -421,6 +436,7 @@ Dropdown menus (select components) are used for field mapping, choosing data typ
 - **`backgroundColor`** - Background color of the closed dropdown
 - **`borderColor`** - Border color around the dropdown
 - **`textColor`** - Text color for the selected value
+- **`errorBorderColor`** - Border color when the control is in an error state
 - **`menuBackgroundColor`** - Background color of the opened dropdown menu
 - **`optionHoverBackgroundColor`** - Background color when hovering over an option
 - **`optionSelectedBackgroundColor`** - Background color for the currently selected option
@@ -437,6 +453,7 @@ const settings = {
       backgroundColor: "#ffffff",
       borderColor: "#d1d5db",
       textColor: "#374151",
+      errorBorderColor: "#dc2626",
       menuBackgroundColor: "#ffffff",
       optionHoverBackgroundColor: "#f3f4f6",
       optionSelectedBackgroundColor: "#eff6ff"
@@ -460,6 +477,10 @@ The dropzone is the drag-and-drop area on the upload screen where users can drop
 - **`backgroundColor`** - Background color
 - **`color`** - Text color for the dropzone message
 - **`outline`** - CSS outline property (e.g., "none", "2px solid blue")
+- **`activeBorderColor`** - Border color while a file is being dragged over the dropzone
+- **`acceptBorderColor`** - Border color when the dragged file is accepted
+- **`rejectBorderColor`** - Border color when the dragged file is rejected
+- **`showColumnPreview`** - Show the faded preview of your schema's columns inside the dropzone (boolean, default `true`)
 
 <Tip>
   A dashed border is commonly used for dropzones to visually distinguish them as interactive upload areas. Consider using your brand's accent color for the border when a file is being dragged over the dropzone.
@@ -475,7 +496,10 @@ const settings = {
       borderStyle: "dashed",
       backgroundColor: "#f9fafb",
       color: "#374151",
-      outline: "none"
+      outline: "none",
+      activeBorderColor: "#3b82f6",
+      acceptBorderColor: "#10b981",
+      rejectBorderColor: "#ef4444"
     }
   }
 }
@@ -489,6 +513,12 @@ Help text appears throughout the interface to provide guidance, tips, and contex
 
 - **`textColor`** - Color of help text
 - **`backgroundColor`** - Background color for help text sections (if applicable)
+- **`showIcon`** - Show the info icon (boolean, default `true`)
+- **`border`** - CSS border for the help text box (default `none`)
+- **`borderRadius`** - Corner radius (default `0.5rem`)
+- **`padding`** - Inner padding (default `0.5rem`)
+- **`fontSize`** - Font size (default `0.875rem`)
+- **`fontWeight`** - Font weight (default `500`)
 
 **Use cases:**
 - Instructions on the upload screen
@@ -505,6 +535,26 @@ const settings = {
   }
 }
 ```
+
+To show help text as a plain subtitle under the step title rather than a box:
+
+```js
+const settings = {
+  styleOverrides: {
+    helpText: {
+      showIcon: false,
+      backgroundColor: "transparent",
+      padding: "0",
+      textColor: "#486581",
+      fontWeight: "400"
+    }
+  }
+}
+```
+
+<Tip>
+  To change the wording of step titles, subtitles and step names, use [`textOverrides.ui`](/reference/settings/settings#textoverrides).
+</Tip>
 
 ### Stepper Bar (Progress Indicator)
 
@@ -563,6 +613,30 @@ const settings = {
     modalOverlay: {
       backgroundColor: "#000000",
       opacity: "50"                    // 50% opacity
+    }
+  }
+}
+```
+
+### Error Navigator
+
+The Error Navigator is available when [`reviewStep.enableNavigatingErrors`](/reference/settings/settings#enablenavigatingerrors) is enabled. Its colors and icons can be customized independently from the data table.
+
+- **`errorColor`** - Color of error indicators, messages, and the error count
+- **`warningColor`** - Color of warning indicators and messages
+- **`accentColor`** - Color of primary actions and the active column filter
+- **`errorIconUrl`** - URL of a custom error icon, or `null` for the default
+- **`warningIconUrl`** - URL of a custom warning icon, or `null` for the default
+
+```js
+const settings = {
+  styleOverrides: {
+    errorNavigator: {
+      errorColor: "#b91c1c",
+      warningColor: "#d97706",
+      accentColor: "#6366f1",
+      errorIconUrl: "https://cdn.example.com/error-icon.svg",
+      warningIconUrl: null
     }
   }
 }

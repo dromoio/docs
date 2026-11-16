@@ -1,0 +1,52 @@
+---
+title: "Embedded Importers"
+description: "Choose an embedded Dromo SDK, launch the importer in your application, and understand when to use embedded or headless imports."
+icon: "window"
+---
+
+An embedded Dromo importer runs inside your web application and guides users through uploading, matching, cleaning, and reviewing their data. Your application configures the import and receives the cleaned results when the user finishes.
+
+## Choose an SDK
+
+<CardGroup cols={3}>
+  <Card title="JavaScript" icon="js" href="/getting-started/javascript">
+    Use the core SDK in any browser application.
+  </Card>
+  <Card title="React" icon="react" href="/getting-started/react">
+    Use the Dromo component and React props.
+  </Card>
+  <Card title="Angular" icon="angular" href="/getting-started/angular">
+    Use the Angular component, inputs, and outputs.
+  </Card>
+</CardGroup>
+
+All three integrations use the same fields, settings, hooks, and result model. The React and Angular packages wrap the JavaScript SDK with framework-native components.
+
+## How an embedded import works
+
+<Steps>
+  <Step title="Configure the importer">
+    Provide a frontend license key, [fields](/reference/fields/fields), [settings](/reference/settings/settings), and user metadata. You can also use a saved schema from Schema Studio.
+  </Step>
+  <Step title="Open it in your application">
+    The SDK displays Dromo in an iframe within a modal or inline container. Users upload a file and resolve mapping or validation issues without leaving your application.
+  </Step>
+  <Step title="Receive cleaned results">
+    Handle the [`onResults` callback](/reference/results) to send the validated data to your application. You can optionally sync imports to Dromo and receive webhooks.
+  </Step>
+</Steps>
+
+## Embedded or headless?
+
+| | Embedded | Headless |
+| --- | --- | --- |
+| Best for | User-guided imports in a web application | Automated or server-driven imports |
+| Initial processing | In the user's browser by default | On Dromo's servers |
+| Resolving issues | Directly in the embedded importer | Through a review URL when human input is needed |
+| Integration | JavaScript, React, or Angular SDK | REST API |
+
+Use an embedded importer when users should see and control the import flow. Use the [Headless API](/getting-started/headless) when imports should begin from your backend or run without an initial user interface.
+
+<Note>
+  Embedded imports can run in [Private Mode](/faqs#what-is-private-mode), where end-user file data remains in the browser.
+</Note>
