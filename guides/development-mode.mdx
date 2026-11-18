@@ -1,0 +1,66 @@
+---
+title: "Development Mode"
+icon: "flask"
+---
+
+Development mode lets you test import flows and iterate on your importer without running production imports. Turn it on with the [`developmentMode`](/reference/settings/settings#param-development-mode) setting (or `setDevelopmentMode(true)` on the `DromoUploader`):
+
+<CodeGroup>
+```javascript JavaScript
+const dromo = new DromoUploader("YOUR_LICENSE_KEY", "YOUR_SCHEMA_ID");
+dromo.setDevelopmentMode(true);
+```
+
+```jsx React
+<DromoUploader
+  licenseKey="YOUR_LICENSE_KEY"
+  fields={fields}
+  settings={{ importIdentifier: "Contacts", developmentMode: true }}
+>
+  Launch Dromo
+</DromoUploader>
+```
+</CodeGroup>
+
+While it is on, the importer shows a "Development mode" banner, and every completed import is flagged as a development mode import. Set `developmentMode` to `false` in production.
+
+## Development mode import limits
+
+Development mode imports don't count toward your production import usage, but how many you can run depends on your plan. Counts are per organization, across all of your license keys.
+
+| Plan | Development mode imports included | After that |
+|---|---|---|
+| Free trial | 100 in total | Importing is paused |
+| Professional | 100 per month | Billed per import — never blocked |
+| Enterprise | Unlimited | — |
+
+<Note>
+  These limits apply only to development mode imports. Production mode imports are not affected.
+</Note>
+
+### Free trial
+
+A free trial includes **100 development mode imports in total** — the count does not reset.
+
+Once all 100 are used:
+
+- When the importer opens, it shows an **"Importing is paused"** screen instead of the upload step.
+- If a user reaches the end of an import, **Finish is blocked**: the importer explains that the import can't be completed, and the results are **not** delivered to your app (your result callbacks and webhooks don't fire for that import).
+
+The importer starts showing a heads-up as the trial nears its limit. To keep importing, [upgrade to a paid plan](https://dromo.io/pricing).
+
+### Professional
+
+Professional plans include **100 development mode imports per month**. On an annual plan, the allowance is the yearly equivalent and is counted over the plan year — your [Billing page](https://dashboard.dromo.io) shows the exact number for your plan.
+
+Past the included allowance, development mode imports are **never blocked**. Each additional one is billed per import and appears on your next invoice. See [Dromo pricing](https://dromo.io/pricing) for the current per-import rate.
+
+The importer shows a heads-up as you approach the allowance, and a notice once a development mode import will be billed.
+
+### Enterprise
+
+Enterprise plans include unlimited development mode imports.
+
+### Checking your usage
+
+The **Billing** page in the [Dromo dashboard](https://dashboard.dromo.io) shows how many development mode imports you've used against your allowance in the current period, a day-by-day (or, for annual plans, month-by-month) breakdown, and — on Professional — how many are billable. On a free trial it also shows imports that were blocked.
