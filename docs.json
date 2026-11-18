@@ -86,6 +86,7 @@
                   "guides/saving-progress"
                 ]
               },
+              "guides/development-mode",
               "guides/custom-steps",
               "guides/custom-styling",
               "guides/bring-your-own-storage",
