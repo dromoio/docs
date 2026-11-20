@@ -3,6 +3,18 @@ title: "Changelog"
 description: "Review Dromo product releases, new SDK and API capabilities, behavior changes, accessibility improvements, and bug fixes."
 ---
 
+<Update label="November 2026" description="Importer update" tags={["Validation", "Customization"]}>
+
+## Custom Values in Multi-Select Fields
+
+Multi-select fields can now accept values that aren't in their options, the same way select fields can. Use it for lists where your options are suggestions rather than the only accepted values, such as tags or names.
+
+- **`allowCustom`**: A new multi-select type option. Set it to `true` to keep values outside `selectOptions` instead of flagging them as errors. Values that match an option are still mapped to it, and users can add a new value in the review table by typing it and pressing Enter.
+
+See [custom values](/reference/fields/field-types#custom-values) in the Field Types reference.
+
+</Update>
+
 <Update label="November 2026" description="SDK v2.23.0" tags={["Column Matching", "Customization"]}>
 
 ## Leave Fields Out of Automatic Column Matching
