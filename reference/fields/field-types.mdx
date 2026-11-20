@@ -358,7 +358,8 @@ Here is an example of a few different valid field type configurations:
   > {
   >   "type": ["multi-select", {
   >     "delimiter": ",",
-  >     "trimValues": true
+  >     "trimValues": true,
+  >     "allowCustom": false
   >   }],
   >   "selectOptions": [],
   >   "manyToOne": true
@@ -377,7 +378,7 @@ Here is an example of a few different valid field type configurations:
     ![Multi Select option matching](/images/guides/multi-select.png)
     On the review screen, the field will show as a multi-select dropdown or chip interface that the user can pick multiple options from.
 
-    A validation error will be shown if a value was not matched and does not equal one of the option labels.
+    A validation error will be shown if a value was not matched and does not equal one of the option labels, unless [`allowCustom`](#custom-values) is `true`.
   </Expandable>
 
   <Info>
@@ -415,6 +416,32 @@ Here is an example of a few different valid field type configurations:
     ]
   }
   ```
+
+#### Custom Values[​](#custom-values "Direct link to Custom Values")
+
+  By default, a value that doesn't match any option is an error. Set `allowCustom` to keep those values instead, the same way it works for [select fields](#select): the options become suggestions, values that match an option are still mapped to it, and any other value is accepted as typed.
+
+  <ResponseField name="allowCustom" type="boolean" default="false">
+    If `true`, values that aren't in `selectOptions` are kept and are not flagged as errors. In the review table, users can type a new value into the cell's search box and press Enter to add it. Duplicate values in a cell are still flagged as a warning.
+  </ResponseField>
+
+  Example: a list of tags separated by semicolons, where new tags are allowed:
+  ```json
+  {
+    "key": "tags",
+    "label": "Tags",
+    "type": ["multi-select", { "delimiter": ";", "allowCustom": true }],
+    "selectOptions": [
+      { "label": "Urgent", "value": "urgent" },
+      { "label": "Follow-up", "value": "follow_up" }
+    ]
+  }
+  ```
+  An input of `Urgent; Escalated` produces `["urgent", "Escalated"]`.
+
+  <Tip>
+    To flag new values without rejecting them, keep `allowCustom: true` and add a warning from a [row hook](/reference/hooks#row-hooks) when a value isn't in your list.
+  </Tip>
 
 #### Many-to-One Mapping[​](#many-to-one-mapping "Direct link to Many-to-One Mapping")
 
