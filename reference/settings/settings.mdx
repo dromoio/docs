@@ -52,6 +52,15 @@ description: "Settings are supplied as an object to the Dromo instance on initia
   };
   ```
 
+  When more than one file is combined, each result row includes a `$sourceFile` key containing the name of the file the row came from. Rows that did not come from a file, such as rows added in the Review Step, do not have this key. Imports of a single file are unchanged.
+
+  ```javascript
+  [
+    { name: "Ada", email: "ada@example.com", $sourceFile: "contacts-one.csv" },
+    { name: "Grace", email: "grace@example.com", $sourceFile: "contacts-two.csv" },
+  ]
+  ```
+
   Named headers must be unique within each file. If an Excel workbook contains multiple sheets, its selected sheet must have the same name as the sheet selected in the first workbook, or you must configure [`uploadStep.sheetOverride`](#param-sheet-override).
 </ResponseField>
 
