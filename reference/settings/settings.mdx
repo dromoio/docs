@@ -61,6 +61,8 @@ description: "Settings are supplied as an object to the Dromo instance on initia
   ]
   ```
 
+  `allowMultiUploads` cannot be used with [`backendSyncMode`](#param-backend-sync-mode) set to `"FULL_DATA"`. Use `"MAPPINGS_ONLY"` or `"DISABLED"` for combined multi-file imports.
+
   Named headers must be unique within each file. If an Excel workbook contains multiple sheets, its selected sheet must have the same name as the sheet selected in the first workbook, or you must configure [`uploadStep.sheetOverride`](#param-sheet-override).
 </ResponseField>
 
