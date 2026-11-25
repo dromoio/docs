@@ -9,7 +9,7 @@ description: "Review Dromo product releases, new SDK and API capabilities, behav
 
 Organizations using Bring Your Own Storage can now manage their storage settings and rotate their keys themselves, without sending credentials to Dromo.
 
-- **Set up in the dashboard**: Organization admins choose their storage (Amazon S3 by access key or IAM role, Azure Blob Storage by account key or SAS token, or Google Cloud Storage) and enter its settings under **My organization → Storage**.
+- **Set up in the dashboard**: Organization admins choose their storage (Amazon S3 by access key or IAM role, Azure Blob Storage by account key or SAS token, or Google Cloud Storage) and enter its settings under **Bring your own → Storage**.
 - **Key rotation**: Enter a new key and save. Dromo writes a test file to your storage first and only switches over if that works, so a mistyped key never interrupts imports.
 - **Test connection**: Check at any time that Dromo can still write to your storage.
 - **Secrets stay secret**: Keys are stored encrypted and can't be read back.
