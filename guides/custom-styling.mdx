@@ -127,6 +127,24 @@ const settings = {
 }
 ```
 
+### Action Bar and Toolbar Placement
+
+Two options change where the importer's navigation and step controls sit. Both default to the standard layout, so nothing moves unless you set them.
+
+- **`actionBarPosition`** - `"inline"` (default) or `"footer"`. With `"footer"`, the Back button moves out of the header and each step's main action buttons move out of the step content, into a bar pinned to the bottom of the importer: Back on the left, the main actions on the right. The bar stays in view while the step content scrolls. The Upload Step has no such buttons, so it shows no bar.
+- **`toolbarPosition`** - `"inline"` (default) or `"belowHeader"`. With `"belowHeader"`, step toolbars get their own row under the step title: "Ignore all" and "Show unmatched only" in the Column Matching Step, and "Show rows with errors", "Find and replace", Export and search in the Review Step.
+
+```js
+const settings = {
+  styleOverrides: {
+    global: {
+      actionBarPosition: "footer",     // Back and main actions in a sticky bottom bar
+      toolbarPosition: "belowHeader"   // Step toolbars on their own row under the title
+    }
+  }
+}
+```
+
 ## Button Styling
 
 Dromo uses three button types throughout the interface: primary (main actions), secondary (alternative actions), and tertiary (subtle actions). Each button type can be fully customized with normal and hover states.

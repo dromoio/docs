@@ -79,6 +79,23 @@ The Dromo Uploader supports custom CSS styling. You can use the `styleOverrides`
         <ResponseField name="backdropBlur" type="boolean" default="true">
           Whether to apply a blur effect to the background when modals are open
         </ResponseField>
+
+        <ResponseField name="actionBarPosition" type='"inline" | "footer"' default='"inline"'>
+          Where the Back button and each step's main action buttons appear.
+
+          The default (`"inline"`) keeps Back in the importer header and each step's buttons where they are today. With `"footer"`, they move into a bar that stays pinned to the bottom of the importer while the step content scrolls: Back on the left, the step's main actions (for example "Confirm matching and continue" or "Finish") on the right.
+
+          The Upload Step has no Back button or main action, so it shows no bar. Custom steps show only Back in the bar, because their own buttons are rendered inside your iframe.
+        </ResponseField>
+
+        <ResponseField name="toolbarPosition" type='"inline" | "belowHeader"' default='"inline"'>
+          Where step toolbars appear.
+
+          The default (`"inline"`) keeps each toolbar next to the step title. With `"belowHeader"`, the toolbar gets its own row under the title:
+
+          - **Column Matching Step**: "Ignore all" and "Show unmatched only" sit on a right-aligned row between the subtitle and the matching table.
+          - **Review Step**: "Show rows with errors", "Navigate errors", "Find and replace", Export and search sit on a left-aligned row under the "Review and edit" title.
+        </ResponseField>
       </div>
     </ResponseField>
 

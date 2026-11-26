@@ -17,6 +17,19 @@ See [`allowMultiUploads`](/reference/settings/settings#param-allow-multi-uploads
 
 </Update>
 
+<Update label="November 2026" description="Upcoming" tags={["Customization", "Styling"]}>
+
+## Footer Action Bar and Toolbar Placement
+
+Two new opt-in style overrides change where the importer's navigation and step controls sit. Both default to the current layout.
+
+- **`styleOverrides.global.actionBarPosition`**: Set to `"footer"` to move the Back button and each step's main action buttons into a bar pinned to the bottom of the importer, with Back on the left and the main actions on the right. The default is `"inline"`.
+- **`styleOverrides.global.toolbarPosition`**: Set to `"belowHeader"` to give step toolbars their own row under the step title in the Column Matching and Review Steps. The default is `"inline"`.
+
+See [`actionBarPosition`](/reference/settings/style-overrides#param-action-bar-position) and [`toolbarPosition`](/reference/settings/style-overrides#param-toolbar-position) in the Style Overrides reference.
+
+</Update>
+
 <Update label="September 2026" description="Upcoming" tags={["Customization", "Bulk Fix"]}>
 
 ## Optional Bulk Fix Step
