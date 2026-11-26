@@ -2,6 +2,34 @@
 title: "Changelog"
 ---
 
+<Update label="November 2026" description="Upcoming" tags={["File Parsing", "Upload Step"]}>
+
+## Combined Multi-File Uploads
+
+Users can now select multiple CSV or Excel files and import their combined rows through one mapping and review flow.
+
+- **`allowMultiUploads`**: Enables multiple file selection in the Upload Step. The header row selected for the first file is applied to every file, headers are unioned by name, and missing columns are filled with empty values before the normal import steps continue.
+- **`$sourceFile`**: When more than one file is combined, each result row includes the name of the file it came from.
+- **Combined limits**: `maxRecords` applies to the total number of combined data rows, while `maxFileSize` continues to apply to each selected file.
+- **Backend sync**: With `backendSyncMode: "FULL_DATA"`, Dromo stores the combined table as one CSV file. The individual files are not stored.
+
+See [`allowMultiUploads`](/reference/settings/settings#param-allow-multi-uploads) in the Settings reference for behavior and Excel sheet requirements.
+
+</Update>
+
+<Update label="November 2026" description="Upcoming" tags={["Customization", "Styling"]}>
+
+## Footer Action Bar and Toolbar Placement
+
+Two new opt-in style overrides change where the importer's navigation and step controls sit. Both default to the current layout.
+
+- **`styleOverrides.global.actionBarPosition`**: Set to `"footer"` to move the Back button and each step's main action buttons into a bar pinned to the bottom of the importer, with Back on the left and the main actions on the right. The default is `"inline"`.
+- **`styleOverrides.global.toolbarPosition`**: Set to `"belowHeader"` to give step toolbars their own row under the step title in the Column Matching and Review Steps. The default is `"inline"`.
+
+See [`actionBarPosition`](/reference/settings/style-overrides#param-action-bar-position) and [`toolbarPosition`](/reference/settings/style-overrides#param-toolbar-position) in the Style Overrides reference.
+
+</Update>
+
 <Update label="September 2026" description="Upcoming" tags={["Customization", "Bulk Fix"]}>
 
 ## Optional Bulk Fix Step
