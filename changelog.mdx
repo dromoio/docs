@@ -11,7 +11,7 @@ Users can now select multiple CSV or Excel files and import their combined rows 
 - **`allowMultiUploads`**: Enables multiple file selection in the Upload Step. The header row selected for the first file is applied to every file, headers are unioned by name, and missing columns are filled with empty values before the normal import steps continue.
 - **`$sourceFile`**: When more than one file is combined, each result row includes the name of the file it came from.
 - **Combined limits**: `maxRecords` applies to the total number of combined data rows, while `maxFileSize` continues to apply to each selected file.
-- **Backend sync**: `allowMultiUploads` is not yet supported with `backendSyncMode: "FULL_DATA"`.
+- **Backend sync**: With `backendSyncMode: "FULL_DATA"`, Dromo stores the combined table as one CSV file. The individual files are not stored.
 
 See [`allowMultiUploads`](/reference/settings/settings#param-allow-multi-uploads) in the Settings reference for behavior and Excel sheet requirements.
 

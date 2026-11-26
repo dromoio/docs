@@ -61,7 +61,7 @@ description: "Settings are supplied as an object to the Dromo instance on initia
   ]
   ```
 
-  `allowMultiUploads` cannot be used with [`backendSyncMode`](#param-backend-sync-mode) set to `"FULL_DATA"`. Use `"MAPPINGS_ONLY"` or `"DISABLED"` for combined multi-file imports.
+  When [`backendSyncMode`](#param-backend-sync-mode) is `"FULL_DATA"`, Dromo stores the combined table as the import's uploaded file: a single CSV named after the number of files, for example `3 combined files.csv`. The individual files are not stored. The stored file contains the combined rows after the header row is applied and does not include `$sourceFile`. A saved session resumes from this combined file, and its result rows still include `$sourceFile`.
 
   Named headers must be unique within each file. If an Excel workbook contains multiple sheets, its selected sheet must have the same name as the sheet selected in the first workbook, or you must configure [`uploadStep.sheetOverride`](#param-sheet-override).
 </ResponseField>
